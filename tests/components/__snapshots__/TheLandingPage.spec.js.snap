@@ -1,0 +1,77 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`LandingPage.vue renders the page 1`] = `
+<div
+  class="container"
+>
+  <el-card-stub
+    shadow="always"
+  >
+    <img
+      class="logo"
+      src="@/assets/logo_transparent.png"
+    />
+    <div
+      class="welcome-text font-size-b font-line-height-secondary"
+    >
+      <p>
+        Welcome to Kenmei, a new manga tracking website currently in
+development.
+      </p>
+      <p>
+        Inspired by
+
+        <el-link-stub
+          href="https://www.trackr.moe"
+          type="default"
+        >
+          trackr.moe
+        </el-link-stub>
+        , the best manga tracking website,
+
+        <el-link-stub
+          href="https://blog.codeanimu.net/posts/2019/07/trackr-moe-the-future/"
+          type="default"
+        >
+          that is now slated to be closed
+        </el-link-stub>
+        , Kenmei is here to replace it
+and provide even more features, for all manga fans out there!
+      </p>
+      <p>
+        If you would like to get notified, when registrations open, please
+leave your email below.
+      </p>
+    </div>
+    <div
+      class="email-form"
+    >
+      <form
+        action="https://tinyletter.com/kenmei"
+        method="post"
+        onsubmit="window.open('https://tinyletter.com/kenmei', 'popupwindow', 'scrollbars=yes,width=800,height=600');"
+        target="popupwindow"
+      >
+        <el-input-stub
+          autocomplete="off"
+          name="email"
+          placeholder="Please enter your email"
+          type="text"
+          validateevent="true"
+          value=""
+        />
+        <input
+          name="embed"
+          type="hidden"
+          value="1"
+        />
+        <input
+          class="el-button"
+          type="submit"
+          value="Subscribe"
+        />
+      </form>
+    </div>
+  </el-card-stub>
+</div>
+`;
