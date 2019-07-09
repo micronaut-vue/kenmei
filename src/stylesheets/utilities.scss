@@ -1,0 +1,22 @@
+// Font Size
+.font-size-xl { font-size: 20px;  }
+.font-size-l  { font-size:  18px; }
+.font-size-m  { font-size:  16px; }
+.font-size-b  { font-size:  14px; }
+.font-size-s  { font-size:  13px; }
+.font-size-xs { font-size: 12px;  }
+
+// Font Weight
+.font-weight-primary   { font-weight: 500; }
+.font-weight-secondary { font-weight: 100; }
+
+// Line Height
+.font-line-height-primary   { line-height: 24px; }
+.font-line-height-secondary { line-height: 16px; }
+
+// Borders
+.border        { border: 1px solid $base-border;        }
+.border-top    { border-top: 1px solid $base-border;    }
+.border-bottom { border-bottom: 1px solid $base-border; }
+.border-right  { border-right: 1px solid $base-border;  }
+.border-left   { border-left: 1px solid $base-border;   }
