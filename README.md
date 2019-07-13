@@ -1,29 +1,6 @@
-# projects
+[![Netlify Status](https://api.netlify.com/api/v1/badges/1dd1ffd0-d72a-4537-8aba-7bd856977ade/deploy-status)](https://app.netlify.com/sites/kenmei/deploys)
 
-## Project setup
-```
-yarn install
-```
+# Kenmei
 
-### Compiles and hot-reloads for development
-```
-yarn run serve
-```
+Inspired by [Trackr.moe](https://github.com/DakuTree/manga-tracker), this website is a cross-site manga tracker, built with Vue.js and Grape.
 
-### Compiles and minifies for production
-```
-yarn run build
-```
-
-### Run your tests
-```
-yarn run test
-```
-
-### Lints and fixes files
-```
-yarn run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
