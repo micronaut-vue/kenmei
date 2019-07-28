@@ -2,3 +2,5 @@ language: node_js
 node_js:
   - "11"
 cache: yarn
+after_script:
+  - cat ./coverage/lcov.info | coveralls
