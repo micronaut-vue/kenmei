@@ -1,14 +1,17 @@
 <template lang="pug">
-  el-table(:data="tableData")
-    el-table-column(prop="series" label="Name")
+  el-table(
+    :data="tableData"
+    :default-sort = "{ prop: 'series.title', order: 'descending' }"
+  )
+    el-table-column(prop="series.title" label="Name" sortable)
       template(slot-scope="scope")
-        el-link(
+        el-link.series-title(
           :href="scope.row.series.url"
           :underline="false"
           target="_blank"
         )
           | {{ scope.row.series.title }}
-    el-table-column(prop="latestChapter" label="Latest Chapter")
+    el-table-column(prop="latestChapter.url" label="Latest Chapter")
       template(slot-scope="scope")
         el-link(
           :href="scope.row.latestChapter.url"
@@ -16,7 +19,7 @@
           target="_blank"
         )
           | {{ scope.row.latestChapter.info.chapter }}
-    el-table-column(prop="latestChapterReleasedAt" label="Released")
+    el-table-column(prop="latestChapter.info.timestamp" label="Released" sortable)
       template(slot-scope="scope")
         | {{ releasedAt(scope.row.latestChapter.info.timestamp) }}
 </template>
@@ -49,7 +52,7 @@
 </script>
 
 <style lang="scss" scoped>
-  // .el-link /deep/ .el-link--inner {
-  //   word-wrap: normal;
-  // }
+  .series-title {
+    word-break: normal;
+  }
 </style>

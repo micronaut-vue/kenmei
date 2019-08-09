@@ -4,7 +4,7 @@ exports[`TheMangaList.vue :props :tableData - renders rows 1`] = `
 <tbody>
   <tr class="el-table__row">
     <td rowspan="1" colspan="1" class="el-table_1_column_1  ">
-      <div class="cell"><a href="series.example.url" target="_blank" class="el-link el-link--default">
+      <div class="cell"><a href="series.example.url" target="_blank" class="series-title el-link el-link--default">
           <!----><span class="el-link--inner">Manga Title</span>
           <!----></a></div>
     </td>
