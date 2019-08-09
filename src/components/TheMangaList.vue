@@ -52,7 +52,7 @@
 </script>
 
 <style lang="scss" scoped>
-  // .el-link /deep/ .el-link--inner {
-  //   word-wrap: normal;
-  // }
+  .series-title {
+    word-break: normal;
+  }
 </style>
