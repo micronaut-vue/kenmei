@@ -1,0 +1,22 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TheMangaList.vue :props :tableData - renders rows 1`] = `
+<tbody>
+  <tr class="el-table__row">
+    <td rowspan="1" colspan="1" class="el-table_1_column_1  ">
+      <div class="cell"><a href="series.example.url" target="_blank" class="el-link el-link--default">
+          <!----><span class="el-link--inner">Manga Title</span>
+          <!----></a></div>
+    </td>
+    <td rowspan="1" colspan="1" class="el-table_1_column_2  ">
+      <div class="cell"><a href="chapter.example.url" target="_blank" class="el-link el-link--default">
+          <!----><span class="el-link--inner">10</span>
+          <!----></a></div>
+    </td>
+    <td rowspan="1" colspan="1" class="el-table_1_column_3  ">
+      <div class="cell">a year ago</div>
+    </td>
+  </tr>
+  <!---->
+</tbody>
+`;
