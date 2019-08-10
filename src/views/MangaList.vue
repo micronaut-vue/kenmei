@@ -4,9 +4,11 @@
       el-button.float-right(
         ref="openAddMangaModalButton"
         type="primary"
+        size="medium"
         @click="dialogVisible = true"
         round
       )
+        i.el-icon-plus.mr-1
         | Add Manga
       el-button.float-right.mr-3(
         type="success"
