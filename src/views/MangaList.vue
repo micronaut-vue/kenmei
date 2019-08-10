@@ -60,12 +60,14 @@
 </template>
 
 <script>
+  import pLimit from 'p-limit';
   import {
     Message, Loading, Dialog, Button, Input, Upload,
   } from 'element-ui';
 
   import TheMangaList from '@/components/TheMangaList';
-  import { getManga, extractSeriesID } from '@/services/api';
+  import { getManga, extractSeriesID, getMangaBulk } from '@/services/api';
+  import Importer from '@/services/importer';
 
   export default {
     name: 'MangaList',
@@ -122,6 +124,65 @@
       },
       alreadyExists(mangaID) {
         return this.tableData.some(manga => manga.series.url.includes(mangaID));
+      },
+      sliceIntoBatches(ids) {
+        const batchSize = 20;
+        const IDChunks = [];
+
+        for (let i = 0; i < ids.length; i += batchSize) {
+          IDChunks.push(ids.slice(i, i + batchSize).join(' '));
+        }
+
+        return IDChunks;
+      },
+      filterNewMangaDexEntries(list) {
+        return Importer(list).filter(value => !this.alreadyExists(value));
+      },
+      processMangaDexList(list) {
+        const promiseLimit = pLimit(1);
+        const seriesIDs = this.filterNewMangaDexEntries(list);
+
+        if (seriesIDs.length === 0) {
+          Message.info('Nothing new to import');
+          return;
+        }
+
+        const IDChunks = this.sliceIntoBatches(seriesIDs);
+        const requestList = IDChunks.map(ids => promiseLimit(
+          () => getMangaBulk(ids).then(
+            (importedList) => {
+              return importedList;
+            }
+          )
+        ));
+
+        this.importMangaInBatches(requestList);
+      },
+      async importMangaInBatches(requestList) {
+        const loading = Loading.service({ target: '.el-dialog' });
+
+        await Promise.all(requestList)
+          .then((importedList) => {
+            const importedManga = importedList.flat();
+            importedManga.forEach(newManga => this.tableData.push(newManga));
+
+            Message.info(`Imported ${importedManga.length} series`);
+            this.importDialogVisible = false;
+          })
+          .catch((_error) => {
+            Message.error('Something went wrong');
+          })
+          .finally(() => { loading.close(); });
+      },
+      processUpload(file) {
+        const reader = new FileReader();
+
+        reader.onload = ((theFile) => {
+          const json = JSON.parse(theFile.target.result);
+          this.processMangaDexList(json);
+        });
+
+        reader.readAsText(file.file);
       },
     },
   };

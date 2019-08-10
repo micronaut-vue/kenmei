@@ -10,6 +10,95 @@ const localVue = createLocalVue();
 localVue.directive('loading', true);
 
 describe('MangaList.vue', () => {
+  describe('when importing MangaDex entries from Trackr.moe JSON', () => {
+    let list;
+    let responseValue;
+    let mangaList;
+
+    beforeEach(() => {
+      list = {
+        series: {
+          reading: {
+            manga: [{
+              full_title_url: 'https://mangadex.org/manga/24121',
+              site_data: {
+                site: 'mangadex.org',
+              },
+            }],
+          },
+        },
+      };
+      responseValue = {
+        series: {
+          title: 'Manga Title',
+          url: 'https://mangadex.org/manga/24121',
+        },
+        latestChapter: {
+          url: 'chapter.example.url',
+          info: {
+            chapter: '10',
+            title: 'Chapter Title',
+            timestamp: 1522299049,
+          },
+        },
+      };
+      mangaList = shallowMount(MangaList, { localVue });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('parses manga list from a json file', async () => {
+      const file = new File([list], 'list.json', { type: 'application/json' });
+      const fileReaderReadTextMock = jest.spyOn(window, 'FileReader');
+
+      fileReaderReadTextMock.mockImplementation(() => ({
+        readAsText: jest.fn(),
+      }));
+
+      mangaList.vm.processUpload({ file });
+
+      await flushPromises();
+
+      expect(fileReaderReadTextMock).toHaveBeenCalled();
+    });
+
+    // TODO: Test this as part of the request, not by itself
+    it('slices ids into chunks of ids', () => {
+      const ids = Array(21).fill().map((v, i) => i);
+      const result = [ids.slice(0, 20).join(' '), ids.slice(20, 21).join(' ')]
+
+      expect(mangaList.vm.sliceIntoBatches(ids)).toEqual(result);
+    });
+
+    it.skip('adds new manga entries and updates progress percentage if successful', async () => {
+      const getMangaMock = jest.spyOn(api, 'getMangaBulk');
+
+      getMangaMock.mockResolvedValue([responseValue]);
+
+      mangaList.vm.processMangaDexList(list);
+
+      await flushPromises();
+
+      expect(mangaList.vm.$data.tableData).toContain(responseValue);
+      expect(mangaList.vm.$data.importProgress).toEqual(100);
+    });
+
+    it.skip('ignores already existing entries', async () => {
+      const getMangaMock = jest.spyOn(api, 'getManga');
+
+      mangaList.setData({ tableData: [responseValue] });
+
+      getMangaMock.mockResolvedValue(responseValue);
+
+      mangaList.vm.processMangaDexList(list);
+
+      await flushPromises();
+
+      expect(mangaList.vm.$data.tableData.length).toBe(1);
+    });
+  });
   describe('when adding new MangaDex entry', () => {
     let mangaList;
 
