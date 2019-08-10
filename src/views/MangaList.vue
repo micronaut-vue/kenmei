@@ -58,7 +58,7 @@
       mangaDexSearch() {
         const mangaID = extractSeriesID(this.mangaURL);
 
-        if (this.tableData.some(manga => manga.series.url.includes(mangaID))) {
+        if (this.alreadyExists(mangaID)) {
           Message.info('Manga already added');
           this.dialogVisible = false;
           return;
@@ -89,6 +89,9 @@
         this.dialogVisible = false;
         loading.close();
         this.mangaURL = '';
+      },
+      alreadyExists(mangaID) {
+        return this.tableData.some(manga => manga.series.url.includes(mangaID));
       },
     },
   };
