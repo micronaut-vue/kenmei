@@ -1,65 +1,66 @@
 <template lang="pug">
-  .flex.flex-col.w-full.max-w-4xl
-    .row.mx-5.mb-5(class="md:mx-0")
-      el-button.float-right(
-        ref="openAddMangaModalButton"
-        type="primary"
-        size="medium"
-        @click="dialogVisible = true"
-        round
-      )
-        i.el-icon-plus.mr-1
-        | Add Manga
-      el-button.float-right.mr-3(
-        type="success"
-        size="medium"
-        @click="importDialogVisible = true"
-        round
-      )
-        i.el-icon-upload2.mr-1
-        | Import
-    .row.mx-5(class="md:mx-0")
-      the-manga-list(:tableData='tableData')
-    el-dialog(
-      title="Import Manga List"
-      :visible.sync="importDialogVisible"
-      custom-class="custom-dialog"
-      width="400px"
-    )
-      el-upload(
-        ref="upload"
-        action=""
-        :http-request="processUpload"
-        :multiple="false"
-        :show-file-list="false"
-        accept="application/json"
-        drag
-        )
-        i.el-icon-upload
-        .el-upload__text
-          | Drop file here or click to upload
-        .el-upload__tip(slot="tip")
-          | You can download your Trackr.moe list here
-    el-dialog(
-      title="Add Manga"
-      :visible.sync="dialogVisible"
-      custom-class="custom-dialog"
-      width="400px"
-    )
-      label.font-size-b.primary-text MangaDex series URL
-      el-input.mt-3(
-        v-model="mangaURL"
-        placeholder="https://mangadex.org/title/7139/one-punch-man"
-      )
-      span(slot="footer" class="dialog-footer")
-        el-button(@click="dialogVisible = false") Cancel
-        el-button(
-          ref="addMangaButton"
+  .container.mx-auto.w-full.h-full.flex.flex-col.items-center
+    .flex.flex-col.w-full.max-w-4xl.py-16
+      .mx-5.mb-5(class="md:mx-0")
+        el-button.float-right(
+          ref="openAddMangaModalButton"
           type="primary"
-          @click="mangaDexSearch"
-          :disabled="mangaURL.length === 0"
+          size="medium"
+          @click="dialogVisible = true"
+          round
         )
-          | Add
+          i.el-icon-plus.mr-1
+          | Add Manga
+        el-button.float-right.mr-3(
+          type="success"
+          size="medium"
+          @click="importDialogVisible = true"
+          round
+        )
+          i.el-icon-upload2.mr-1
+          | Import
+      .flex-grow.mx-5(class="md:mx-0")
+        the-manga-list(:tableData='tableData')
+      el-dialog(
+        title="Import Manga List"
+        :visible.sync="importDialogVisible"
+        custom-class="custom-dialog"
+        width="400px"
+      )
+        el-upload(
+          ref="upload"
+          action=""
+          :http-request="processUpload"
+          :multiple="false"
+          :show-file-list="false"
+          accept="application/json"
+          drag
+          )
+          i.el-icon-upload
+          .el-upload__text
+            | Drop file here or click to upload
+          .el-upload__tip(slot="tip")
+            | You can download your Trackr.moe list here
+      el-dialog(
+        title="Add Manga"
+        :visible.sync="dialogVisible"
+        custom-class="custom-dialog"
+        width="400px"
+      )
+        label.font-size-b.primary-text MangaDex series URL
+        el-input.mt-3(
+          v-model="mangaURL"
+          placeholder="https://mangadex.org/title/7139/one-punch-man"
+        )
+        span(slot="footer" class="dialog-footer")
+          el-button(@click="dialogVisible = false") Cancel
+          el-button(
+            ref="addMangaButton"
+            type="primary"
+            @click="mangaDexSearch"
+            :disabled="mangaURL.length === 0"
+          )
+            | Add
 </template>
 
 <script>

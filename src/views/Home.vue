@@ -1,7 +1,6 @@
 <template lang="pug">
-  #home
-    .container.mx-auto.w-full.h-full.flex.flex-col.justify-center.items-center
-      router-view
+  #home.h-full
+    router-view
 </template>
 
 <script>
@@ -9,9 +8,3 @@
     name: 'Home',
   };
 </script>
-
-<style lang="scss" scoped>
-  #home {
-    height: 100%;
-  }
-</style>
