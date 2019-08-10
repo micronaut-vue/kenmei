@@ -95,6 +95,10 @@
 </script>
 
 <style media="screen" lang="scss">
+  .el-button.float-right + .el-button.float-right {
+    @apply ml-0;
+  }
+
   @media (max-width: 640px) {
     .custom-dialog {
       width: 100% !important;
