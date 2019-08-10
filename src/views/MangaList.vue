@@ -8,8 +8,36 @@
         round
       )
         | Add Manga
+      el-button.float-right.mr-3(
+        type="success"
+        size="medium"
+        @click="importDialogVisible = true"
+        round
+      )
+        i.el-icon-upload2.mr-1
+        | Import
     .row.mx-5(class="md:mx-0")
       the-manga-list(:tableData='tableData')
+    el-dialog(
+      title="Import Manga List"
+      :visible.sync="importDialogVisible"
+      custom-class="custom-dialog"
+      width="400px"
+    )
+      el-upload(
+        ref="upload"
+        action=""
+        :http-request="processUpload"
+        :multiple="false"
+        :show-file-list="false"
+        accept="application/json"
+        drag
+        )
+        i.el-icon-upload
+        .el-upload__text
+          | Drop file here or click to upload
+        .el-upload__tip(slot="tip")
+          | You can download your Trackr.moe list here
     el-dialog(
       title="Add Manga"
       :visible.sync="dialogVisible"
@@ -33,7 +61,7 @@
 
 <script>
   import {
-    Message, Loading, Dialog, Button, Input,
+    Message, Loading, Dialog, Button, Input, Upload,
   } from 'element-ui';
 
   import TheMangaList from '@/components/TheMangaList';
@@ -46,12 +74,14 @@
       'el-button': Button,
       'el-dialog': Dialog,
       'el-input': Input,
+      'el-upload': Upload,
     },
     data() {
       return {
         tableData: [],
         mangaURL: '',
         dialogVisible: false,
+        importDialogVisible: false,
       };
     },
     methods: {
