@@ -42,6 +42,7 @@
       title="Add Manga"
       :visible.sync="dialogVisible"
       custom-class="custom-dialog"
+      width="400px"
     )
       label.font-size-b.primary-text MangaDex series URL
       el-input.mt-3(
