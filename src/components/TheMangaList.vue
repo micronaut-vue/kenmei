@@ -12,15 +12,19 @@
         )
           | {{ scope.row.series.title }}
     el-table-column(prop="latestChapter.url" label="Latest Chapter")
-      template(slot-scope="scope")
+      template(v-if='scope.row.latestChapter.info' slot-scope="scope")
         el-link(
           :href="scope.row.latestChapter.url"
           :underline="false"
           target="_blank"
         )
           | {{ scope.row.latestChapter.info.chapter }}
-    el-table-column(prop="latestChapter.info.timestamp" label="Released" sortable)
-      template(slot-scope="scope")
+    el-table-column(
+      prop="latestChapter.info.timestamp"
+      label="Released"
+      sortable
+    )
+      template(v-if='scope.row.latestChapter.info' slot-scope="scope")
         | {{ releasedAt(scope.row.latestChapter.info.timestamp) }}
 </template>
 
