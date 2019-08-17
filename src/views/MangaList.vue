@@ -48,7 +48,7 @@
               target="_blank"
             )
               | here
-            progress-bar(:percentage='importProgress')
+            progress-bar.mt-2(:percentage='importProgress')
       el-dialog(
         title="Add Manga"
         :visible.sync="dialogVisible"
@@ -181,6 +181,7 @@
         this.importMangaInBatches(requestList);
       },
       async importMangaInBatches(requestList) {
+        const loading = Loading.service({ target: '.el-upload-dragger' });
         await Promise.all(requestList)
           .then((importedList) => {
             const importedManga = importedList.flat();
@@ -191,6 +192,9 @@
           })
           .catch((_error) => {
             Message.error('Something went wrong');
+          })
+          .finally(() => {
+            loading.close();
           });
       },
       processUpload(file) {
