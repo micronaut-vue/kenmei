@@ -40,8 +40,15 @@
           .el-upload__text
             | Drop file here or click to upload
           .el-upload__tip(slot="tip")
-            | You can download your Trackr.moe list here
-            progress-bar(:percentage='importProgress')
+            | You can download your Trackr.moe list
+            |
+            el-link.align-baseline.text-xs(
+              href="https://trackr.moe/user/options"
+              :underline="false"
+              target="_blank"
+            )
+              | here
+            progress-bar.mt-2(:percentage='importProgress')
       el-dialog(
         title="Add Manga"
         :visible.sync="dialogVisible"
@@ -67,7 +74,7 @@
 <script>
   import pLimit from 'p-limit';
   import {
-    Message, Loading, Dialog, Button, Input, Upload,
+    Message, Loading, Dialog, Button, Input, Upload, Link,
   } from 'element-ui';
 
   import TheMangaList from '@/components/TheMangaList';
@@ -84,6 +91,7 @@
       'el-dialog': Dialog,
       'el-input': Input,
       'el-upload': Upload,
+      'el-link': Link,
     },
     data() {
       return {
@@ -173,6 +181,7 @@
         this.importMangaInBatches(requestList);
       },
       async importMangaInBatches(requestList) {
+        const loading = Loading.service({ target: '.el-upload-dragger' });
         await Promise.all(requestList)
           .then((importedList) => {
             const importedManga = importedList.flat();
@@ -183,6 +192,9 @@
           })
           .catch((_error) => {
             Message.error('Something went wrong');
+          })
+          .finally(() => {
+            loading.close();
           });
       },
       processUpload(file) {
