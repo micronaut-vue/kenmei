@@ -41,6 +41,7 @@
             | Drop file here or click to upload
           .el-upload__tip(slot="tip")
             | You can download your Trackr.moe list here
+            progress-bar(:percentage='importProgress')
       el-dialog(
         title="Add Manga"
         :visible.sync="dialogVisible"
@@ -70,6 +71,7 @@
   } from 'element-ui';
 
   import TheMangaList from '@/components/TheMangaList';
+  import ProgressBar from '@/components/ProgressBar';
   import { getManga, extractSeriesID, getMangaBulk } from '@/services/api';
   import Importer from '@/services/importer';
 
@@ -77,6 +79,7 @@
     name: 'MangaList',
     components: {
       TheMangaList,
+      ProgressBar,
       'el-button': Button,
       'el-dialog': Dialog,
       'el-input': Input,
@@ -88,6 +91,7 @@
         mangaURL: '',
         dialogVisible: false,
         importDialogVisible: false,
+        importProgress: 0,
       };
     },
     methods: {
@@ -143,6 +147,7 @@
         return Importer(list).filter(value => !this.alreadyExists(value));
       },
       processMangaDexList(list) {
+        let seriesImported = 0;
         const promiseLimit = pLimit(1);
         const seriesIDs = this.filterNewMangaDexEntries(list);
 
@@ -155,6 +160,11 @@
         const requestList = IDChunks.map(ids => promiseLimit(
           () => getMangaBulk(ids).then(
             (importedList) => {
+              seriesImported += importedList.length;
+              this.importProgress = Math.floor(
+                seriesImported / seriesIDs.length * 100
+              );
+
               return importedList;
             }
           )
@@ -163,8 +173,6 @@
         this.importMangaInBatches(requestList);
       },
       async importMangaInBatches(requestList) {
-        const loading = Loading.service({ target: '.el-dialog' });
-
         await Promise.all(requestList)
           .then((importedList) => {
             const importedManga = importedList.flat();
@@ -175,10 +183,12 @@
           })
           .catch((_error) => {
             Message.error('Something went wrong');
-          })
-          .finally(() => { loading.close(); });
+          });
       },
       processUpload(file) {
+        // Reset import progress
+        this.importProgress = 0;
+
         const reader = new FileReader();
 
         reader.onload = ((theFile) => {
