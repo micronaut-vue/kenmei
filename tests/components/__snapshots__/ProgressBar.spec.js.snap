@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`ProgressBar.vue renders progress bar 1`] = `<el-progress-stub type="line" percentage="0" strokewidth="6" width="126" showtext="true" color="[object Object],[object Object],[object Object],[object Object],[object Object]"></el-progress-stub>`;

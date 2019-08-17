@@ -54,4 +54,54 @@ describe('API', () => {
       });
     });
   });
+
+  describe('getMangaBulk()', () => {
+    it('makes a request to the API bulk endpoint and delegate to sanitizeManga', () => {
+      const mockData = {
+        successful: {
+          1: {
+            title: 'Manga Title',
+            url: 'series.example.url',
+            latestChapter: {
+              url: 'chapter.example.url',
+              info: {
+                chapter: '10',
+                title: 'Chapter Title',
+                timestamp: 1522299049,
+              },
+            },
+          },
+          2: {
+            title: 'Manga Title',
+            url: 'series.example.url',
+            latestChapter: {
+              url: 'chapter.example.url',
+              info: {
+                chapter: '10',
+                title: 'Chapter Title',
+                timestamp: 1522299049,
+              },
+            },
+          },
+        },
+        failed: ['3'],
+      };
+
+      axios.post.mockResolvedValue({ status: 200, data: mockData });
+
+      apiService.getMangaBulk('1 2 3').then((data) => {
+        expect(data.length).toBe(2);
+      });
+    });
+
+    it('makes a request to the API and returns empty object if not found', () => {
+      axios.post.mockResolvedValue({
+        status: 200, data: { error: 'not_found' },
+      });
+
+      apiService.getMangaBulk('1 2 3').then((data) => {
+        expect(data).toEqual([]);
+      });
+    });
+  });
 });
