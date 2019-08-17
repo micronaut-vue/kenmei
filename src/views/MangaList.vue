@@ -40,7 +40,14 @@
           .el-upload__text
             | Drop file here or click to upload
           .el-upload__tip(slot="tip")
-            | You can download your Trackr.moe list here
+            | You can download your Trackr.moe list
+            |
+            el-link.align-baseline.text-xs(
+              href="https://trackr.moe/user/options"
+              :underline="false"
+              target="_blank"
+            )
+              | here
             progress-bar(:percentage='importProgress')
       el-dialog(
         title="Add Manga"
@@ -67,7 +74,7 @@
 <script>
   import pLimit from 'p-limit';
   import {
-    Message, Loading, Dialog, Button, Input, Upload,
+    Message, Loading, Dialog, Button, Input, Upload, Link,
   } from 'element-ui';
 
   import TheMangaList from '@/components/TheMangaList';
@@ -84,6 +91,7 @@
       'el-dialog': Dialog,
       'el-input': Input,
       'el-upload': Upload,
+      'el-link': Link,
     },
     data() {
       return {
