@@ -1,11 +1,11 @@
 <template lang="pug">
-  el-table(
+  el-table.shadow-lg.rounded(
     :data="tableData"
     :default-sort = "{ prop: 'series.title', order: 'descending' }"
   )
     el-table-column(prop="series.title" label="Name" sortable)
       template(slot-scope="scope")
-        el-link.series-title(
+        el-link.break-normal(
           :href="scope.row.series.url"
           :underline="false"
           target="_blank"
@@ -54,9 +54,3 @@
     },
   };
 </script>
-
-<style lang="scss" scoped>
-  .series-title {
-    word-break: normal;
-  }
-</style>
