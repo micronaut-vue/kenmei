@@ -14,7 +14,7 @@
     "core-js": "^2.6.5",
     "dayjs": "^1.8.15",
     "element-ui": "^2.4.5",
-    "p-limit": "^2.2.0",
+    "p-limit": "^2.2.1",
     "pug-plain-loader": "^1.0.0",
     "vue": "^2.6.10",
     "vue-analytics": "^5.17.0",
