@@ -17,7 +17,7 @@
     "p-limit": "^2.2.1",
     "pug-plain-loader": "^1.0.0",
     "vue": "^2.6.10",
-    "vue-analytics": "^5.17.0",
+    "vue-analytics": "^5.17.2",
     "vue-router": "^3.0.3"
   },
   "devDependencies": {
