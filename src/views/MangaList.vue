@@ -1,6 +1,6 @@
 <template lang="pug">
   .container.mx-auto.w-full.h-full.flex.flex-col.items-center
-    .flex.flex-col.w-full.max-w-4xl.py-16
+    .flex.flex-col.w-full.max-w-4xl.pt-32.pb-16
       .mx-5.mb-5(class="md:mx-0")
         el-button.float-right(
           ref="openAddMangaModalButton"

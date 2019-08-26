@@ -1,6 +1,8 @@
 <template lang="pug">
   .container.mx-auto.w-full.h-full.flex.flex-col.justify-center.items-center
-    el-card.text-center.max-w-lg.mx-5.justify-center(shadow="always" class="md:mx-0")
+    el-card.text-center.max-w-lg.mx-5.mt-16.justify-center(
+      shadow="always" class="md:mx-0"
+    )
       img.max-w-xs.w-full.inline.logo(src='@/assets/logo.svg')
       .welcome-text.font-size-b.font-line-height-secondary
         p
