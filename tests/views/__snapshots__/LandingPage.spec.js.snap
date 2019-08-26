@@ -10,7 +10,7 @@ exports[`LandingPage.vue renders the page 1`] = `
   >
     <img
       class="max-w-xs w-full inline logo"
-      src="@/assets/logo_transparent.png"
+      src="@/assets/logo.svg"
     />
     <div
       class="welcome-text font-size-b font-line-height-secondary"
