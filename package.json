@@ -18,6 +18,7 @@
     "pug-plain-loader": "^1.0.0",
     "vue": "^2.6.10",
     "vue-analytics": "^5.17.2",
+    "vue-rollbar": "^1.0.0",
     "vue-router": "^3.0.3"
   },
   "devDependencies": {
