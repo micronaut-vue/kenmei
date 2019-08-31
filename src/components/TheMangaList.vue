@@ -10,7 +10,7 @@
           :underline="false"
           target="_blank"
         )
-          | {{ scope.row.series.title }}
+          | {{ scope.row.series.title | sanitize }}
     el-table-column(prop="latestChapter.url" label="Latest Chapter")
       template(v-if='scope.row.latestChapter.info' slot-scope="scope")
         el-link(
@@ -31,6 +31,7 @@
 <script>
   import { Table, TableColumn, Link } from 'element-ui';
   import dayjs from 'dayjs';
+  import he from 'he';
   import relativeTime from 'dayjs/plugin/relativeTime';
 
   dayjs.extend(relativeTime);
@@ -40,6 +41,11 @@
       'el-table': Table,
       'el-table-column': TableColumn,
       'el-link': Link,
+    },
+    filters: {
+      sanitize(title) {
+        return he.decode(title);
+      },
     },
     props: {
       tableData: {
