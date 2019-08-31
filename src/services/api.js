@@ -11,7 +11,7 @@ const sanitizeManga = (manga) => {
 };
 
 // This can extract both the series and chapter, we want to make use of that
-export const extractSeriesID = url => url.match(/(?<=\/)\d+/g);
+export const extractSeriesID = url => url.match(/(?!\/)\d+/g);
 
 export const getManga = id => axios
   .get(`https://api.kenmei.co/api/v1/series/${id}`)
