@@ -67,7 +67,7 @@ describe('MangaList.vue', () => {
     // TODO: Test this as part of the request, not by itself
     it('slices ids into chunks of ids', () => {
       const ids = Array(21).fill().map((v, i) => i);
-      const result = [ids.slice(0, 20).join(' '), ids.slice(20, 21).join(' ')]
+      const result = [ids.slice(0, 20).join(' '), ids.slice(20, 21).join(' ')];
 
       expect(mangaList.vm.sliceIntoBatches(ids)).toEqual(result);
     });
@@ -85,8 +85,22 @@ describe('MangaList.vue', () => {
       expect(mangaList.vm.$data.importProgress).toEqual(100);
     });
 
+    it('shows Something went wrong message if Import failed', async () => {
+      const errorMessageMock = jest.spyOn(Message, 'error');
+      const getMangaMock     = jest.spyOn(api, 'getMangaBulk');
+
+      getMangaMock.mockRejectedValue();
+
+      mangaList.vm.processMangaDexList(list);
+
+      await flushPromises();
+
+      expect(errorMessageMock).toHaveBeenCalledWith('Something went wrong');
+    });
+
     it('ignores already existing entries', async () => {
-      const getMangaMock = jest.spyOn(api, 'getManga');
+      const infoMessageMock = jest.spyOn(Message, 'info');
+      const getMangaMock    = jest.spyOn(api, 'getManga');
 
       mangaList.setData({ tableData: [responseValue] });
 
@@ -97,6 +111,7 @@ describe('MangaList.vue', () => {
       await flushPromises();
 
       expect(mangaList.vm.$data.tableData.length).toBe(1);
+      expect(infoMessageMock).toHaveBeenCalledWith('Nothing new to import');
     });
   });
   describe('when adding new MangaDex entry', () => {
@@ -151,6 +166,18 @@ describe('MangaList.vue', () => {
 
       await flushPromises();
       expect(infoMessageMock).toHaveBeenCalledWith('Manga was not found');
+    });
+
+    it('shows Manga already added if it has already been added', () => {
+      const infoMessageMock = jest.spyOn(Message, 'info');
+      const mangaURL = 'https://mangadex.org/manga/24121';
+      const tableData = [{ series: { title: 'Manga Title', url: mangaURL } }];
+
+      mangaList.setData({ tableData, mangaURL });
+
+      mangaList.vm.mangaDexSearch();
+
+      expect(infoMessageMock).toHaveBeenCalledWith('Manga already added');
     });
 
     it('shows URL is incorrect message if response is 400', async () => {
