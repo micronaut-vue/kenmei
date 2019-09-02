@@ -67,7 +67,7 @@ describe('MangaList.vue', () => {
     // TODO: Test this as part of the request, not by itself
     it('slices ids into chunks of ids', () => {
       const ids = Array(21).fill().map((v, i) => i);
-      const result = [ids.slice(0, 20).join(' '), ids.slice(20, 21).join(' ')]
+      const result = [ids.slice(0, 20).join(' '), ids.slice(20, 21).join(' ')];
 
       expect(mangaList.vm.sliceIntoBatches(ids)).toEqual(result);
     });
@@ -100,7 +100,7 @@ describe('MangaList.vue', () => {
 
     it('ignores already existing entries', async () => {
       const infoMessageMock = jest.spyOn(Message, 'info');
-      const getMangaMock = jest.spyOn(api, 'getMangaBulk');
+      const getMangaMock    = jest.spyOn(api, 'getManga');
 
       mangaList.setData({ tableData: [responseValue] });
 
