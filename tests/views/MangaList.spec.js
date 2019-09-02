@@ -129,7 +129,8 @@ describe('MangaList.vue', () => {
           },
         },
       };
-      getMangaMock.mockImplementation(() => Promise.resolve(responseValue));
+
+      getMangaMock.mockResolvedValue(responseValue);
 
       expect(mangaList.vm.$data.tableData).not.toContain(responseValue);
 
@@ -144,7 +145,7 @@ describe('MangaList.vue', () => {
       const infoMessageMock = jest.spyOn(Message, 'info');
       const getMangaMock    = jest.spyOn(api, 'getManga');
 
-      getMangaMock.mockImplementation(() => Promise.resolve({}));
+      getMangaMock.mockResolvedValue({});
 
       mangaList.vm.mangaDexSearch();
 
