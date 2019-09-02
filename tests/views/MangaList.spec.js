@@ -72,7 +72,7 @@ describe('MangaList.vue', () => {
       expect(mangaList.vm.sliceIntoBatches(ids)).toEqual(result);
     });
 
-    it.skip('adds new manga entries and updates progress percentage if successful', async () => {
+    it('adds new manga entries and updates progress percentage if successful', async () => {
       const getMangaMock = jest.spyOn(api, 'getMangaBulk');
 
       getMangaMock.mockResolvedValue([responseValue]);
@@ -85,7 +85,7 @@ describe('MangaList.vue', () => {
       expect(mangaList.vm.$data.importProgress).toEqual(100);
     });
 
-    it.skip('ignores already existing entries', async () => {
+    it('ignores already existing entries', async () => {
       const getMangaMock = jest.spyOn(api, 'getManga');
 
       mangaList.setData({ tableData: [responseValue] });
@@ -129,7 +129,8 @@ describe('MangaList.vue', () => {
           },
         },
       };
-      getMangaMock.mockImplementation(() => Promise.resolve(responseValue));
+
+      getMangaMock.mockResolvedValue(responseValue);
 
       expect(mangaList.vm.$data.tableData).not.toContain(responseValue);
 
@@ -140,11 +141,11 @@ describe('MangaList.vue', () => {
       expect(mangaList.vm.$data.tableData).toContain(responseValue);
     });
 
-    it.skip('shows Manga not found message if API returns nothing', async () => {
+    it('shows Manga not found message if API returns nothing', async () => {
       const infoMessageMock = jest.spyOn(Message, 'info');
       const getMangaMock    = jest.spyOn(api, 'getManga');
 
-      getMangaMock.mockImplementation(() => Promise.resolve({}));
+      getMangaMock.mockResolvedValue({});
 
       mangaList.vm.mangaDexSearch();
 
@@ -152,11 +153,11 @@ describe('MangaList.vue', () => {
       expect(infoMessageMock).toHaveBeenCalledWith('Manga was not found');
     });
 
-    it.skip('shows URL is incorrect message if response is 400', async () => {
-      const infoMessageMock = jest.spyOn(Message, 'info');
+    it('shows URL is incorrect message if response is 400', async () => {
+      const infoMessageMock = jest.spyOn(Message, 'error');
       const getMangaMock    = jest.spyOn(api, 'getManga');
 
-      getMangaMock.mockImplementation(() => Promise.resolve({}));
+      getMangaMock.mockRejectedValue({ response: { status: 400 } });
 
       mangaList.vm.mangaDexSearch();
 
@@ -164,11 +165,11 @@ describe('MangaList.vue', () => {
       expect(infoMessageMock).toHaveBeenCalledWith('URL is incorrect');
     });
 
-    it.skip('shows error message on unsuccessful API lookup', async () => {
+    it('shows error message on unsuccessful API lookup', async () => {
       const errorMessageMock = jest.spyOn(Message, 'error');
       const getMangaMock    = jest.spyOn(api, 'getManga');
 
-      getMangaMock.mockImplementation(() => Promise.resolve());
+      getMangaMock.mockRejectedValue({ response: { status: 500 } });
 
       mangaList.vm.mangaDexSearch();
 
