@@ -5,22 +5,24 @@
     menu-trigger='click'
     router
   )
-    el-menu-item.cursor-default
+    el-menu-item(index='/').border-none
       img.w-32(src='@/assets/logo.svg')
-    el-submenu.avatar-menu.float-right(index='1')
-      template(slot='title')
-        el-avatar.align-middle(
-          src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-        )
-      el-menu-item.sm_hidden(index='/landing-page') Home
-      el-menu-item.sm_hidden(index='/manga-list') Manga List
-      el-menu-item(disabled) Settings
-      el-menu-item(disabled) Logout
-    el-menu-item.max-sm_hidden.float-right(index='/manga-list') Manga List
-    el-menu-item.max-sm_hidden.float-right(index='/landing-page') Home
+    template(v-if='signedIn')
+      el-submenu.avatar-menu.float-right(index='1')
+        template(slot='title')
+          el-avatar.align-middle(
+            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
+          )
+        el-menu-item.sm_hidden(index='/manga-list') Manga List
+        el-menu-item(disabled) Settings
+        el-menu-item(@click='signOutMethod') Logout
+      el-menu-item.max-sm_hidden.float-right(index='/manga-list') Manga List
+    template(v-else)
+      el-menu-item.float-right(index='/sign-in') Sign In
 </template>
 
 <script>
+  import { mapGetters, mapActions } from 'vuex';
   import {
     Menu, MenuItem, Avatar, Submenu,
   } from 'element-ui';
@@ -38,8 +40,19 @@
       };
     },
     computed: {
+      ...mapGetters('user', [
+        'signedIn',
+      ]),
       currentPath() {
         return this.$route.path;
+      },
+    },
+    methods: {
+      ...mapActions('user', [
+        'signOut',
+      ]),
+      signOutMethod() {
+        this.signOut().then(() => this.$router.push('/'));
       },
     },
   };
