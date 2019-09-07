@@ -18,6 +18,11 @@ export default new Router({
       component: () => import(/* webpackChunkName: "manga_list" */ './views/MangaList.vue')
     },
     {
+      path: '/sign-in',
+      name: 'Sign In',
+      component: () => import(/* webpackChunkName: "sign_in" */ './views/SignOn.vue')
+    },
+    {
       path: '/landing-page',
       component: () => import(/* webpackChunkName: "landing_page" */ './views/LandingPage.vue')
     }

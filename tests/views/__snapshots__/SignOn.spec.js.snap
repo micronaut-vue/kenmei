@@ -1,0 +1,39 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`SignOn.vue renders the page 1`] = `
+<div
+  class="container mx-auto w-full h-full"
+>
+  <div
+    class="flex flex-col h-full w-full items-center justify-center"
+  >
+    <div
+      class="w-full max-w-xs mt-16 rounded overflow-hidden shadow-lg bg-white"
+    >
+      <div
+        class="px-6 py-4"
+        id="sign-on-card"
+      >
+        <el-tabs-stub
+          stretch="true"
+          tabposition="top"
+          value="signIn"
+        >
+          <el-tab-pane-stub
+            label="Sign In"
+            name="signIn"
+          >
+            <the-sign-in-stub />
+          </el-tab-pane-stub>
+          <el-tab-pane-stub
+            label="Sign Up"
+            name="signUp"
+          >
+            <the-sign-up-stub />
+          </el-tab-pane-stub>
+        </el-tabs-stub>
+      </div>
+    </div>
+  </div>
+</div>
+`;
