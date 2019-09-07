@@ -8,6 +8,7 @@ import '@/stylesheets/global.scss';
 import '@/stylesheets/tailwind.css';
 
 import router from '@/router';
+import store from '@/store/store';
 
 Vue.config.productionTip = false;
 
@@ -37,5 +38,6 @@ Vue.config.errorHandler = (err, _vm, _info) => { Vue.rollbar.error(err); };
 
 new Vue({
   router,
+  store,
   render: h => h(Home),
 }).$mount('#app');
