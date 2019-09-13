@@ -2,7 +2,9 @@
   el-table.shadow-lg.rounded(
     :data="tableData"
     :default-sort = "{ prop: 'series.title', order: 'descending' }"
+    @selection-change="handleSelectionChange"
   )
+    el-table-column(type="selection")
     el-table-column(prop="series.title" label="Name" sortable)
       template(slot-scope="scope")
         el-link.break-normal(
@@ -56,6 +58,9 @@
     methods: {
       releasedAt(timestamp) {
         return dayjs().to(dayjs.unix(timestamp));
+      },
+      handleSelectionChange(val) {
+        this.$emit('seriesSelected', val);
       },
     },
   };

@@ -2,6 +2,16 @@
   .container.mx-auto.w-full.h-full.flex.flex-col.items-center
     .flex.flex-col.w-full.max-w-4xl.pt-32.pb-16
       .mx-5.mb-5(class="md:mx-0")
+        el-button(
+          v-show="selectedSeries.length > 0"
+          ref="removeSeriesButton"
+          type="danger"
+          size="medium"
+          @click="removeSeries"
+          round
+        )
+          i.el-icon-delete.mr-1
+          | Remove
         el-button.float-right(
           ref="openAddMangaModalButton"
           type="primary"
@@ -20,7 +30,7 @@
           i.el-icon-upload2.mr-1
           | Import
       .flex-grow.mx-5(class="md:mx-0")
-        the-manga-list(:tableData='tableData')
+        the-manga-list(:tableData='tableData' @seriesSelected="handleSelection")
       el-dialog(
         title="Import Manga List"
         :visible.sync="importDialogVisible"
@@ -96,13 +106,32 @@
     data() {
       return {
         tableData: [],
+        selectedSeries: [],
         mangaURL: '',
         dialogVisible: false,
         importDialogVisible: false,
         importProgress: 0,
       };
     },
+    computed: {
+      // TODO: Lookup by DB id instead of title when we'll start storing
+      // series on back-end
+      selectedSeriesTitles() {
+        return this.selectedSeries.map(series => series.series.title);
+      },
+    },
     methods: {
+      handleSelection(selectedSeries) {
+        this.selectedSeries = selectedSeries;
+      },
+      // TODO: When we are going to store these on the back-end, make a
+      // relevant API call
+      removeSeries() {
+        // console.log(this.selectedSeriesTitles);
+        this.tableData = this.tableData.filter(
+          item => !this.selectedSeriesTitles.includes(item.series.title)
+        );
+      },
       mangaDexSearch() {
         const mangaID = extractSeriesID(this.mangaURL);
 
