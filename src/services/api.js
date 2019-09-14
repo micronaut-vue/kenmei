@@ -1,4 +1,4 @@
-import axios from 'axios';
+import { secure } from '@/modules/axios';
 
 const sanitizeManga = (manga) => {
   const newManga = {};
@@ -13,16 +13,16 @@ const sanitizeManga = (manga) => {
 // This can extract both the series and chapter, we want to make use of that
 export const extractSeriesID = url => url.match(/(?!\/)\d+/g);
 
-export const getManga = id => axios
-  .get(`https://api.kenmei.co/api/v1/series/${id}`)
+export const getManga = id => secure
+  .get(`/api/v1/series/${id}`)
   .then((response) => {
     if (response.data.error) { return {}; }
 
     return sanitizeManga(response.data);
   });
 
-export const getMangaBulk = ids => axios
-  .post('https://api.kenmei.co/api/v1/series/bulk', { ids })
+export const getMangaBulk = ids => secure
+  .post('/api/v1/series/bulk', { ids })
   .then((response) => {
     if (response.data.error) { return []; }
 
