@@ -1,8 +1,6 @@
 import axios from 'axios';
 import * as apiService from '@/services/api';
 
-jest.mock('axios');
-
 describe('API', () => {
   describe('extractSeriesID()', () => {
     it('extracts an ID from a MangaDex series or chapter URL', () => {
@@ -16,7 +14,7 @@ describe('API', () => {
   });
 
   describe('getManga()', () => {
-    it('makes a request to the API and returns manga if found', () => {
+    it('makes a request to the API and returns manga if found', async () => {
       const mockData = {
         title: 'Manga Title',
         url: 'series.example.url',
@@ -30,33 +28,29 @@ describe('API', () => {
         },
       };
 
-      axios.get.mockImplementationOnce(
-        () => Promise.resolve({ status: 200, data: mockData })
-      );
+      axios.get.mockResolvedValue({ status: 200, data: mockData });
 
-      apiService.getManga('123').then((data) => {
-        expect(data).toEqual(
-          {
-            series: { title: mockData.title, url: mockData.url },
-            latestChapter: mockData.latestChapter,
-          }
-        );
-      });
+      const data = await apiService.getManga('123');
+      expect(data).toEqual(
+        {
+          series: { title: mockData.title, url: mockData.url },
+          latestChapter: mockData.latestChapter,
+        }
+      );
     });
 
-    it('makes a request to the API and returns empty object if not found', () => {
-      axios.get.mockImplementationOnce(
-        () => Promise.resolve({ status: 200, data: { error: 'not_found' } })
-      );
-
-      apiService.getManga('123').then((data) => {
-        expect(data).toEqual({});
+    it('makes a request to the API and returns empty object if not found', async () => {
+      axios.get.mockResolvedValue({
+        status: 200, data: { error: 'not_found' }
       });
+
+      const data = await apiService.getManga('123');
+      expect(data).toEqual({});
     });
   });
 
   describe('getMangaBulk()', () => {
-    it('makes a request to the API bulk endpoint and delegate to sanitizeManga', () => {
+    it('makes a request to the API bulk endpoint and delegate to sanitizeManga', async () => {
       const mockData = {
         successful: {
           1: {
@@ -89,19 +83,17 @@ describe('API', () => {
 
       axios.post.mockResolvedValue({ status: 200, data: mockData });
 
-      apiService.getMangaBulk('1 2 3').then((data) => {
-        expect(data.length).toBe(2);
-      });
+      const data = await apiService.getMangaBulk('1 2 3');
+      expect(data.length).toEqual(2);
     });
 
-    it('makes a request to the API and returns empty object if not found', () => {
+    it('makes a request to the API and returns empty object if not found', async () => {
       axios.post.mockResolvedValue({
         status: 200, data: { error: 'not_found' },
       });
 
-      apiService.getMangaBulk('1 2 3').then((data) => {
-        expect(data).toEqual([]);
-      });
+      const data = await apiService.getMangaBulk('1 2 3');
+      expect(data).toEqual([]);
     });
   });
 });
