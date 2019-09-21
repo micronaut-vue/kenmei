@@ -33,6 +33,8 @@ Vue.use(Rollbar, {
   },
 });
 
+Vue.config.errorHandler = (err, _vm, _info) => { Vue.rollbar.error(err); };
+
 new Vue({
   router,
   render: h => h(Home),
