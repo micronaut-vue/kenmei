@@ -26,5 +26,6 @@ module.exports = {
     'jest-watch-typeahead/testname',
   ],
   collectCoverage: true,
+  coveragePathIgnorePatterns: ['/node_modules/', 'src/modules/'],
   coverageReporters: ['lcov', 'text-summary'],
 };
