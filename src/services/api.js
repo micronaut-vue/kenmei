@@ -1,32 +1,30 @@
 import { secure } from '@/modules/axios';
 
-const sanitizeManga = (manga) => {
-  const newManga = {};
-  const { title, url, latestChapter } = manga;
-
-  newManga.series = { title, url };
-  newManga.latestChapter = latestChapter;
-
-  return newManga;
-};
-
 // This can extract both the series and chapter, we want to make use of that
 export const extractSeriesID = url => url.match(/(?!\/)\d+/g);
 
-export const getManga = id => secure
-  .get(`/api/v1/series/${id}`)
+export const addMangaEntry = (seriesURL, mangaListID) => secure
+  .post('/api/v1/manga_entries/', {
+    manga_entry: {
+      series_url: seriesURL,
+      manga_list_id: mangaListID,
+    },
+  })
   .then((response) => {
     if (response.data.error) { return {}; }
 
-    return sanitizeManga(response.data);
+    return response.data;
   });
 
-export const getMangaBulk = ids => secure
-  .post('/api/v1/series/bulk', { ids })
+export const deleteMangaEntry = seriesID => secure
+  .delete(`/api/v1/manga_entries/${seriesID}`)
+  .then(_response => true)
+  .catch(_request => false);
+
+export const addMangaEntries = urls => secure
+  .post('/api/v1/manga_entries/bulk', { urls })
   .then((response) => {
     if (response.data.error) { return []; }
 
-    return Object
-      .values(response.data.successful)
-      .map(manga => sanitizeManga(manga));
+    return response.data;
   });
