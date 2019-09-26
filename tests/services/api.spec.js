@@ -1,6 +1,8 @@
 import axios from 'axios';
 import * as apiService from '@/services/api';
 
+import mangaEntryFactory from '../factories/mangaEntry';
+
 describe('API', () => {
   describe('extractSeriesID()', () => {
     it('extracts an ID from a MangaDex series or chapter URL', () => {
@@ -15,18 +17,7 @@ describe('API', () => {
 
   describe('getManga()', () => {
     it('makes a request to the API and returns manga if found', async () => {
-      const mockData = {
-        title: 'Manga Title',
-        url: 'series.example.url',
-        latestChapter: {
-          url: 'chapter.example.url',
-          info: {
-            chapter: '10',
-            title: 'Chapter Title',
-            timestamp: 1522299049,
-          },
-        },
-      };
+      const mockData = mangaEntryFactory.build();
 
       axios.get.mockResolvedValue({ status: 200, data: mockData });
 
@@ -53,30 +44,8 @@ describe('API', () => {
     it('makes a request to the API bulk endpoint and delegate to sanitizeManga', async () => {
       const mockData = {
         successful: {
-          1: {
-            title: 'Manga Title',
-            url: 'series.example.url',
-            latestChapter: {
-              url: 'chapter.example.url',
-              info: {
-                chapter: '10',
-                title: 'Chapter Title',
-                timestamp: 1522299049,
-              },
-            },
-          },
-          2: {
-            title: 'Manga Title',
-            url: 'series.example.url',
-            latestChapter: {
-              url: 'chapter.example.url',
-              info: {
-                chapter: '10',
-                title: 'Chapter Title',
-                timestamp: 1522299049,
-              },
-            },
-          },
+          1: mangaEntryFactory.build(),
+          2: mangaEntryFactory.build(),
         },
         failed: ['3'],
       };

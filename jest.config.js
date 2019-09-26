@@ -20,12 +20,19 @@ module.exports = {
   testMatch: [
     '**/tests/**/*.spec.(js|jsx|ts|tsx)|**/__tests__/*.(js|jsx|ts|tsx)',
   ],
+  testPathIgnorePatterns: [
+    '<rootDir>/tests/factories',
+  ],
   testURL: 'http://localhost/',
   watchPlugins: [
     'jest-watch-typeahead/filename',
     'jest-watch-typeahead/testname',
   ],
   collectCoverage: true,
-  coveragePathIgnorePatterns: ['/node_modules/', 'src/modules/'],
+  coveragePathIgnorePatterns: [
+    '/node_modules/',
+    'src/modules/',
+    'tests/factories/',
+  ],
   coverageReporters: ['lcov', 'text-summary'],
 };

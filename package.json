@@ -41,6 +41,7 @@
     "eslint-plugin-vue": "^5.0.0",
     "flush-promises": "^1.0.2",
     "pug": "^2.0.4",
+    "rosie": "^2.0.1",
     "sass": "^1.22.10",
     "sass-loader": "^7.3.1",
     "tailwindcss": "^1.0.6",
