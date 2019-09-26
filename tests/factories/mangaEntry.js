@@ -1,13 +1,24 @@
 import { Factory } from 'rosie';
 
 export default new Factory()
-  .attr('title', 'Manga Title')
-  .attr('url', 'series.example.url')
-  .attr('latestChapter', {
-    url: 'chapter.example.url',
-    info: {
-      chapter: '10',
-      title: 'Chapter Title',
-      timestamp: 1522299049,
+  .attr('id', '1')
+  .attr('type', 'manga_entry')
+  .attr('attributes', {
+    title: 'Manga Title',
+    last_chapter_read: '1',
+    last_chapter_available: '2',
+    last_released_at: '2019-01-01T00:00:00.000Z',
+  })
+  .attr('links', {
+    series_url: 'example.url/manga/1',
+    last_chapter_read_url: 'example.url/manga/1/chapter/1',
+    last_chapter_available_url: 'example.url/manga/1/chapter/2',
+  })
+  .attr('relationships', {
+    manga_list: {
+      data: {
+        id: '1',
+        type: 'manga_list',
+      },
     },
   });
