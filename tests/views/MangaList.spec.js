@@ -65,14 +65,6 @@ describe('MangaList.vue', () => {
       expect(fileReaderReadTextMock).toHaveBeenCalled();
     });
 
-    // TODO: Test this as part of the request, not by itself
-    it('slices ids into chunks of ids', () => {
-      const ids = Array(21).fill().map((v, i) => i);
-      const result = [ids.slice(0, 20).join(' '), ids.slice(20, 21).join(' ')];
-
-      expect(mangaList.vm.sliceIntoBatches(ids)).toEqual(result);
-    });
-
     it('adds new manga entries and updates progress percentage if successful', async () => {
       const getMangaMock = jest.spyOn(api, 'getMangaBulk');
 

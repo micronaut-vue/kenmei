@@ -1,13 +1,26 @@
-import { extractSeriesID } from '@/services/api';
-
-export default (list) => {
-  const mangaDexSeries = list.series.reading.manga.filter(
+export const processList = (list) => {
+  const lists = {};
+  const filterMD = manga => manga.filter(
     series => series.site_data.site === 'mangadex.org'
   );
 
-  const mangaDexIDs = mangaDexSeries.map(
-    manga => extractSeriesID(manga.full_title_url)
-  );
+  Object.entries(list.series).forEach(([_key, series]) => {
+    lists[series.name] = filterMD(series.manga);
+  });
 
-  return [].concat(...mangaDexIDs);
+  return lists;
+};
+
+export const sliceIntoBatches = (lists) => {
+  const batchSize = 20;
+  const URLChunks = [];
+
+  Object.entries(lists).forEach(([name, list]) => {
+    for (let i = 0; i < list.length; i += batchSize) {
+      const formatURLs = list.slice(i, i + batchSize);
+      URLChunks.push({ [name]: formatURLs });
+    }
+  });
+
+  return URLChunks;
 };

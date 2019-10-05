@@ -33,6 +33,7 @@ module.exports = {
     '/node_modules/',
     'src/modules/',
     'tests/factories/',
+    'tests/fixtures/',
   ],
   coverageReporters: ['lcov', 'text-summary'],
 };
