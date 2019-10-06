@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const DEV_API_URL = 'http://localhost:3000';
-const PRODUCTION_API_URL = 'https://kenmei-api-pr-23.herokuapp.com/';
+const PRODUCTION_API_URL = 'https://api.kenmei.co';
 
 const currentEnv = () => (
   process.env.NODE_ENV === 'production' ? PRODUCTION_API_URL : DEV_API_URL
