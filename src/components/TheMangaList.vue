@@ -1,36 +1,47 @@
 <template lang="pug">
   el-table.shadow-lg.rounded(
     :data="tableData"
-    :default-sort = "{ prop: 'series.title', order: 'descending' }"
+    :default-sort = "{ prop: 'attributes.title', order: 'descending' }"
+    v-loading='listsLoading'
     @selection-change="handleSelectionChange"
   )
     el-table-column(type="selection")
-    el-table-column(prop="series.title" label="Name" sortable)
+    el-table-column(prop="attributes.title" label="Name" sortable)
       template(slot-scope="scope")
         el-link.break-normal(
-          :href="scope.row.series.url"
+          :href="scope.row.links.series_url"
           :underline="false"
           target="_blank"
         )
-          | {{ scope.row.series.title | sanitize }}
-    el-table-column(prop="latestChapter.url" label="Latest Chapter")
-      template(v-if='scope.row.latestChapter.info' slot-scope="scope")
-        el-link(
-          :href="scope.row.latestChapter.url"
-          :underline="false"
-          target="_blank"
-        )
-          | {{ scope.row.latestChapter.info.chapter }}
+          | {{ scope.row.attributes.title | sanitize }}
     el-table-column(
-      prop="latestChapter.info.timestamp"
+      prop="attributes.last_chapter_read"
+      label="Last Chapter Read"
+    )
+      template(v-if='scope.row.attributes' slot-scope="scope")
+        | {{ scope.row.attributes.last_chapter_read }}
+    el-table-column(
+      prop="links.last_chapter_available_url"
+      label="Latest Chapter"
+    )
+      template(v-if='scope.row.attributes' slot-scope="scope")
+        el-link(
+          :href="scope.row.links.last_chapter_available_url"
+          :underline="false"
+          target="_blank"
+        )
+          | {{ scope.row.attributes.last_chapter_available }}
+    el-table-column(
+      prop="attributes.last_released_at"
       label="Released"
       sortable
     )
-      template(v-if='scope.row.latestChapter.info' slot-scope="scope")
-        | {{ releasedAt(scope.row.latestChapter.info.timestamp) }}
+      template(v-if='scope.row.attributes' slot-scope="scope")
+        | {{ releasedAt(scope.row.attributes.last_released_at) }}
 </template>
 
 <script>
+  import { mapState } from 'vuex';
   import { Table, TableColumn, Link } from 'element-ui';
   import dayjs from 'dayjs';
   import he from 'he';
@@ -55,12 +66,18 @@
         required: true,
       },
     },
+    computed: {
+      ...mapState('lists', [
+        'listsLoading',
+      ]),
+    },
     methods: {
-      releasedAt(timestamp) {
-        return dayjs().to(dayjs.unix(timestamp));
+      releasedAt(datetime) {
+        return dayjs().to(dayjs(datetime));
       },
       handleSelectionChange(val) {
-        this.$emit('seriesSelected', val);
+        const ids = val.map(entry => entry.id);
+        this.$emit('seriesSelected', ids);
       },
     },
   };

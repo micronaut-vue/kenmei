@@ -1,25 +1,26 @@
-import Importer from '@/services/importer';
+import mangaList from '../fixtures/mangalist';
+import filteredList from '../fixtures/mangaListTitleChapter';
+import * as Importer from '@/services/importer';
 
 describe('Importer', () => {
-  it('filters list to return MangaDex IDs', () => {
-    const list = {
-      series: {
-        reading: {
-          manga: [{
-            full_title_url: 'https://mangadex.org/manga/24121',
-            site_data: {
-              site: 'mangadex.org',
-            },
-          }, {
-            full_title_url: 'https://mangarock.example.test',
-            site_data: {
-              site: 'mangarock.org',
-            },
-          }],
-        },
-      },
-    };
+  describe('processList', () => {
+    it('filters Trackr list into API ready object with MangaDex only entries', () => {
+      const filtered = Importer.processList(mangaList);
 
-    expect(Importer(list)).toEqual(['24121']);
+      expect(Object.keys(filtered)).toEqual(
+        ['Reading', 'On-Hold', 'Plan to Read']
+      );
+      // TODO: Test only MangaDex is being returned
+    });
+  });
+
+  describe('sliceIntoBatches', () => {
+    it('slices lists into chunks of 20', () => {
+      const response = Importer.sliceIntoBatches(filteredList);
+
+      expect(response).toHaveLength(2);
+      expect(response[0].reading).toHaveLength(20);
+      expect(response[1].reading).toHaveLength(2);
+    });
   });
 });

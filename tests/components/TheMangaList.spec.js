@@ -1,31 +1,35 @@
-import { mount } from '@vue/test-utils';
+import { mount, createLocalVue } from '@vue/test-utils';
+import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
 
 import MangaList from '@/components/TheMangaList.vue';
+import lists from '@/store/modules/lists';
+import mangaEntryFactory from '../factories/mangaEntry';
+
+const localVue = createLocalVue();
+
+localVue.directive('loading', true);
+localVue.use(Vuex);
 
 describe('TheMangaList.vue', () => {
   let mangaList;
+  let store;
 
   beforeEach(() => {
+    store = new Vuex.Store({
+      modules: {
+        lists: {
+          namespaced: true,
+          state: lists.store,
+        },
+      },
+    });
     mangaList = mount(MangaList, {
+      store,
+      localVue,
       sync: false,
       propsData: {
-        tableData: [
-          {
-            series: {
-              title: 'Manga Title',
-              url: 'series.example.url',
-            },
-            latestChapter: {
-              url: 'chapter.example.url',
-              info: {
-                chapter: '10',
-                title: 'Chapter Title',
-                timestamp: 1522299049,
-              },
-            },
-          },
-        ],
+        tableData: [mangaEntryFactory.build()],
       },
     });
   });
@@ -52,20 +56,7 @@ describe('TheMangaList.vue', () => {
     it(':tableData - sanitizes manga title to convert special characters', async () => {
       mangaList.setProps({
         tableData: [
-          {
-            series: {
-              title: '&Uuml;bel Blatt',
-              url: 'series.example.url',
-            },
-            latestChapter: {
-              url: 'chapter.example.url',
-              info: {
-                chapter: '10',
-                title: 'Chapter Title',
-                timestamp: 1522299049,
-              },
-            },
-          },
+          mangaEntryFactory.build({ attributes: { title: '&Uuml;bel Blatt' } }),
         ],
       });
 

@@ -8,17 +8,20 @@ exports[`TheMangaList.vue :props :tableData - renders rows 1`] = `
           <!----></label></div>
     </td>
     <td rowspan="1" colspan="1" class="el-table_1_column_2  ">
-      <div class="cell"><a href="series.example.url" target="_blank" class="break-normal el-link el-link--default">
+      <div class="cell"><a href="example.url/manga/1" target="_blank" class="break-normal el-link el-link--default">
           <!----><span class="el-link--inner">Manga Title</span>
           <!----></a></div>
     </td>
     <td rowspan="1" colspan="1" class="el-table_1_column_3  ">
-      <div class="cell"><a href="chapter.example.url" target="_blank" class="el-link el-link--default">
-          <!----><span class="el-link--inner">10</span>
-          <!----></a></div>
+      <div class="cell">1</div>
     </td>
     <td rowspan="1" colspan="1" class="el-table_1_column_4  ">
-      <div class="cell">a year ago</div>
+      <div class="cell"><a href="example.url/manga/1/chapter/2" target="_blank" class="el-link el-link--default">
+          <!----><span class="el-link--inner">2</span>
+          <!----></a></div>
+    </td>
+    <td rowspan="1" colspan="1" class="el-table_1_column_5  ">
+      <div class="cell">9 months ago</div>
     </td>
   </tr>
   <!---->
