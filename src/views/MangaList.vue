@@ -1,8 +1,8 @@
 <template lang="pug">
   .container.mx-auto.w-full.h-full.flex.flex-col.items-center
-    .flex.flex-col.w-full.max-w-4xl.pt-32.pb-16
-      .mx-5.mb-5(class="md:mx-0")
-        el-select.shadow-md.rounded.float-right(
+    .flex.flex-col.w-full.max-w-6xl.pt-24.sm_pb-16
+      .mx-5.mb-5.max-sm_mx-2
+        el-select.sm_shadow-md.rounded.float-right(
           v-model="currentListID"
           placeholder="Select"
         )
@@ -12,8 +12,8 @@
             :label="list.attributes.name"
             :value="list.id"
           )
-      .mx-5.mb-5(class="md:mx-0")
-        el-button.shadow-md(
+      .mx-5.mb-5.max-sm_mx-2
+        el-button.sm_shadow-md(
           v-show="selectedSeriesIDs.length > 0"
           ref="removeSeriesButton"
           type="danger"
@@ -23,7 +23,7 @@
         )
           i.el-icon-delete.mr-1
           | Remove
-        el-button.shadow-md.float-right(
+        el-button.sm_shadow-md.float-right(
           ref="openAddMangaModalButton"
           type="primary"
           size="medium"
@@ -32,7 +32,7 @@
         )
           i.el-icon-plus.mr-1
           | Add Manga
-        el-button.shadow-md.float-right.mr-3(
+        el-button.sm_shadow-md.float-right.mr-3(
           type="success"
           size="medium"
           @click="importDialogVisible = true"
@@ -40,7 +40,7 @@
         )
           i.el-icon-upload2.mr-1
           | Import
-      .flex-grow.mx-5(class="md:mx-0")
+      .flex-grow.sm_mx-5.mx-0
         the-manga-list(
           :tableData='currentListEntries'
           @seriesSelected="handleSelection"
