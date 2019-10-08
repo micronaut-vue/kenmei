@@ -1,5 +1,5 @@
 <template lang="pug">
-  #home
+  #home.h-full
     navigation-bar
     router-view
 </template>

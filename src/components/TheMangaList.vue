@@ -1,5 +1,5 @@
 <template lang="pug">
-  el-table.sm_shadow-lg.sm_rounded(
+  el-table.shadow-lg.rounded(
     :data="tableData"
     :default-sort = "{ prop: 'attributes.title', order: 'descending' }"
     v-loading='listsLoading'
@@ -82,13 +82,3 @@
     },
   };
 </script>
-
-<style media="screen" lang="scss">
-  .el-table th > .cell {
-    @apply break-normal;
-  }
-
-  .el-table td > .cell {
-    @apply break-normal;
-  }
-</style>
