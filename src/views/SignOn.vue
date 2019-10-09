@@ -1,7 +1,7 @@
 <template lang="pug">
   .container.mx-auto.w-full.h-full
     .flex.flex-col.h-full.w-full.items-center.justify-center
-      .w-full.max-w-xs.mt-16.rounded.overflow-hidden.shadow-lg.bg-white
+      base-card.max-w-xs
         .px-6.py-4#sign-on-card
           el-tabs(v-model="activeTab" stretch)
             el-tab-pane(label="Sign In" name="signIn")
