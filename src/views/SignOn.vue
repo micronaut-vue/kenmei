@@ -3,29 +3,24 @@
     .flex.flex-col.h-full.w-full.items-center.justify-center
       base-card.max-w-xs
         .px-6.py-4#sign-on-card
-          el-tabs(v-model="activeTab" stretch)
-            el-tab-pane(label="Sign In" name="signIn")
-              the-sign-in
-            el-tab-pane(label="Sign Up" name="signUp")
-              the-sign-up
+          component(
+            :is='activeComponent'
+            @componentChanged='activeComponent = $event'
+          )
 </template>
 
 <script>
-  import { Tabs, TabPane } from 'element-ui';
-
-  import TheSignIn from '@/components/TheSignIn';
-  import TheSignUp from '@/components/TheSignUp';
+  import TheSignOnTabs from '@/components/TheSignOnTabs';
+  import TheResetPassword from '@/components/TheResetPassword';
 
   export default {
     components: {
-      TheSignIn,
-      TheSignUp,
-      'el-tabs': Tabs,
-      'el-tab-pane': TabPane,
+      TheSignOnTabs,
+      TheResetPassword,
     },
     data() {
       return {
-        activeTab: 'signIn',
+        activeComponent: 'TheSignOnTabs',
       };
     },
   };
