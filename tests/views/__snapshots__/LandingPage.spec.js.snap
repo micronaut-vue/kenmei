@@ -4,78 +4,81 @@ exports[`LandingPage.vue renders the page 1`] = `
 <div
   class="container mx-auto w-full h-full flex flex-col justify-center items-center"
 >
-  <el-card-stub
-    class="text-center max-w-lg mx-5 mt-16 justify-center md:mx-0"
-    shadow="always"
+  <base-card-stub
+    class="max-w-lg text-center mx-5 md_mx-0"
   >
-    <img
-      class="max-w-xs w-full inline logo"
-      src="@/assets/logo.svg"
-    />
     <div
-      class="welcome-text font-size-b font-line-height-secondary"
+      class="p-5"
     >
-      <p>
-        Welcome to Kenmei, a new manga tracking website currently in
-development.
-      </p>
-      <p>
-        Inspired by
-
-        <el-link-stub
-          class="inline align-baseline"
-          href="https://www.trackr.moe"
-          type="default"
-        >
-          trackr.moe
-        </el-link-stub>
-        , the best manga tracking website,
-
-        <el-link-stub
-          class="inline align-baseline"
-          href="https://blog.codeanimu.net/posts/2019/07/trackr-moe-the-future/"
-          type="default"
-        >
-          that is now slated to be closed
-        </el-link-stub>
-        , Kenmei is here to replace it
-and provide even more features, for all manga fans out there!
-      </p>
-      <p>
-        If you would like to get notified, when registrations open, please
-leave your email below.
-      </p>
-    </div>
-    <div
-      class="email-form"
-    >
-      <form
-        action="https://tinyletter.com/kenmei"
-        method="post"
-        onsubmit="window.open('https://tinyletter.com/kenmei', 'popupwindow', 'scrollbars=yes,width=800,height=600');"
-        target="popupwindow"
+      <img
+        class="max-w-xs w-full inline logo"
+        src="@/assets/logo.svg"
+      />
+      <div
+        class="welcome-text font-size-b font-line-height-secondary"
       >
-        <el-input-stub
-          autocomplete="off"
-          class="my-5"
-          name="email"
-          placeholder="Please enter your email"
-          type="text"
-          validateevent="true"
-          value=""
-        />
-        <input
-          name="embed"
-          type="hidden"
-          value="1"
-        />
-        <input
-          class="el-button"
-          type="submit"
-          value="Subscribe"
-        />
-      </form>
+        <p>
+          Welcome to Kenmei, a new manga tracking website currently in
+development.
+        </p>
+        <p>
+          Inspired by
+
+          <el-link-stub
+            class="inline align-baseline"
+            href="https://www.trackr.moe"
+            type="default"
+          >
+            trackr.moe
+          </el-link-stub>
+          , the best manga tracking website,
+
+          <el-link-stub
+            class="inline align-baseline"
+            href="https://blog.codeanimu.net/posts/2019/07/trackr-moe-the-future/"
+            type="default"
+          >
+            that is now slated to be closed
+          </el-link-stub>
+          , Kenmei is here to replace it
+and provide even more features, for all manga fans out there!
+        </p>
+        <p>
+          If you would like to get notified, when registrations open, please
+leave your email below.
+        </p>
+      </div>
+      <div
+        class="email-form"
+      >
+        <form
+          action="https://tinyletter.com/kenmei"
+          method="post"
+          onsubmit="window.open('https://tinyletter.com/kenmei', 'popupwindow', 'scrollbars=yes,width=800,height=600');"
+          target="popupwindow"
+        >
+          <el-input-stub
+            autocomplete="off"
+            class="my-5"
+            name="email"
+            placeholder="Please enter your email"
+            type="text"
+            validateevent="true"
+            value=""
+          />
+          <input
+            name="embed"
+            type="hidden"
+            value="1"
+          />
+          <input
+            class="el-button"
+            type="submit"
+            value="Subscribe"
+          />
+        </form>
+      </div>
     </div>
-  </el-card-stub>
+  </base-card-stub>
 </div>
 `;
