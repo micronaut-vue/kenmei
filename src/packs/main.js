@@ -16,6 +16,9 @@ Vue.use(Loading);
 Vue.use(VueAnalytics, {
   id: 'UA-145065333-1',
   router,
+  debug: {
+    sendHitTask: process.env.NODE_ENV === 'production',
+  },
 });
 Vue.use(Rollbar, {
   accessToken: process.env.ROLLBAR_CLIENT_TOKEN,
