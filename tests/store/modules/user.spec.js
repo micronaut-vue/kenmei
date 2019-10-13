@@ -200,5 +200,54 @@ describe('user', () => {
         expect(errorMessageSpy).toBeCalled();
       });
     });
+
+    describe('updatePassword', () => {
+      it('PUTs to passwords endpoint and logs in user on success', async () => {
+        const axiosSpy = jest.spyOn(axios, 'put');
+        const mockData = {
+          resetPasswordToken: 'abcdf',
+          user: { email: 'test@example.com' },
+        };
+        const mockResponse = { access: '123.abc.jwt', user_id: 1 };
+
+        axiosSpy.mockResolvedValue({ status: 200, data: mockResponse });
+
+        user.actions.updatePassword({ commit }, mockData);
+
+        await flushPromises();
+
+        expect(axiosSpy).toHaveBeenCalledWith(
+          '/auth/passwords/',
+          {
+            user: mockData.user,
+            reset_password_token: mockData.resetPasswordToken,
+          },
+        );
+        expect(commit).toHaveBeenCalledWith(
+          'setCurrentUser', { user_id: mockResponse.user_id }
+        );
+      });
+
+      it('shows server-side errors if request failed', async () => {
+        const axiosSpy        = jest.spyOn(axios, 'put');
+        const errorMessageSpy = jest.spyOn(Message, 'error');
+
+        const mockResponse = { response: { data: 'Token expired' } };
+        const mockData = {
+          resetPasswordToken: 'abcdf',
+          user: { email: 'test@example.com' },
+        };
+
+        axiosSpy.mockRejectedValue(mockResponse);
+
+        user.actions.updatePassword({ commit }, mockData);
+
+        await flushPromises();
+
+        expect(commit).not.toHaveBeenCalledWith('setCurrentUser');
+        // TODO: Check that we actually called it with server-side errors
+        expect(errorMessageSpy).toBeCalled();
+      });
+    });
   });
 });

@@ -65,6 +65,23 @@ const actions = {
       })
       .then(() => { loading.close(); });
   },
+  updatePassword({ commit }, { resetPasswordToken, user }) {
+    const loading = Loading.service({ target: '#reset-pass-card' });
+    const payload = { user, reset_password_token: resetPasswordToken };
+
+    return plain.put('/auth/passwords/', payload)
+      .then((response) => {
+        commit('setCurrentUser', { user_id: response.data.user_id });
+        localStorage.access = response.data.access;
+      })
+      .catch((request) => {
+        Message.error({
+          dangerouslyUseHTMLString: true,
+          message: request.response.data,
+        });
+      })
+      .then(() => { loading.close(); });
+  },
 };
 
 const mutations = {
