@@ -7,8 +7,8 @@ exports[`SignOn.vue renders the page 1`] = `
   <div
     class="flex flex-col h-full w-full items-center justify-center"
   >
-    <div
-      class="w-full max-w-xs mt-16 rounded overflow-hidden shadow-lg bg-white"
+    <base-card-stub
+      class="max-w-xs"
     >
       <div
         class="px-6 py-4"
@@ -33,7 +33,7 @@ exports[`SignOn.vue renders the page 1`] = `
           </el-tab-pane-stub>
         </el-tabs-stub>
       </div>
-    </div>
+    </base-card-stub>
   </div>
 </div>
 `;

@@ -4,6 +4,7 @@ import Rollbar from 'vue-rollbar';
 import { Loading } from 'element-ui';
 import Home from '@/views/Home.vue';
 import '@/plugins/element.js';
+import '@/components/_globals.js';
 import '@/stylesheets/global.scss';
 import '@/stylesheets/tailwind.css';
 

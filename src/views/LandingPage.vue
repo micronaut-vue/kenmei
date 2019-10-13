@@ -1,46 +1,45 @@
 <template lang="pug">
   .container.mx-auto.w-full.h-full.flex.flex-col.justify-center.items-center
-    el-card.text-center.max-w-lg.mx-5.mt-16.justify-center(
-      shadow="always" class="md:mx-0"
-    )
-      img.max-w-xs.w-full.inline.logo(src='@/assets/logo.svg')
-      .welcome-text.font-size-b.font-line-height-secondary
-        p
-          | Welcome to Kenmei, a new manga tracking website currently in
-          | development.
-        p
-          | Inspired by
-          |
-          el-link.inline.align-baseline(
-            href="https://www.trackr.moe" :underline="false"
+    base-card.max-w-lg.text-center.mx-5.md_mx-0
+      .p-5
+        img.max-w-xs.w-full.inline.logo(src='@/assets/logo.svg')
+        .welcome-text.font-size-b.font-line-height-secondary
+          p
+            | Welcome to Kenmei, a new manga tracking website currently in
+            | development.
+          p
+            | Inspired by
+            |
+            el-link.inline.align-baseline(
+              href="https://www.trackr.moe" :underline="false"
+            )
+              | trackr.moe
+            |, the best manga tracking website,
+            |
+            el-link.inline.align-baseline(
+              href="https://blog.codeanimu.net/posts/2019/07/trackr-moe-the-future/"
+              :underline="false"
+            )
+              | that is now slated to be closed
+            |, Kenmei is here to replace it
+            | and provide even more features, for all manga fans out there!
+          p
+            | If you would like to get notified, when registrations open, please
+            | leave your email below.
+        .email-form
+          form(
+            action='https://tinyletter.com/kenmei'
+            method='post'
+            target='popupwindow'
+            onsubmit="window.open('https://tinyletter.com/kenmei', 'popupwindow', 'scrollbars=yes,width=800,height=600');"
           )
-            | trackr.moe
-          |, the best manga tracking website,
-          |
-          el-link.inline.align-baseline(
-            href="https://blog.codeanimu.net/posts/2019/07/trackr-moe-the-future/"
-            :underline="false"
-          )
-            | that is now slated to be closed
-          |, Kenmei is here to replace it
-          | and provide even more features, for all manga fans out there!
-        p
-          | If you would like to get notified, when registrations open, please
-          | leave your email below.
-      .email-form
-        form(
-          action='https://tinyletter.com/kenmei'
-          method='post'
-          target='popupwindow'
-          onsubmit="window.open('https://tinyletter.com/kenmei', 'popupwindow', 'scrollbars=yes,width=800,height=600');"
-        )
-          el-input.my-5(
-            v-model="form.email"
-            placeholder="Please enter your email"
-            name='email'
-          )
-          input(type='hidden', value='1', name='embed')
-          input.el-button(type='submit', value='Subscribe')
+            el-input.my-5(
+              v-model="form.email"
+              placeholder="Please enter your email"
+              name='email'
+            )
+            input(type='hidden', value='1', name='embed')
+            input.el-button(type='submit', value='Subscribe')
 </template>
 
 <script>
