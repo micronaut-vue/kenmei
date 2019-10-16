@@ -41,5 +41,19 @@ export default new Router({
         }
       },
     },
+    {
+      path: '/reset-password/:resetPasswordToken',
+      name: 'Reset Password',
+      component: () => import(/* webpackChunkName: "sign_in" */ './views/ResetPassword.vue'),
+      props: true,
+      beforeEnter: (to, from, next) => {
+        if (store.getters["user/signedIn"]) {
+          Message.info('You are already signed in');
+          next('/manga-list');
+        } else {
+          next();
+        }
+      },
+    },
   ]
 })

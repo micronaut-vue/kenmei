@@ -14,24 +14,7 @@ exports[`SignOn.vue renders the page 1`] = `
         class="px-6 py-4"
         id="sign-on-card"
       >
-        <el-tabs-stub
-          stretch="true"
-          tabposition="top"
-          value="signIn"
-        >
-          <el-tab-pane-stub
-            label="Sign In"
-            name="signIn"
-          >
-            <the-sign-in-stub />
-          </el-tab-pane-stub>
-          <el-tab-pane-stub
-            label="Sign Up"
-            name="signUp"
-          >
-            <the-sign-up-stub />
-          </el-tab-pane-stub>
-        </el-tabs-stub>
+        <thesignontabs-stub />
       </div>
     </base-card-stub>
   </div>

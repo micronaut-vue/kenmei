@@ -28,6 +28,12 @@
         type='primary'
         @click='submitForm'
       ) Sign In
+      .text-center
+        el-link(
+          @click.native="$emit('resetPassword')"
+          :underline="false"
+        )
+          | Forgot your password?
 </template>
 
 <script>
