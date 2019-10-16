@@ -21,7 +21,7 @@ exports[`TheMangaList.vue :props :tableData - renders rows 1`] = `
           <!----></a></div>
     </td>
     <td rowspan="1" colspan="1" class="el-table_1_column_5  ">
-      <div class="cell">9 months ago</div>
+      <div class="cell">10 months ago</div>
     </td>
   </tr>
   <!---->
