@@ -40,7 +40,7 @@
       sortable
     )
       template(v-if='scope.row.attributes' slot-scope="scope")
-        | {{ releasedAt(scope.row.attributes.last_released_at) }}
+        | {{ scope.row.attributes.last_released_at | timeAgo }}
 </template>
 
 <script>
@@ -62,6 +62,9 @@
       sanitize(title) {
         return he.decode(title);
       },
+      timeAgo(datetime) {
+        return dayjs().to(dayjs(datetime));
+      },
     },
     props: {
       tableData: {
@@ -75,9 +78,6 @@
       ]),
     },
     methods: {
-      releasedAt(datetime) {
-        return dayjs().to(dayjs(datetime));
-      },
       handleSelectionChange(val) {
         const ids = val.map(entry => entry.id);
         this.$emit('seriesSelected', ids);
