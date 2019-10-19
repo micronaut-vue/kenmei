@@ -157,50 +157,6 @@ describe('user', () => {
       });
     });
 
-    describe('signUp', () => {
-      it('POSTs to registrations endpoint and show confirmation message', async () => {
-        const axiosSpy = jest.spyOn(axios, 'post');
-        const mockData = {
-          email: 'test@example.com',
-          password: 'password',
-          password_confirmation: 'password',
-        };
-
-        axiosSpy.mockResolvedValue({ status: 200 });
-
-        user.actions.signUp({ commit }, mockData);
-
-        await flushPromises();
-
-        expect(axiosSpy).toHaveBeenCalledWith(
-          '/api/v1/registrations/',
-          { user: mockData }
-        );
-      });
-
-      it('shows server-side errors if request failed', async () => {
-        const axiosSpy        = jest.spyOn(axios, 'post');
-        const errorMessageSpy = jest.spyOn(Message, 'error');
-
-        const mockData     = { email: 'test@example.com' };
-        const mockResponse = {
-          response: {
-            data: 'Missing password<br>Missing password confirmation',
-          },
-        };
-
-        axiosSpy.mockRejectedValue(mockResponse);
-
-        user.actions.signUp({ commit }, mockData);
-
-        await flushPromises();
-
-        expect(commit).not.toHaveBeenCalledWith('setCurrentUser');
-        // TODO: Check that we actually called it with server-side errors
-        expect(errorMessageSpy).toBeCalled();
-      });
-    });
-
     describe('updatePassword', () => {
       it('PUTs to passwords endpoint and logs in user on success', async () => {
         const axiosSpy = jest.spyOn(axios, 'put');

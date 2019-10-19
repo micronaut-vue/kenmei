@@ -44,27 +44,6 @@ const actions = {
         }
       });
   },
-  signUp({ _commit }, data) {
-    const loading = Loading.service({ target: '#sign-on-card' });
-
-    return plain.post('/api/v1/registrations/', { user: data })
-      .then(() => {
-        Message({
-          message: `Thank you for registering. Please email hi@kenmei.co from
-          the same email to get your account confirmed`,
-          type: 'success',
-          duration: 0,
-          showClose: true,
-        });
-      })
-      .catch((request) => {
-        Message.error({
-          dangerouslyUseHTMLString: true,
-          message: request.response.data,
-        });
-      })
-      .then(() => { loading.close(); });
-  },
   updatePassword({ commit }, { resetPasswordToken, user }) {
     const loading = Loading.service({ target: '#reset-pass-card' });
     const payload = { user, reset_password_token: resetPasswordToken };
