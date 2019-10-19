@@ -55,5 +55,19 @@ export default new Router({
         }
       },
     },
+    {
+      path: '/confirmation/:confirmationToken',
+      name: 'User Confirmation',
+      component: () => import(/* webpackChunkName: "user_confirmation" */ './views/UserConfirmation.vue'),
+      props: true,
+      beforeEnter: (to, from, next) => {
+        if (store.getters["user/signedIn"]) {
+          Message.info("You've already signed in");
+          next('/manga-list');
+        } else {
+          next();
+        }
+      },
+    },
   ]
 })

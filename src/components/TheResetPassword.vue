@@ -15,7 +15,7 @@
         | Check your
         |
         strong {{ user.email }}
-        |  inbox for instructions from us on how to verify your account
+        |  inbox for instructions from us on how to reset your password
     template(v-else)
       el-form-item(prop='email')
         p.leading-normal.text-gray-600
