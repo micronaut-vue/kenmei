@@ -5,37 +5,46 @@
     :model='user'
     label-position='top'
   )
-    el-form-item(prop='email')
-      el-input(placeholder='Email' type='email' v-model.trim='user.email')
-    el-form-item(prop='password')
-      el-input(
-        placeholder='Password'
-        type='password'
-        v-model.trim='user.password'
-        auto-complete='new-password'
-        @keyup.enter.native='submitForm'
-      )
-    el-form-item(prop='password_confirmation')
-      el-input(
-        placeholder='Password confirmation'
-        type='password'
-        v-model.trim='user.password_confirmation'
-        auto-complete='new-password'
-        @keyup.enter.native='signUp(user)'
-      )
-    el-form-item
-      el-button.w-full(
-        ref='signUpSubmit'
-        type='primary'
-        @click='submitForm'
-      ) Sign Up
+    template(v-if="confirmationInitiated")
+      p.leading-normal.text-gray-600.text-center
+        | Check your
+        |
+        strong {{ user.email }}
+        |  inbox for instructions from us on how to verify your account
+    template(v-else)
+      el-form-item(prop='email')
+        el-input(placeholder='Email' type='email' v-model.trim='user.email')
+      el-form-item(prop='password')
+        el-input(
+          placeholder='Password'
+          type='password'
+          v-model.trim='user.password'
+          auto-complete='new-password'
+          @keyup.enter.native='submitForm'
+        )
+      el-form-item(prop='password_confirmation')
+        el-input(
+          placeholder='Password confirmation'
+          type='password'
+          v-model.trim='user.password_confirmation'
+          auto-complete='new-password'
+          @keyup.enter.native='signUp(user)'
+        )
+      el-form-item
+        el-button.w-full(
+          ref='signUpSubmit'
+          type='primary'
+          @click='submitForm'
+        ) Sign Up
 </template>
 
 <script>
-  import { mapActions, mapGetters } from 'vuex';
+  import { mapGetters } from 'vuex';
   import {
-    Form, FormItem, Button, Input,
+    Form, FormItem, Button, Input, Loading, Message,
   } from 'element-ui';
+
+  import { plain } from '@/modules/axios';
 
   export default {
     components: {
@@ -54,6 +63,7 @@
       };
 
       return {
+        confirmationInitiated: false,
         user: {
           email: '',
           password: '',
@@ -102,15 +112,27 @@
       ]),
     },
     methods: {
-      ...mapActions('user', [
-        'signUp',
-      ]),
       submitForm() {
         this.$refs.signUpForm.validate((valid) => {
-          if (valid) { this.signUp(this.user); }
+          if (valid) { this.signUp(); }
 
           return false;
         });
+      },
+      signUp() {
+        const loading = Loading.service({ target: '#sign-on-card' });
+
+        return plain.post('/api/v1/registrations/', { user: this.user })
+          .then(() => {
+            this.confirmationInitiated = true;
+          })
+          .catch((request) => {
+            Message.error({
+              dangerouslyUseHTMLString: true,
+              message: request.response.data,
+            });
+          })
+          .then(() => { loading.close(); });
       },
     },
   };
