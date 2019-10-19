@@ -3,24 +3,24 @@
 exports[`TheMangaList.vue :props :tableData - renders rows 1`] = `
 <tbody>
   <tr class="el-table__row">
-    <td rowspan="1" colspan="1" class="el-table_1_column_1  el-table-column--selection">
+    <td rowspan="1" colspan="1" class="el-table_3_column_11  el-table-column--selection">
       <div class="cell"><label class="el-checkbox"><span class="el-checkbox__input"><span class="el-checkbox__inner"></span><input type="checkbox" aria-hidden="false" class="el-checkbox__original" value=""></span>
           <!----></label></div>
     </td>
-    <td rowspan="1" colspan="1" class="el-table_1_column_2  ">
+    <td rowspan="1" colspan="1" class="el-table_3_column_12  ">
       <div class="cell"><a href="example.url/manga/1" target="_blank" class="break-normal el-link el-link--default">
           <!----><span class="el-link--inner">Manga Title</span>
           <!----></a></div>
     </td>
-    <td rowspan="1" colspan="1" class="el-table_1_column_3  ">
+    <td rowspan="1" colspan="1" class="el-table_3_column_13  ">
       <div class="cell">1</div>
     </td>
-    <td rowspan="1" colspan="1" class="el-table_1_column_4  ">
+    <td rowspan="1" colspan="1" class="el-table_3_column_14  ">
       <div class="cell"><a href="example.url/manga/1/chapter/2" target="_blank" class="el-link el-link--default">
           <!----><span class="el-link--inner">2</span>
           <!----></a></div>
     </td>
-    <td rowspan="1" colspan="1" class="el-table_1_column_5  ">
+    <td rowspan="1" colspan="1" class="el-table_3_column_15  ">
       <div class="cell">10 months ago</div>
     </td>
   </tr>
