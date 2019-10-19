@@ -26,11 +26,14 @@
     )
       template(v-if='scope.row.attributes' slot-scope="scope")
         el-link(
+          v-if="scope.row.links.last_chapter_available_url"
           :href="scope.row.links.last_chapter_available_url"
           :underline="false"
           target="_blank"
         )
           | {{ scope.row.attributes.last_chapter_available }}
+        template(v-else)
+          | No chapters
     el-table-column(
       prop="attributes.last_released_at"
       label="Released"

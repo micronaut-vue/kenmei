@@ -64,5 +64,19 @@ describe('TheMangaList.vue', () => {
 
       expect(mangaList.find('.el-link--inner').text()).toContain('Übel Blatt');
     });
+
+    it(':tableData - shows Released at as Unknown if no latest chapters availiable', async () => {
+      mangaList.setProps({
+        tableData: [
+          mangaEntryFactory.build(
+            { links: { last_chapter_available_url: null } }
+          ),
+        ],
+      });
+
+      await flushPromises();
+
+      expect(mangaList.find('.el-link--inner').text()).toContain('No chapters');
+    });
   });
 });
