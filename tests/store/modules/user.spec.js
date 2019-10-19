@@ -100,7 +100,7 @@ describe('user', () => {
 
         expect(commit).not.toHaveBeenCalledWith('setCurrentUser');
         expect(infoMessageSpy).toHaveBeenLastCalledWith(
-          'Please email hi@kenmei.co to get your account confirmed'
+          'Please check your email inbox and confirm your account first'
         );
       });
     });

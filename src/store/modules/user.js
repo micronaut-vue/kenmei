@@ -21,7 +21,7 @@ const actions = {
       .catch((request) => {
         if (request.response.data.error === 'User unconfirmed') {
           Message.info(
-            'Please email hi@kenmei.co to get your account confirmed'
+            'Please check your email inbox and confirm your account first'
           );
         } else {
           Message.error(request.response.data.error);
