@@ -65,6 +65,20 @@ describe('TheMangaList.vue', () => {
       expect(mangaList.find('.el-link--inner').text()).toContain('Übel Blatt');
     });
 
+    it(':tableData - shows Released at as Unknown if no timestamp availiable', async () => {
+      mangaList.setProps({
+        tableData: [
+          mangaEntryFactory.build(
+            { attributes: { last_released_at: null } }
+          ),
+        ],
+      });
+
+      await flushPromises();
+
+      expect(mangaList.find('.el-link--inner').text()).toContain('Unknown');
+    });
+
     it(':tableData - shows Released at as Unknown if no latest chapters availiable', async () => {
       mangaList.setProps({
         tableData: [

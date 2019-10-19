@@ -38,9 +38,13 @@
       prop="attributes.last_released_at"
       label="Released"
       sortable
+      :sort-method="releasedAtSort"
     )
       template(v-if='scope.row.attributes' slot-scope="scope")
-        | {{ scope.row.attributes.last_released_at | timeAgo }}
+        template(v-if='scope.row.attributes.last_released_at')
+          | {{ scope.row.attributes.last_released_at | timeAgo }}
+        template(v-else)
+          | Unknown
 </template>
 
 <script>
@@ -78,6 +82,15 @@
       ]),
     },
     methods: {
+      releasedAtSort(a, b) {
+        const aReleasedAt = a.attributes.last_released_at;
+        const bReleasedAt = b.attributes.last_released_at;
+
+        // Descending order, with null always being the oldest
+        return (aReleasedAt === null) - (bReleasedAt === null)
+          || -(aReleasedAt > bReleasedAt)
+          || +(aReleasedAt < bReleasedAt);
+      },
       handleSelectionChange(val) {
         const ids = val.map(entry => entry.id);
         this.$emit('seriesSelected', ids);
