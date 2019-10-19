@@ -1,6 +1,8 @@
 import { Message } from 'element-ui';
 import { secure } from '@/modules/axios';
 
+import { extractSeriesID } from '@/services/api';
+
 const state = {
   lists: [],
   entries: [],
@@ -11,8 +13,8 @@ const getters = {
   getEntriesByListId: state => listID => state.entries.filter(
     entry => entry.relationships.manga_list.data.id === listID
   ),
-  entryAlreadyExists: state => mangaID => state.entries.some(
-    manga => manga.links.series_url.includes(mangaID)
+  entryAlreadyExists: state => mangaURL => state.entries.some(
+    manga => extractSeriesID(manga.links.series_url) === extractSeriesID(mangaURL)
   ),
 };
 

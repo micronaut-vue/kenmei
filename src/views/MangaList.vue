@@ -107,7 +107,7 @@
   import TheMangaList from '@/components/TheMangaList';
   import ProgressBar from '@/components/ProgressBar';
   import {
-    addMangaEntry, addMangaEntries, deleteMangaEntry, extractSeriesID,
+    addMangaEntry, addMangaEntries, deleteMangaEntry,
   } from '@/services/api';
   import { processList, sliceIntoBatches } from '@/services/importer';
 
@@ -170,7 +170,7 @@
         this.removeEntries(this.selectedSeriesIDs);
       },
       mangaDexSearch() {
-        if (this.alreadyExists(this.mangaURL)) {
+        if (this.entryAlreadyExists(this.mangaURL)) {
           Message.info('Manga already added');
           this.dialogVisible = false;
           return;
@@ -200,11 +200,6 @@
         loading.close();
         this.mangaURL = '';
       },
-      alreadyExists(mangaURL) {
-        // TODO: We want to save and send back MangaDex ID from back-end
-        const mangaID = extractSeriesID(mangaURL);
-        return this.entryAlreadyExists(mangaID);
-      },
       processMangaDexList(list) {
         let seriesImported  = 0;
         const filteredLists = {};
@@ -217,7 +212,7 @@
               seriesURL: url.full_title_url,
               lastRead: url.title_data.current_chapter,
             }))
-            .filter(url => !this.alreadyExists(url.seriesURL));
+            .filter(url => !this.entryAlreadyExists(url.seriesURL));
         });
 
         if (Object.values(filteredLists).every(list => list.length === 0)) {

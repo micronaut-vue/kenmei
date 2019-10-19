@@ -31,11 +31,17 @@ describe('lists', () => {
 
     describe('entryAlreadyExists', () => {
       it('returns entries based on a list id', () => {
-        const state = { entries: mangaEntryFactory.buildList(1) };
+        const state = {
+          entries: mangaEntryFactory.buildList(
+            1,
+            { links: { series_url: 'example.url/manga/12' } }
+          ),
+        };
 
         const entryAlreadyExists = lists.getters.entryAlreadyExists(state);
 
-        expect(entryAlreadyExists('example.url/manga/1')).toBeTruthy();
+        expect(entryAlreadyExists('example.url/manga/12')).toBeTruthy();
+        expect(entryAlreadyExists('example.url/manga/1')).not.toBeTruthy();
         expect(entryAlreadyExists('example.url/manga/2')).not.toBeTruthy();
       });
     });
