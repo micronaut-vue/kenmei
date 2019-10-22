@@ -24,7 +24,26 @@
             | here
           progress-bar.mt-2(:percentage='importProgress')
     el-tab-pane(label="MangaDex" name="mangaDex")
-      | Coming soon
+      template(v-if="importInitiated")
+        p.leading-normal.text-gray-600.text-center.break-normal
+          | Your MangaDex MDList import has started. You will receive an email
+          | when the series have been imported.
+      template(v-else)
+        el-input(
+          v-model="importURL"
+          placeholder="https://mangadex.org/list/3"
+          prefix-icon="el-icon-link"
+        )
+        p.text-gray-600.text-xs.italic
+          | Provide your MangaDex MDList URL. It needs to be all lists link, not
+          | specific ones like Reading or Completed.
+        el-button.float-right(
+          ref="importMangaDexButton"
+          type="primary"
+          @click="importMangaDex"
+          :disabled="!validUrl"
+        )
+          | Import
 </template>
 
 <script>
@@ -33,6 +52,8 @@
   import {
     Tabs, TabPane, Input, Link, Upload, Button, Message, Loading,
   } from 'element-ui';
+
+  import { secure } from '@/modules/axios';
 
   import ProgressBar from '@/components/ProgressBar';
   import { processList, sliceIntoBatches } from '@/services/importer';
@@ -53,14 +74,33 @@
         activeTab: 'trackrMoe',
         importURL: '',
         importProgress: 0,
+        importInitiated: false,
       };
     },
     computed: {
       ...mapGetters('lists', [
         'entryAlreadyExists',
       ]),
+      validUrl() {
+        return this.importURL.match(/(mangadex.org\/list[/])\d+$/) !== null;
+      },
     },
     methods: {
+      importMangaDex() {
+        const loading = Loading.service({ target: '.el-dialog' });
+        secure.post('/api/v1/importers/mangadex', { url: this.importURL })
+          .then(() => {
+            this.importInitiated = true;
+          })
+          .catch((_error) => {
+            Message.error(
+              'Something went wrong, try again later or contact hi@kenmei.co'
+            );
+          })
+          .then(() => {
+            loading.close();
+          });
+      },
       processMangaDexList(list) {
         let seriesImported  = 0;
         const filteredLists = {};
