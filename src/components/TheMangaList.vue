@@ -19,7 +19,15 @@
       label="Last Chapter Read"
     )
       template(v-if='scope.row.attributes' slot-scope="scope")
-        | {{ scope.row.attributes.last_chapter_read }}
+        el-link.break-normal(
+          v-if="scope.row.links.last_chapter_read_url"
+          :href="scope.row.links.last_chapter_read_url"
+          :underline="false"
+          target="_blank"
+        )
+          | {{ scope.row.attributes.last_chapter_read }}
+        template(v-else)
+          | {{ scope.row.attributes.last_chapter_read }}
     el-table-column(
       prop="links.last_chapter_available_url"
       label="Latest Chapter"
