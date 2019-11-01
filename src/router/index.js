@@ -10,7 +10,7 @@ export default new Router({
     {
       path: '/',
       name: 'root',
-      component: () => import(/* webpackChunkName: "landing_page" */ './views/LandingPage.vue')
+      component: () => import(/* webpackChunkName: "landing_page" */ '@/views/LandingPage.vue')
     },
     {
       path: '/manga-list',
@@ -18,7 +18,7 @@ export default new Router({
       // route level code-splitting
       // this generates a separate chunk (about.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import(/* webpackChunkName: "manga_list" */ './views/MangaList.vue'),
+      component: () => import(/* webpackChunkName: "manga_list" */ '@/views/MangaList.vue'),
       beforeEnter: (to, from, next) => {
         if (store.getters["user/signedIn"]) {
           next();
@@ -31,7 +31,7 @@ export default new Router({
     {
       path: '/sign-in',
       name: 'Sign In',
-      component: () => import(/* webpackChunkName: "sign_in" */ './views/SignOn.vue'),
+      component: () => import(/* webpackChunkName: "sign_in" */ '@/views/SignOn.vue'),
       beforeEnter: (to, from, next) => {
         if (store.getters["user/signedIn"]) {
           Message.info('You are already signed in');
@@ -44,7 +44,7 @@ export default new Router({
     {
       path: '/reset-password/:resetPasswordToken',
       name: 'Reset Password',
-      component: () => import(/* webpackChunkName: "sign_in" */ './views/ResetPassword.vue'),
+      component: () => import(/* webpackChunkName: "sign_in" */ '@/views/ResetPassword.vue'),
       props: true,
       beforeEnter: (to, from, next) => {
         if (store.getters["user/signedIn"]) {
@@ -58,7 +58,7 @@ export default new Router({
     {
       path: '/confirmation/:confirmationToken',
       name: 'User Confirmation',
-      component: () => import(/* webpackChunkName: "user_confirmation" */ './views/UserConfirmation.vue'),
+      component: () => import(/* webpackChunkName: "user_confirmation" */ '@/views/UserConfirmation.vue'),
       props: true,
       beforeEnter: (to, from, next) => {
         if (store.getters["user/signedIn"]) {
