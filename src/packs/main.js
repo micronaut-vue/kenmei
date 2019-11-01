@@ -8,8 +8,8 @@ import '@/components/_globals.js';
 import '@/stylesheets/global.scss';
 import '@/stylesheets/tailwind.css';
 
-import router from '@/router';
-import store from '@/store/store';
+import router from '@/router/';
+import store from '@/store/index';
 
 Vue.config.productionTip = false;
 
