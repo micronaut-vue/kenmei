@@ -1,7 +1,7 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 import { Message } from 'element-ui';
-import store from '@/store/store';
+import store from '@/store/index';
 
 Vue.use(Router);
 

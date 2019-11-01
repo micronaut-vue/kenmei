@@ -9,7 +9,7 @@ import '@/stylesheets/global.scss';
 import '@/stylesheets/tailwind.css';
 
 import router from '@/router';
-import store from '@/store/store';
+import store from '@/store/index';
 
 Vue.config.productionTip = false;
 
