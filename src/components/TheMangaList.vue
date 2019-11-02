@@ -53,14 +53,32 @@
           | {{ scope.row.attributes.last_released_at | timeAgo }}
         template(v-else)
           | Unknown
+    el-table-column(width="50")
+      template(slot-scope="scope")
+        el-tooltip(
+          effect="dark"
+          content="Set last read to the latest chapter"
+          placement="top-start"
+        )
+          el-button(
+            ref="updateEntryButton"
+            icon="el-icon-check"
+            size="mini"
+            @click="tryEntryUpdate(scope.row)"
+            circle
+          )
 </template>
 
 <script>
-  import { mapState } from 'vuex';
-  import { Table, TableColumn, Link } from 'element-ui';
+  import { mapState, mapMutations } from 'vuex';
+  import {
+    Table, TableColumn, Link, Button, Message, Tooltip,
+  } from 'element-ui';
   import dayjs from 'dayjs';
   import he from 'he';
   import relativeTime from 'dayjs/plugin/relativeTime';
+
+  import { updateMangaEntry } from '@/services/api';
 
   dayjs.extend(relativeTime);
 
@@ -69,6 +87,8 @@
       'el-table': Table,
       'el-table-column': TableColumn,
       'el-link': Link,
+      'el-button': Button,
+      'el-tooltip': Tooltip,
     },
     filters: {
       sanitize(title) {
@@ -90,6 +110,18 @@
       ]),
     },
     methods: {
+      ...mapMutations('lists', [
+        'updateEntry',
+      ]),
+      async tryEntryUpdate(entry) {
+        const response = await updateMangaEntry(entry);
+        if (response) {
+          Message.info('Updated last read chapter');
+          this.updateEntry(response);
+        } else {
+          Message.error("Couldn't update. Try refreshing the page");
+        }
+      },
       releasedAtSort(a, b) {
         const aReleasedAt = a.attributes.last_released_at;
         const bReleasedAt = b.attributes.last_released_at;

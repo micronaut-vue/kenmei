@@ -1,10 +1,13 @@
 import { mount, createLocalVue } from '@vue/test-utils';
+import { Message } from 'element-ui';
 import Vuex from 'vuex';
 import flushPromises from 'flush-promises';
 
 import MangaList from '@/components/TheMangaList.vue';
 import lists from '@/store/modules/lists';
 import mangaEntryFactory from '../factories/mangaEntry';
+
+import * as api from '@/services/api';
 
 const localVue = createLocalVue();
 
@@ -20,7 +23,11 @@ describe('TheMangaList.vue', () => {
       modules: {
         lists: {
           namespaced: true,
-          state: lists.store,
+          state: {
+            lists: [],
+            entries: [mangaEntryFactory.build({ id: '1' })],
+          },
+          mutations: lists.mutations,
         },
       },
     });
@@ -31,6 +38,56 @@ describe('TheMangaList.vue', () => {
       propsData: {
         tableData: mangaEntryFactory.buildList(1),
       },
+    });
+  });
+
+  describe('when updating a manga entry', () => {
+    let updateMangaEntryMock;
+
+    beforeEach(() => {
+      updateMangaEntryMock = jest.spyOn(api, 'updateMangaEntry');
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('mutates the state and shows success message', async () => {
+      const infoMessageMock = jest.spyOn(Message, 'info');
+      const mangaEntry = mangaEntryFactory.build(
+        {
+          id: '1',
+          attributes: {
+            title: 'Manga Title',
+            last_chapter_read: '2',
+            last_chapter_available: '2',
+          },
+        }
+      );
+
+      updateMangaEntryMock.mockResolvedValue(mangaEntry);
+
+      mangaList.find({ ref: 'updateEntryButton' }).trigger('click');
+
+      await flushPromises();
+
+      expect(infoMessageMock).toHaveBeenCalledWith('Updated last read chapter');
+    });
+
+    it('shows error message if update failed', async () => {
+      const errorMessageMock = jest.spyOn(Message, 'error');
+
+      // TODO: Change to correct mockRejectedValue, when I am able to fix the
+      // issue with using it
+      updateMangaEntryMock.mockResolvedValue(false);
+
+      mangaList.find({ ref: 'updateEntryButton' }).trigger('click');
+
+      await flushPromises();
+
+      expect(errorMessageMock).toHaveBeenCalledWith(
+        "Couldn't update. Try refreshing the page"
+      );
     });
   });
 
