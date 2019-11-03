@@ -132,14 +132,6 @@ describe('TheMangaList.vue', () => {
   });
 
   describe(':props', () => {
-    it(':tableData - renders rows', async () => {
-      await flushPromises();
-
-      const table = mangaList.find('tbody');
-
-      expect(table.html()).toMatchSnapshot();
-    });
-
     // TODO: Can't get ElementUI table to trigger sorting on click
     // When I figure that out, update this test to actually work
     it.skip(':tableData - sorting Released at shows Unknown last', async () => {
