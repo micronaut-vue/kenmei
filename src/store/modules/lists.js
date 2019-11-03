@@ -42,6 +42,10 @@ const mutations = {
   addEntry(state, data) {
     state.entries.push(data);
   },
+  updateEntry(state, data) {
+    const index = state.entries.findIndex(entry => entry.id === data.id);
+    state.entries.splice(index, 1, data);
+  },
   removeEntries(state, entryIDs) {
     state.entries = state.entries.filter(
       (mangaEntry, _index, _arr) => !entryIDs.includes(mangaEntry.id)

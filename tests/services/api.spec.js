@@ -41,6 +41,33 @@ describe('API', () => {
     });
   });
 
+  describe('updateMangaEntry()', () => {
+    it('makes a request to the API and returns updated entry if found', async () => {
+      const mangaEntry = mangaEntryFactory.build();
+
+      axios.put.mockResolvedValue({ status: 200, data: { data: mangaEntry } });
+
+      const data = await apiService.updateMangaEntry(mangaEntry);
+      expect(data).toEqual(mangaEntry);
+    });
+
+    it('makes a request to the API and returns false if entry not found', async () => {
+      const mangaEntry = mangaEntryFactory.build();
+      axios.put.mockResolvedValue({ status: 404, data: { error: 'error' } });
+
+      const data = await apiService.updateMangaEntry(mangaEntry);
+      expect(data).toEqual(false);
+    });
+
+    it('makes a request to the API and returns false if API fails', async () => {
+      const mangaEntry = mangaEntryFactory.build();
+      axios.put.mockRejectedValue({ response: { data: 'Things happened' } });
+
+      const response = await apiService.updateMangaEntry(mangaEntry);
+      expect(response).toEqual(false);
+    });
+  });
+
   describe('deleteMangaEntry()', () => {
     it('makes a request to the API and returns true on success', async () => {
       const axiosSpy = jest.spyOn(axios, 'delete');
