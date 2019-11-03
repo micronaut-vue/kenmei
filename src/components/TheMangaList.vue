@@ -5,7 +5,10 @@
     v-loading='listsLoading'
     @selection-change="handleSelectionChange"
   )
-    el-table-column(type="selection")
+    el-table-column(type="selection" width="35")
+    el-table-column(width="30" align="center")
+      template(slot-scope="scope")
+        .new-chapter-dot(v-if="unread(scope.row)")
     el-table-column(prop="attributes.title" label="Name" sortable)
       template(slot-scope="scope")
         el-link.break-normal(
@@ -113,6 +116,16 @@
       ...mapMutations('lists', [
         'updateEntry',
       ]),
+      /* eslint-disable camelcase */
+      unread(entry) {
+        const {
+          last_chapter_read_url, last_chapter_available_url,
+        } = entry.links;
+
+        return last_chapter_read_url
+          && (last_chapter_read_url !== last_chapter_available_url);
+      },
+      /* eslint-enable camelcase */
       async tryEntryUpdate(entry) {
         const response = await updateMangaEntry(entry);
         if (response) {
@@ -140,6 +153,10 @@
 </script>
 
 <style media="screen" lang="scss">
+  .new-chapter-dot {
+    background-color: #409EFF;
+    @apply h-2 w-2 p-0 rounded-full;
+  }
   .el-table th > .cell {
     @apply break-normal;
   }
