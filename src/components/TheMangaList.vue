@@ -64,6 +64,7 @@
           placement="top-start"
         )
           el-button(
+            v-if="scope.row.attributes.last_chapter_available"
             ref="updateEntryButton"
             icon="el-icon-check"
             size="mini"
