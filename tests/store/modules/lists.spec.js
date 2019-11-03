@@ -81,6 +81,31 @@ describe('lists', () => {
       });
     });
 
+    describe('updateEntry', () => {
+      it('updates existing manga entry with the new state', () => {
+        let entryToUpdate = mangaEntryFactory.build(
+          { id: 1, attributes: { title: 'Manga Title' } }
+        );
+        let entry = mangaEntryFactory.build(
+          { id: 2, attributes: { title: 'Manga Title' } }
+        );
+
+        const state = { entries: [entryToUpdate, entry] };
+
+        const updatedEntry = mangaEntryFactory.build(
+          { id: 1, attributes: { title: 'Updated Title' } }
+        );
+
+        lists.mutations.updateEntry(state, updatedEntry);
+
+        entryToUpdate = state.entries.find(e => e.id === 1);
+        entry = state.entries.find(e => e.id === 2);
+
+        expect(entryToUpdate.attributes.title).toContain('Updated Title');
+        expect(entry.attributes.title).toContain('Manga Title');
+      });
+    });
+
     describe('removeEntries', () => {
       it('removes a manga entry', () => {
         const entryToStay = mangaEntryFactory.build({ id: '1' });
