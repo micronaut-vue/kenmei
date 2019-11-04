@@ -177,6 +177,62 @@ describe('TheMangaList.vue', () => {
       expect(tableRows.at(2).text()).toContain('10 months ago');
     });
 
+    it(':tableData - new releases are shown first', async () => {
+      const first = mangaEntryFactory.build(
+        {
+          attributes: {
+            title: 'Manga Title Last',
+            last_chapter_read: '1',
+            last_chapter_available: '2',
+          },
+          links: {
+            last_chapter_read_url: 'example.url/manga/1/chapter/1',
+            last_chapter_available_url: 'example.url/manga/1/chapter/2',
+          },
+        }
+      );
+      const second = mangaEntryFactory.build(
+        {
+          attributes: {
+            title: 'Manga Title Middle',
+            last_chapter_read: '3',
+            last_chapter_available: '4',
+          },
+          links: {
+            last_chapter_read_url: 'example.url/manga/1/chapter/3',
+            last_chapter_available_url: 'example.url/manga/1/chapter/4',
+          },
+        }
+      );
+      const last = mangaEntryFactory.build(
+        {
+          attributes: {
+            title: 'Manga Title Last',
+            last_chapter_read: '5',
+            last_chapter_available: '5',
+          },
+          links: {
+            last_chapter_read_url: 'example.url/manga/1/chapter/5',
+            last_chapter_available_url: 'example.url/manga/1/chapter/5',
+          },
+        }
+      );
+      const mangaList = mount(MangaList, {
+        store,
+        localVue,
+        sync: false,
+        propsData: { tableData: [second, first, last] },
+      });
+
+      await flushPromises();
+
+      const tableRows  = mangaList.findAll('.el-table__row');
+
+      expect(tableRows.at(0).text()).toContain('12');
+      expect(tableRows.at(1).text()).toContain('34');
+      expect(tableRows.at(2).text()).toContain('55');
+    });
+
     it(':tableData - sanitizes manga title to convert special characters', async () => {
       mangaList.setProps({
         tableData: [
