@@ -1,12 +1,18 @@
 <template lang="pug">
   el-table.sm_shadow-lg.sm_rounded(
     :data="tableData"
-    :default-sort = "{ prop: 'attributes.title', order: 'descending' }"
+    :default-sort = "{ prop: 'newReleases', order: 'descending' }"
     v-loading='listsLoading'
     @selection-change="handleSelectionChange"
   )
     el-table-column(type="selection" width="35")
-    el-table-column(width="30" align="center")
+    el-table-column(
+      prop="newReleases"
+      width="30"
+      align="center"
+      sortable
+      :sort-method="newReleasesSort"
+    )
       template(slot-scope="scope")
         .new-chapter-dot(v-if="unread(scope.row)")
     el-table-column(prop="attributes.title" label="Name" sortable)
@@ -135,6 +141,9 @@
         } else {
           Message.error("Couldn't update. Try refreshing the page");
         }
+      },
+      newReleasesSort(entryA, entryB) {
+        return Number(this.unread(entryA)) - Number(this.unread(entryB));
       },
       releasedAtSort(a, b) {
         const aReleasedAt = a.attributes.last_released_at;
