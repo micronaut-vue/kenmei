@@ -181,13 +181,13 @@ describe('TheMangaList.vue', () => {
       const first = mangaEntryFactory.build(
         {
           attributes: {
-            title: 'Manga Title Last',
-            last_chapter_read: '1',
-            last_chapter_available: '2',
+            title: 'Manga Title First',
+            last_chapter_read: '3',
+            last_chapter_available: '4',
           },
           links: {
-            last_chapter_read_url: 'example.url/manga/1/chapter/1',
-            last_chapter_available_url: 'example.url/manga/1/chapter/2',
+            last_chapter_read_url: 'example.url/manga/1/chapter/3',
+            last_chapter_available_url: 'example.url/manga/1/chapter/4',
           },
         }
       );
@@ -195,12 +195,12 @@ describe('TheMangaList.vue', () => {
         {
           attributes: {
             title: 'Manga Title Middle',
-            last_chapter_read: '3',
-            last_chapter_available: '4',
+            last_chapter_read: '1',
+            last_chapter_available: '2',
           },
           links: {
-            last_chapter_read_url: 'example.url/manga/1/chapter/3',
-            last_chapter_available_url: 'example.url/manga/1/chapter/4',
+            last_chapter_read_url: 'example.url/manga/1/chapter/1',
+            last_chapter_available_url: 'example.url/manga/1/chapter/2',
           },
         }
       );

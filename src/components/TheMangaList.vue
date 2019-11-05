@@ -1,7 +1,7 @@
 <template lang="pug">
   el-table.sm_shadow-lg.sm_rounded(
     :data="tableData"
-    :default-sort = "{ prop: 'newReleases', order: 'descending' }"
+    :default-sort = "{ prop: 'newReleases', order: 'ascending' }"
     v-loading='listsLoading'
     @selection-change="handleSelectionChange"
   )
@@ -143,7 +143,7 @@
         }
       },
       newReleasesSort(entryA, entryB) {
-        return Number(this.unread(entryA)) - Number(this.unread(entryB));
+        return Number(this.unread(entryB)) - Number(this.unread(entryA));
       },
       releasedAtSort(a, b) {
         const aReleasedAt = a.attributes.last_released_at;
