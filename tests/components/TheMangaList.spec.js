@@ -54,6 +54,20 @@ describe('TheMangaList.vue', () => {
       jest.restoreAllMocks();
     });
 
+    it('sets last chapter read button to loading', async () => {
+      updateMangaEntryMock.mockResolvedValue(false);
+
+      expect(mangaList.vm.$data.entryUpdated).toBeNull();
+
+      mangaList.find({ ref: 'updateEntryButton' }).trigger('click');
+
+      expect(mangaList.vm.$data.entryUpdated).toBe(defaultEntries[0]);
+
+      await flushPromises();
+
+      expect(mangaList.vm.$data.entryUpdated).toBeNull();
+    });
+
     it('mutates the state and shows success message', async () => {
       const infoMessageMock = jest.spyOn(Message, 'info');
       const mangaEntry = mangaEntryFactory.build({ id: 1 });
@@ -68,7 +82,9 @@ describe('TheMangaList.vue', () => {
 
       await flushPromises();
 
-      expect(infoMessageMock).toHaveBeenCalledWith('Updated last read chapter');
+      expect(infoMessageMock).toHaveBeenCalledWith(
+        'Updated last read chapter to 2'
+      );
     });
 
     it('shows error message if update failed', async () => {
