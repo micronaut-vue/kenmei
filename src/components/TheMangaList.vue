@@ -1,5 +1,6 @@
 <template lang="pug">
   el-table.sm_shadow-lg.sm_rounded(
+    ref="mangaListTable"
     :data="tableData"
     :default-sort = "{ prop: 'newReleases', order: 'ascending' }"
     v-loading='listsLoading'
@@ -15,7 +16,12 @@
     )
       template(slot-scope="scope")
         .new-chapter-dot(v-if="unread(scope.row)")
-    el-table-column(prop="attributes.title" label="Name" sortable)
+    el-table-column(
+      prop="attributes.title"
+      label="Title"
+      :sort-method="titleSort"
+      sortable
+    )
       template(slot-scope="scope")
         el-link.break-normal(
           :href="scope.row.links.series_url"
@@ -141,6 +147,12 @@
         } else {
           Message.error("Couldn't update. Try refreshing the page");
         }
+      },
+      titleSort(entryA, entryB) {
+        const entryATitle = entryA.attributes.title.toLowerCase();
+        const entryBTitle = entryB.attributes.title.toLowerCase();
+
+        return entryATitle.localeCompare(entryBTitle);
       },
       newReleasesSort(entryA, entryB) {
         return Number(this.unread(entryB)) - Number(this.unread(entryA));

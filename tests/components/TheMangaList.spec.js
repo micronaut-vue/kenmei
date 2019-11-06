@@ -233,6 +233,34 @@ describe('TheMangaList.vue', () => {
       expect(tableRows.at(2).text()).toContain('55');
     });
 
+    it.skip(':tableData - sort titles alphabetically ignoring case', async () => {
+      const first = mangaEntryFactory.build(
+        { attributes: { title: 'a' } }
+      );
+      const second = mangaEntryFactory.build(
+        { attributes: { title: 'b' } }
+      );
+      const last = mangaEntryFactory.build(
+        { attributes: { title: 'C' } }
+      );
+      const mangaList = mount(MangaList, {
+        store,
+        localVue,
+        sync: false,
+        propsData: { tableData: [second, first, last] },
+      });
+
+      await flushPromises();
+
+      mangaList.vm.$refs.mangaListTable.sort('attributes.title', 'ascending');
+
+      const tableRows = mangaList.findAll('.el-table__row');
+
+      expect(tableRows.at(0).text()).toContain('a');
+      expect(tableRows.at(1).text()).toContain('b');
+      expect(tableRows.at(2).text()).toContain('C');
+    });
+
     it(':tableData - sanitizes manga title to convert special characters', async () => {
       mangaList.setProps({
         tableData: [
