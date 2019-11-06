@@ -68,7 +68,7 @@
           | {{ scope.row.attributes.last_released_at | timeAgo }}
         template(v-else)
           | Unknown
-    el-table-column(width="50")
+    el-table-column(width="50" class-name="actions")
       template(slot-scope="scope")
         el-tooltip(
           effect="dark"
@@ -76,7 +76,7 @@
           placement="top-start"
         )
           el-button(
-            v-if="scope.row.attributes.last_chapter_available"
+            v-if="lastChapterNotSet(scope.row)"
             ref="updateEntryButton"
             icon="el-icon-check"
             size="mini"
@@ -130,6 +130,13 @@
         'updateEntry',
       ]),
       /* eslint-disable camelcase */
+      lastChapterNotSet(entry) {
+        const {
+          last_chapter_read_url, last_chapter_available_url,
+        } = entry.links;
+
+        return last_chapter_read_url !== last_chapter_available_url;
+      },
       unread(entry) {
         const {
           last_chapter_read_url, last_chapter_available_url,
@@ -175,6 +182,9 @@
 </script>
 
 <style media="screen" lang="scss">
+  .actions > .cell {
+    height: 28px; // matches the button height
+  }
   .new-chapter-dot {
     background-color: #409EFF;
     @apply h-2 w-2 p-0 rounded-full;
