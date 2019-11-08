@@ -20,6 +20,7 @@ Vue.use(VueAnalytics, {
   debug: {
     sendHitTask: process.env.NODE_ENV === 'production',
   },
+  ignoreRoutes: ['User Confirmation', 'Reset Password']
 });
 Vue.use(Rollbar, {
   accessToken: process.env.ROLLBAR_CLIENT_TOKEN,
