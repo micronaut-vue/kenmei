@@ -11,6 +11,7 @@ exports[`LandingPage.vue renders the page 1`] = `
       class="p-5"
     >
       <img
+        alt="logo"
         class="max-w-xs w-full inline logo"
         src="@/assets/logo.svg"
       />

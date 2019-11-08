@@ -6,7 +6,7 @@
     router
   )
     el-menu-item(index='/').border-none
-      img.w-32(src='@/assets/logo.svg')
+      img.w-32(src='@/assets/logo.svg' alt="logo")
     template(v-if='signedIn')
       el-submenu.avatar-menu.float-right(index='1')
         template(slot='title')
