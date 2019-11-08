@@ -2,7 +2,7 @@
   .container.mx-auto.w-full.h-full.flex.flex-col.justify-center.items-center
     base-card.max-w-lg.text-center.mx-5.md_mx-0
       .p-5
-        img.max-w-xs.w-full.inline.logo(src='@/assets/logo.svg')
+        img.max-w-xs.w-full.inline.logo(src='@/assets/logo.svg' alt="logo")
         .welcome-text.font-size-b.font-line-height-secondary
           p
             | Welcome to Kenmei, a new manga tracking website currently in
