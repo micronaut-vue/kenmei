@@ -51,28 +51,7 @@
         custom-class="custom-dialog"
         width="400px"
       )
-        el-upload(
-          ref="upload"
-          action=""
-          :http-request="processUpload"
-          :multiple="false"
-          :show-file-list="false"
-          accept="application/json"
-          drag
-          )
-          i.el-icon-upload
-          .el-upload__text
-            | Drop file here or click to upload
-          .el-upload__tip(slot="tip")
-            | You can download your Trackr.moe list
-            |
-            el-link.align-baseline.text-xs(
-              href="https://trackr.moe/user/options"
-              :underline="false"
-              target="_blank"
-            )
-              | here
-            progress-bar.mt-2(:percentage='importProgress')
+        importers(@importCompleted="completeImport")
       el-dialog(
         title="Add Manga"
         :visible.sync="dialogVisible"
@@ -96,30 +75,25 @@
 </template>
 
 <script>
-  import pLimit from 'p-limit';
   import {
     mapActions, mapState, mapMutations, mapGetters,
   } from 'vuex';
   import {
-    Message, Loading, Dialog, Button, Input, Upload, Link, Select, Option,
+    Message, Loading, Dialog, Button, Input, Link, Select, Option,
   } from 'element-ui';
 
+  import Importers from '@/components/TheImporters';
   import TheMangaList from '@/components/TheMangaList';
-  import ProgressBar from '@/components/ProgressBar';
-  import {
-    addMangaEntry, addMangaEntries, deleteMangaEntry,
-  } from '@/services/api';
-  import { processList, sliceIntoBatches } from '@/services/importer';
+  import { addMangaEntry, deleteMangaEntry } from '@/services/api';
 
   export default {
     name: 'MangaList',
     components: {
+      Importers,
       TheMangaList,
-      ProgressBar,
       'el-button': Button,
       'el-dialog': Dialog,
       'el-input': Input,
-      'el-upload': Upload,
       'el-link': Link,
       'el-select': Select,
       'el-option': Option,
@@ -131,7 +105,6 @@
         mangaURL: '',
         dialogVisible: false,
         importDialogVisible: false,
-        importProgress: 0,
       };
     },
     computed: {
@@ -169,6 +142,11 @@
 
         this.removeEntries(this.selectedSeriesIDs);
       },
+      completeImport() {
+        // Request all lists again to get new lists if created
+        // TODO: Figure out based on relationships if there was a new list added
+        this.retrieveLists();
+      },
       mangaDexSearch() {
         if (this.entryAlreadyExists(this.mangaURL)) {
           Message.info('Manga already added');
@@ -199,77 +177,6 @@
         this.dialogVisible = false;
         loading.close();
         this.mangaURL = '';
-      },
-      processMangaDexList(list) {
-        let seriesImported  = 0;
-        const filteredLists = {};
-        const promiseLimit  = pLimit(1);
-        const listsToImport = processList(list);
-
-        Object.entries(listsToImport).forEach(([name, list]) => {
-          filteredLists[name] = list
-            .map(url => ({
-              seriesURL: url.full_title_url,
-              lastRead: url.title_data.current_chapter,
-            }))
-            .filter(url => !this.entryAlreadyExists(url.seriesURL));
-        });
-
-        if (Object.values(filteredLists).every(list => list.length === 0)) {
-          Message.info('Nothing new to import');
-          return;
-        }
-
-        const entriesToImport = Object.values(filteredLists).flat();
-        const URLChunks       = sliceIntoBatches(filteredLists);
-
-        const requestList = URLChunks.map(payload => promiseLimit(
-          () => addMangaEntries(payload).then(
-            (importedList) => {
-              seriesImported += importedList.data.length;
-              this.importProgress = Math.floor(
-                seriesImported / entriesToImport.length * 100
-              );
-
-              return importedList.data;
-            }
-          )
-        ));
-
-        this.importMangaInBatches(requestList);
-      },
-      async importMangaInBatches(requestList) {
-        const loading = Loading.service({ target: '.el-upload-dragger' });
-        await Promise.all(requestList)
-          .then((importedList) => {
-            const importedManga = importedList.flat();
-
-            Message.info(`Imported ${importedManga.length} series`);
-            this.importDialogVisible = false;
-          })
-          .catch((_error) => {
-            Message.error('Something went wrong');
-          })
-          .finally(() => {
-            loading.close();
-          });
-
-        // Request all lists again to get new lists if created
-        // TODO: Figure out based on relationships if there was a new list added
-        this.retrieveLists();
-      },
-      processUpload(file) {
-        // Reset import progress
-        this.importProgress = 0;
-
-        const reader = new FileReader();
-
-        reader.onload = ((theFile) => {
-          const json = JSON.parse(theFile.target.result);
-          this.processMangaDexList(json);
-        });
-
-        reader.readAsText(file.file);
       },
     },
   };

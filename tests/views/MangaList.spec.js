@@ -4,6 +4,7 @@ import { Message } from 'element-ui';
 import flushPromises from 'flush-promises';
 import MangaList from '@/views/MangaList.vue';
 import TheMangaList from '@/components/TheMangaList.vue';
+import TheImporters from '@/components/TheImporters.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
 
@@ -18,108 +19,6 @@ localVue.use(Vuex);
 localVue.directive('loading', true);
 
 describe('MangaList.vue', () => {
-  describe('when importing MangaDex entries from Trackr.moe JSON', () => {
-    let importedList;
-    let mangaEntry;
-    let store;
-    let mangaList;
-
-    beforeEach(() => {
-      importedList = {
-        series: {
-          reading: {
-            manga: [{
-              full_title_url: 'example.url/manga/1',
-              title_data: {
-                current_chapter: '38201:--:v5/c34',
-              },
-              site_data: {
-                site: 'mangadex.org',
-              },
-            }],
-          },
-        },
-      };
-      mangaEntry = mangaEntryFactory.build();
-      store = new Vuex.Store({
-        modules: {
-          lists: {
-            namespaced: true,
-            state: {
-              lists: [],
-              entries: [],
-            },
-            actions: lists.actions,
-            getters: lists.getters,
-            mutations: lists.mutations,
-          },
-        },
-      });
-      mangaList = shallowMount(MangaList, { store, localVue });
-      mangaList.setData({ currentListID: '1', importProgress: 0 });
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks();
-    });
-
-    it('parses manga list from a json file', async () => {
-      const file = new File(
-        [importedList], 'list.json', { type: 'application/json' }
-      );
-      const fileReaderReadTextMock = jest.spyOn(window, 'FileReader');
-
-      fileReaderReadTextMock.mockImplementation(() => ({
-        readAsText: jest.fn(),
-      }));
-
-      mangaList.vm.processUpload({ file });
-
-      await flushPromises();
-
-      expect(fileReaderReadTextMock).toHaveBeenCalled();
-    });
-
-    it('adds new manga entries and updates progress percentage if successful', async () => {
-      const addMangaEntriesMock = jest.spyOn(api, 'addMangaEntries');
-
-      addMangaEntriesMock.mockResolvedValue({ data: [mangaEntry] });
-
-      mangaList.vm.processMangaDexList(importedList);
-
-      await flushPromises();
-
-      // TODO: Find out why this is not woring anymore
-      // expect(mangaList.vm.currentListEntries).toContain(mangaEntry);
-      expect(mangaList.vm.$data.importProgress).toEqual(100);
-    });
-
-    it('shows Something went wrong message if Import failed', async () => {
-      const errorMessageMock    = jest.spyOn(Message, 'error');
-      const addMangaEntriesMock = jest.spyOn(api, 'addMangaEntries');
-
-      addMangaEntriesMock.mockRejectedValue();
-
-      mangaList.vm.processMangaDexList(importedList);
-
-      await flushPromises();
-
-      expect(errorMessageMock).toHaveBeenCalledWith('Something went wrong');
-    });
-
-    it('ignores already existing entries', async () => {
-      const infoMessageMock = jest.spyOn(Message, 'info');
-
-      store.state.lists.entries = [mangaEntry];
-
-      mangaList.vm.processMangaDexList(importedList);
-
-      await flushPromises();
-
-      expect(mangaList.vm.currentListEntries.length).toBe(1);
-      expect(infoMessageMock).toHaveBeenCalledWith('Nothing new to import');
-    });
-  });
   describe('when adding new MangaDex entry', () => {
     let store;
     let mangaList;
@@ -246,6 +145,13 @@ describe('MangaList.vue', () => {
 
       expect(mangaList.html()).toContain('Remove');
       expect(mangaList.vm.$data.selectedSeriesIDs).toContain('1');
+    });
+
+    it('@importCompleted - refreshes manga list', () => {
+      const retrieveListsSpy = jest.spyOn(mangaList.vm, 'retrieveLists');
+      mangaList.find(TheImporters).vm.$emit('importCompleted');
+
+      expect(retrieveListsSpy).toHaveBeenCalled();
     });
   });
   describe(':data', () => {
