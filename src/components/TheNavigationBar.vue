@@ -10,9 +10,8 @@
     template(v-if='signedIn')
       el-submenu.avatar-menu.float-right(index='1')
         template(slot='title')
-          el-avatar.align-middle(
-            src="https://cube.elemecdn.com/0/88/03b0d39583f48206768a7534e55bcpng.png"
-          )
+          el-avatar.align-middle
+            img(src='@/assets/default-avatar.png')
         el-menu-item.sm_hidden(index='/manga-list') Manga List
         el-menu-item(disabled) Settings
         el-menu-item(@click='signOutMethod') Logout
