@@ -28,6 +28,9 @@ describe('TheImporters.vue', () => {
           reading: {
             manga: [{
               full_title_url: 'example.url/manga/1',
+              generated_current_data: {
+                url: 'example.url/chapter/1',
+              },
               title_data: {
                 current_chapter: '38201:--:v5/c34',
               },
