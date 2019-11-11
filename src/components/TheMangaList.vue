@@ -102,6 +102,7 @@
   import relativeTime from 'dayjs/plugin/relativeTime';
 
   import { updateMangaEntry } from '@/services/api';
+  import sortBy from '@/services/sorters';
 
   dayjs.extend(relativeTime);
 
@@ -180,41 +181,9 @@
         }
       },
       applySorting({ _column, prop, order }) {
-        switch (prop) {
-        case 'attributes.last_released_at':
-          this.sortedData = this.tableData.sort(this.releasedAtSort);
-          break;
-        case 'newReleases':
-          this.sortedData = this.tableData.sort(this.newReleasesSort);
-          break;
-        case 'attributes.title':
-          this.sortedData = this.tableData.sort(this.titleSort);
-          break;
-        default:
-          this.sortedData = this.tableData.sort(this.newReleasesSort);
-        }
-
-        if (order === 'descending') { this.sortedData.reverse(); }
+        this.sortedData = sortBy(this.tableData, prop, order);
 
         this.paginate(1);
-      },
-      titleSort(entryA, entryB) {
-        const entryATitle = entryA.attributes.title.toLowerCase();
-        const entryBTitle = entryB.attributes.title.toLowerCase();
-
-        return entryATitle.localeCompare(entryBTitle);
-      },
-      newReleasesSort(entryA, entryB) {
-        return Number(this.unread(entryB)) - Number(this.unread(entryA));
-      },
-      releasedAtSort(a, b) {
-        const aReleasedAt = a.attributes.last_released_at;
-        const bReleasedAt = b.attributes.last_released_at;
-
-        // Descending order, with null always being the oldest
-        return (aReleasedAt === null) - (bReleasedAt === null)
-          || -(aReleasedAt > bReleasedAt)
-          || +(aReleasedAt < bReleasedAt);
       },
       handleSelectionChange(val) {
         const ids = val.map(entry => entry.id);
