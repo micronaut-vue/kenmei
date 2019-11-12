@@ -118,6 +118,52 @@ describe('MangaList.vue', () => {
       expect(errorMessageMock).toHaveBeenCalledWith('Something went wrong');
     });
   });
+  describe('watchers', () => {
+    let store;
+
+    beforeEach(() => {
+      jest.useFakeTimers();
+      store = new Vuex.Store({
+        modules: {
+          lists: {
+            namespaced: true,
+            state: lists.store,
+            actions: lists.actions,
+            getters: lists.getters,
+            mutations: lists.mutations,
+          },
+        },
+      });
+    });
+
+    it('searchTerm - adds filtered series to the filteredEntries', () => {
+      const entry1 = mangaEntryFactory.build(
+        { attributes: { title: 'Boku no Hero' } }
+      );
+      const entry2 = mangaEntryFactory.build(
+        { attributes: { title: 'Attack on Titan' } }
+      );
+      const mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        computed: {
+          currentListEntries: () => [entry1, entry2],
+        },
+      });
+
+      expect(mangaList.vm.filteredEntries).toBe(null);
+
+      mangaList.setData({ searchTerm: 'Boku no' });
+      jest.runAllTimers();
+
+      expect(mangaList.vm.filteredEntries).toContain(entry1);
+
+      mangaList.setData({ searchTerm: 'Attack' });
+      jest.runAllTimers();
+
+      expect(mangaList.vm.filteredEntries).toContain(entry2);
+    });
+  });
   describe('@events', () => {
     let mangaList;
     let store;
