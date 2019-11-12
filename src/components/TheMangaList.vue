@@ -88,7 +88,6 @@
         :current-page.sync="currentPage"
         :total="tableData.length"
         :hide-on-single-page="true"
-        @current-change="paginate"
       )
 </template>
 
@@ -132,7 +131,6 @@
     data() {
       return {
         currentPage: 1,
-        currentPageEntries: [],
         sortedData: [],
       };
     },
@@ -140,13 +138,16 @@
       ...mapState('lists', [
         'listsLoading',
       ]),
+      currentPageEntries() {
+        const page = this.currentPage - 1;
+        return this.sortedData.slice(page * 50, (page + 1) * 50);
+      },
     },
     watch: {
       tableData(newVal, oldVal) {
         if (newVal === oldVal) { return; }
 
         this.sortedData = newVal;
-        this.paginate(1);
         this.$refs.mangaListTable.sort('newReleases', 'ascending');
       },
     },
@@ -182,20 +183,11 @@
       },
       applySorting({ _column, prop, order }) {
         this.sortedData = sortBy(this.tableData, prop, order);
-
-        this.paginate(1);
+        this.currentPage = 1;
       },
       handleSelectionChange(val) {
         const ids = val.map(entry => entry.id);
         this.$emit('seriesSelected', ids);
-      },
-      paginate(pageNumber) {
-        this.currentPage = pageNumber;
-        // So we can pass 1 as the first page (instead of 0)
-        pageNumber -= 1;
-        this.currentPageEntries = this.sortedData.slice(
-          pageNumber * 50, (pageNumber + 1) * 50
-        );
       },
     },
   };

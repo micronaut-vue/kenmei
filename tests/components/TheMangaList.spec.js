@@ -18,6 +18,8 @@ describe('TheMangaList.vue', () => {
   let mangaList;
   let store;
 
+  const defaultEntries = mangaEntryFactory.buildList(1);
+
   beforeEach(() => {
     store = new Vuex.Store({
       modules: {
@@ -36,7 +38,7 @@ describe('TheMangaList.vue', () => {
       localVue,
       sync: false,
       propsData: {
-        tableData: mangaEntryFactory.buildList(1),
+        tableData: defaultEntries,
       },
     });
   });
@@ -46,6 +48,7 @@ describe('TheMangaList.vue', () => {
 
     beforeEach(() => {
       updateMangaEntryMock = jest.spyOn(api, 'updateMangaEntry');
+      mangaList.setData({ sortedData: defaultEntries });
     });
 
     afterEach(() => {
