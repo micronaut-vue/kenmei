@@ -66,13 +66,13 @@ describe('Sorters', () => {
       expect(sorted[2]).toBe(entry3);
     });
 
-    it('sorts by newly released', () => {
+    it('sorts by newly released, ordered by released at', () => {
       const sorted = sortBy(
         [entry2, entry1, entry3], 'newReleases', 'ascending'
       );
 
-      expect(sorted[0]).toBe(entry2);
-      expect(sorted[1]).toBe(entry1);
+      expect(sorted[0]).toBe(entry1);
+      expect(sorted[1]).toBe(entry2);
       expect(sorted[2]).toBe(entry3);
     });
   });
