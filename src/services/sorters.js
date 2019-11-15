@@ -37,7 +37,7 @@ export default function sortBy(array, sortType, order) {
     sortedData = array.sort(releasedAtSort);
     break;
   case 'newReleases':
-    sortedData = array.sort(newReleasesSort);
+    sortedData = array.sort(releasedAtSort).sort(newReleasesSort);
     break;
   case 'attributes.title':
     sortedData = array.sort(titleSort);
