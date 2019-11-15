@@ -2,7 +2,7 @@
   .container.mx-auto.w-full.h-full.flex.flex-col.items-center
     .flex.flex-col.w-full.max-w-6xl.pt-24.sm_pb-16
       .mx-5.mb-5.max-sm_mx-2
-        el-select.sm_shadow-md.rounded.float-right(
+        el-select.sm_shadow-md.rounded.float-right.w-48(
           v-model="currentListID"
           placeholder="Select"
         )
@@ -12,6 +12,12 @@
             :label="list.attributes.name"
             :value="list.id"
           )
+      .mx-5.mb-5.max-sm_mx-2
+        el-input.sm_shadow-md.rounded.float-right.w-64(
+          prefix-icon="el-icon-search"
+          placeholder="Input manga title"
+          v-model='searchTerm'
+        )
       .mx-5.mb-5.max-sm_mx-2
         el-button.sm_shadow-md(
           v-show="selectedSeriesIDs.length > 0"
@@ -42,7 +48,7 @@
           | Import
       .flex-grow.sm_mx-5.mx-0
         the-manga-list(
-          :tableData='currentListEntries'
+          :tableData='filteredEntries || currentListEntries'
           @seriesSelected="handleSelection"
         )
       el-dialog(
@@ -75,6 +81,7 @@
 </template>
 
 <script>
+  import debounce from 'lodash/debounce';
   import {
     mapActions, mapState, mapMutations, mapGetters,
   } from 'vuex';
@@ -101,8 +108,10 @@
     data() {
       return {
         selectedSeriesIDs: [],
+        filteredEntries: null,
         currentListID: null,
         mangaURL: '',
+        searchTerm: '',
         dialogVisible: false,
         importDialogVisible: false,
       };
@@ -119,6 +128,13 @@
         return this.getEntriesByListId(this.currentListID);
       },
     },
+    watch: {
+      searchTerm(newVal, oldVal) {
+        if (newVal === oldVal) { return; }
+        this.setListsLoading(true);
+        this.search(newVal.toLowerCase());
+      },
+    },
     mounted() {
       this.retrieveLists();
     },
@@ -129,7 +145,14 @@
       ...mapMutations('lists', [
         'addEntry',
         'removeEntries',
+        'setListsLoading',
       ]),
+      search: debounce(function search(searchTerm) {
+        this.filteredEntries = this.currentListEntries.filter(
+          entry => entry.attributes.title.toLowerCase().includes(searchTerm)
+        );
+        this.setListsLoading(false);
+      }, 250),
       handleSelection(selectedSeriesIDs) {
         this.selectedSeriesIDs = selectedSeriesIDs;
       },
