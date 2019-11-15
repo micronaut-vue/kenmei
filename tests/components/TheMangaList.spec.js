@@ -18,6 +18,8 @@ describe('TheMangaList.vue', () => {
   let mangaList;
   let store;
 
+  const defaultEntries = mangaEntryFactory.buildList(1);
+
   beforeEach(() => {
     store = new Vuex.Store({
       modules: {
@@ -36,7 +38,7 @@ describe('TheMangaList.vue', () => {
       localVue,
       sync: false,
       propsData: {
-        tableData: mangaEntryFactory.buildList(1),
+        tableData: defaultEntries,
       },
     });
   });
@@ -46,6 +48,7 @@ describe('TheMangaList.vue', () => {
 
     beforeEach(() => {
       updateMangaEntryMock = jest.spyOn(api, 'updateMangaEntry');
+      mangaList.setData({ sortedData: defaultEntries });
     });
 
     afterEach(() => {
@@ -132,135 +135,6 @@ describe('TheMangaList.vue', () => {
   });
 
   describe(':props', () => {
-    // TODO: Can't get ElementUI table to trigger sorting on click
-    // When I figure that out, update this test to actually work
-    it.skip(':tableData - sorting Released at shows Unknown last', async () => {
-      mangaList.setProps({
-        tableData: [
-          mangaEntryFactory.build(
-            {
-              attributes: { title: 'Manga Title Last', last_released_at: null },
-            }
-          ),
-          mangaEntryFactory.build(
-            {
-              attributes: {
-                title: 'Manga Title Middle',
-                last_released_at: '2019-01-01T00:00:00.000Z',
-              },
-            }
-          ),
-          mangaEntryFactory.build(
-            {
-              attributes: {
-                title: 'Manga Title First',
-                last_released_at: '2019-01-10T00:00:00.000Z',
-              },
-            }
-          ),
-        ],
-      });
-
-      await flushPromises();
-
-      const releasedAt = mangaList.find('.el-table_1_column_5').find('.cell');
-      const tableRows  = mangaList.findAll('.el-table__row');
-
-      releasedAt.trigger('click');
-
-      expect(tableRows.at(0).text()).toContain('10 months ago');
-      expect(tableRows.at(2).text()).toContain('Unknown');
-
-      releasedAt.trigger('click');
-
-      expect(tableRows.at(0).text()).toContain('Unknown');
-      expect(tableRows.at(2).text()).toContain('10 months ago');
-    });
-
-    it(':tableData - new releases are shown first', async () => {
-      const first = mangaEntryFactory.build(
-        {
-          attributes: {
-            title: 'Manga Title First',
-            last_chapter_read: '3',
-            last_chapter_available: '4',
-          },
-          links: {
-            last_chapter_read_url: 'example.url/manga/1/chapter/3',
-            last_chapter_available_url: 'example.url/manga/1/chapter/4',
-          },
-        }
-      );
-      const second = mangaEntryFactory.build(
-        {
-          attributes: {
-            title: 'Manga Title Middle',
-            last_chapter_read: '1',
-            last_chapter_available: '2',
-          },
-          links: {
-            last_chapter_read_url: 'example.url/manga/1/chapter/1',
-            last_chapter_available_url: 'example.url/manga/1/chapter/2',
-          },
-        }
-      );
-      const last = mangaEntryFactory.build(
-        {
-          attributes: {
-            title: 'Manga Title Last',
-            last_chapter_read: '5',
-            last_chapter_available: '5',
-          },
-          links: {
-            last_chapter_read_url: 'example.url/manga/1/chapter/5',
-            last_chapter_available_url: 'example.url/manga/1/chapter/5',
-          },
-        }
-      );
-      const mangaList = mount(MangaList, {
-        store,
-        localVue,
-        sync: false,
-        propsData: { tableData: [second, first, last] },
-      });
-
-      await flushPromises();
-
-      const tableRows  = mangaList.findAll('.el-table__row');
-
-      expect(tableRows.at(0).text()).toContain('12');
-      expect(tableRows.at(1).text()).toContain('34');
-      expect(tableRows.at(2).text()).toContain('55');
-    });
-
-    it.skip(':tableData - sort titles alphabetically ignoring case', async () => {
-      const first = mangaEntryFactory.build(
-        { attributes: { title: 'a' } }
-      );
-      const second = mangaEntryFactory.build(
-        { attributes: { title: 'b' } }
-      );
-      const last = mangaEntryFactory.build(
-        { attributes: { title: 'C' } }
-      );
-      const mangaList = mount(MangaList, {
-        store,
-        localVue,
-        sync: false,
-        propsData: { tableData: [second, first, last] },
-      });
-
-      await flushPromises();
-
-      mangaList.vm.$refs.mangaListTable.sort('attributes.title', 'ascending');
-
-      const tableRows = mangaList.findAll('.el-table__row');
-
-      expect(tableRows.at(0).text()).toContain('a');
-      expect(tableRows.at(1).text()).toContain('b');
-      expect(tableRows.at(2).text()).toContain('C');
-    });
-
     it(':tableData - sanitizes manga title to convert special characters', async () => {
       mangaList.setProps({
         tableData: [
