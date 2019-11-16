@@ -161,7 +161,8 @@
           last_chapter_read_url, last_chapter_available_url,
         } = entry.links;
 
-        return last_chapter_read_url !== last_chapter_available_url;
+        return last_chapter_available_url
+          && (last_chapter_read_url !== last_chapter_available_url);
       },
       unread(entry) {
         const {
