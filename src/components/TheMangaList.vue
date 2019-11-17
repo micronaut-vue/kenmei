@@ -78,7 +78,7 @@
               ref="updateEntryButton"
               icon="el-icon-check"
               size="mini"
-              @click="tryEntryUpdate(scope.row)"
+              @click="setLastRead(scope.row)"
               circle
             )
     .flex.flex-row.justify-center
@@ -173,8 +173,12 @@
           && (last_chapter_read_url !== last_chapter_available_url);
       },
       /* eslint-enable camelcase */
-      async tryEntryUpdate(entry) {
-        const response = await updateMangaEntry(entry);
+      async setLastRead(entry) {
+        const attributes = {
+          last_chapter_read: entry.attributes.last_chapter_available,
+          last_chapter_read_url: entry.links.last_chapter_available_url,
+        };
+        const response = await updateMangaEntry(entry.id, attributes);
         if (response) {
           Message.info('Updated last read chapter');
           this.updateEntry(response);
