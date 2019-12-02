@@ -19,33 +19,45 @@
           v-model='searchTerm'
         )
       .mx-5.mb-5.max-sm_mx-2
-        el-button.sm_shadow-md(
-          v-show="selectedSeriesIDs.length > 0"
-          ref="removeSeriesButton"
-          type="danger"
-          size="medium"
-          @click="removeSeries"
-          round
-        )
-          i.el-icon-delete.mr-1
-          | Remove
-        el-button.sm_shadow-md.float-right(
-          ref="openAddMangaModalButton"
-          type="primary"
-          size="medium"
-          @click="dialogVisible = true"
-          round
-        )
-          i.el-icon-plus.mr-1
-          | Add Manga
-        el-button.sm_shadow-md.float-right.mr-3(
-          type="success"
-          size="medium"
-          @click="importDialogVisible = true"
-          round
-        )
-          i.el-icon-upload2.mr-1
-          | Import
+        .bulk-actions.inline-block.max-sm_mb-5.max-sm_float-right
+          el-button.sm_shadow-md(
+            v-show="entriesSelected"
+            ref="removeSeriesButton"
+            type="danger"
+            size="medium"
+            @click="removeSeries"
+            round
+          )
+            i.el-icon-delete.mr-1
+            | Remove
+          el-button.sm_shadow-md(
+            v-show="entriesSelected"
+            ref="editMangaEntriesButton"
+            type="info"
+            size="medium"
+            @click="editDialogVisible = true"
+            round
+          )
+            i.el-icon-edit.mr-1
+            | Edit
+        .actions.inline-block.float-right
+          el-button.sm_shadow-md(
+            ref="openAddMangaModalButton"
+            type="primary"
+            size="medium"
+            @click="dialogVisible = true"
+            round
+          )
+            i.el-icon-plus.mr-1
+            | Add Manga
+          el-button.sm_shadow-md(
+            type="success"
+            size="medium"
+            @click="importDialogVisible = true"
+            round
+          )
+            i.el-icon-upload2.mr-1
+            | Import
       .flex-grow.sm_mx-5.mx-0
         the-manga-list(
           :tableData='filteredEntries || currentListEntries'
@@ -78,6 +90,31 @@
             :disabled="mangaURL.length === 0"
           )
             | Add
+      el-dialog(
+        title="Edit Manga Entry"
+        custom-class="custom-dialog edit-manga-entry-dialog"
+        width="400px"
+        :visible.sync="editDialogVisible"
+        :before-close="closeEditModal"
+      )
+        el-select.rounded.w-full(
+          v-model="newListID"
+          placeholder="Select new list"
+        )
+          el-option(
+            v-for="list in lists"
+            :key="list.id"
+            :label="list.attributes.name"
+            :value="list.id"
+          )
+        span(slot="footer" class="dialog-footer")
+          el-button(@click="closeEditModal") Cancel
+          el-button(
+            ref="updateEntryButton"
+            type="primary"
+            @click="updateMangaEntries"
+          )
+            | Update
 </template>
 
 <script>
@@ -91,7 +128,9 @@
 
   import Importers from '@/components/TheImporters';
   import TheMangaList from '@/components/TheMangaList';
-  import { addMangaEntry, deleteMangaEntry } from '@/services/api';
+  import {
+    addMangaEntry, bulkUpdateMangaEntry, deleteMangaEntry,
+  } from '@/services/api';
 
   export default {
     name: 'MangaList',
@@ -110,10 +149,12 @@
         selectedSeriesIDs: [],
         filteredEntries: null,
         currentListID: null,
+        newListID: null,
         mangaURL: '',
         searchTerm: '',
         dialogVisible: false,
         importDialogVisible: false,
+        editDialogVisible: false,
       };
     },
     computed: {
@@ -124,6 +165,9 @@
         'getEntriesByListId',
         'entryAlreadyExists',
       ]),
+      entriesSelected() {
+        return this.selectedSeriesIDs.length > 0;
+      },
       currentListEntries() {
         return this.getEntriesByListId(this.currentListID);
       },
@@ -144,9 +188,28 @@
       ]),
       ...mapMutations('lists', [
         'addEntry',
+        'updateEntry',
         'removeEntries',
         'setListsLoading',
       ]),
+      async updateMangaEntries() {
+        const loading = Loading.service({ target: '.edit-manga-entry-dialog' });
+        const response = await bulkUpdateMangaEntry(
+          this.selectedSeriesIDs, { manga_list_id: this.newListID }
+        );
+
+        loading.close();
+
+        this.editDialogVisible = false;
+
+        if (response) {
+          Message.info(`${this.selectedSeriesIDs.length} entries updated`);
+          this.resetSelectedAttributes();
+          response.map(e => this.updateEntry(e));
+        } else {
+          Message.error("Couldn't update. Try refreshing the page");
+        }
+      },
       search: debounce(function search(searchTerm) {
         this.filteredEntries = this.currentListEntries.filter(
           entry => entry.attributes.title.toLowerCase().includes(searchTerm)
@@ -200,6 +263,14 @@
         this.dialogVisible = false;
         loading.close();
         this.mangaURL = '';
+      },
+      closeEditModal() {
+        this.editDialogVisible = false;
+        this.newListID = null;
+      },
+      resetSelectedAttributes() {
+        this.selectedSeriesIDs = [];
+        this.newListID = null;
       },
     },
   };

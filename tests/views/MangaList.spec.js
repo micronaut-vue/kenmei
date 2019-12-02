@@ -118,6 +118,111 @@ describe('MangaList.vue', () => {
       expect(errorMessageMock).toHaveBeenCalledWith('Something went wrong');
     });
   });
+  describe('when updating manga entries', () => {
+    let store;
+    let mangaList;
+    let mangaEntry;
+    let updateMangaEntriesMock;
+
+    beforeEach(() => {
+      updateMangaEntriesMock = jest.spyOn(api, 'bulkUpdateMangaEntry');
+      mangaEntry = mangaEntryFactory.build({ id: 1 });
+
+      store = new Vuex.Store({
+        modules: {
+          lists: {
+            namespaced: true,
+            state: {
+              lists: [
+                mangaListFactory.build({ id: '1' }),
+                mangaListFactory.build({ id: '2' }),
+              ],
+              entries: [mangaEntry],
+            },
+            actions: lists.actions,
+            getters: lists.getters,
+            mutations: lists.mutations,
+          },
+        },
+      });
+      mangaList = shallowMount(MangaList, { store, localVue });
+      mangaList.setData({
+        selectedSeriesIDs: ['1'],
+        currentListID: '1',
+        newListID: '2',
+        editDialogVisible: true,
+      });
+      mangaList.find({ ref: 'editMangaEntriesButton' }).trigger('click');
+    });
+
+    afterEach(() => {
+      expect(updateMangaEntriesMock).toHaveBeenCalledWith(
+        ['1'], { manga_list_id: '2' }
+      );
+      jest.restoreAllMocks();
+    });
+
+    describe('if update was successful', () => {
+      let updatedMangaEntry;
+
+      beforeEach(() => {
+        updatedMangaEntry = mangaEntryFactory.build(
+          { relationships: { manga_list: { data: { id: '2' } } } }
+        );
+
+        updateMangaEntriesMock.mockResolvedValue([updatedMangaEntry]);
+      });
+
+      it('resets edit manga entries modal', async () => {
+        mangaList.vm.updateMangaEntries();
+
+        await flushPromises();
+
+        expect(mangaList.vm.$data.selectedSeriesIDs).toEqual([]);
+        expect(mangaList.vm.$data.editDialogVisible).toBe(false);
+        expect(mangaList.vm.$data.newListID).toBe(null);
+      });
+
+      it('tells user how many entries have been updated', async () => {
+        const infoMessageMock = jest.spyOn(Message, 'info');
+
+        mangaList.vm.updateMangaEntries();
+
+        await flushPromises();
+
+        expect(infoMessageMock).toHaveBeenCalledWith('1 entries updated');
+      });
+
+      it("changes manga entry's manga list", async () => {
+        mangaList.vm.updateMangaEntries();
+
+        await flushPromises();
+
+        expect(mangaList.vm.currentListEntries).not.toContain(mangaEntry);
+
+        mangaList.setData({ currentListID: '2' });
+
+        expect(mangaList.vm.currentListEntries).toContain(updatedMangaEntry);
+      });
+    });
+
+    describe('if update was unsuccessful', () => {
+      it("shows couldn't update message and keeps entry the same", async () => {
+        const errorMessageMock = jest.spyOn(Message, 'error');
+
+        updateMangaEntriesMock.mockResolvedValue(false);
+
+        mangaList.vm.updateMangaEntries();
+
+        await flushPromises();
+
+        expect(mangaList.vm.currentListEntries).toContain(mangaEntry);
+        expect(errorMessageMock).toHaveBeenCalledWith(
+          "Couldn't update. Try refreshing the page"
+        );
+      });
+    });
+  });
   describe('watchers', () => {
     let store;
 

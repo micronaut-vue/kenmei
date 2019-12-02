@@ -16,13 +16,17 @@ export const addMangaEntry = (seriesURL, mangaListID) => secure
     return response.data;
   });
 
-export const updateMangaEntry = entry => secure
-  .put(`/api/v1/manga_entries/${entry.id}`, {
-    manga_entry: {
-      last_chapter_read: entry.attributes.last_chapter_available,
-      last_chapter_read_url: entry.links.last_chapter_available_url,
-    },
+export const updateMangaEntry = (id, attributes) => secure
+  .put(`/api/v1/manga_entries/${id}`, { manga_entry: attributes })
+  .then((response) => {
+    if (response.data.error) { return false; }
+
+    return response.data.data;
   })
+  .catch(_error => false);
+
+export const bulkUpdateMangaEntry = (ids, attributes) => secure
+  .put('/api/v1/manga_entries/bulk_update', { ids, manga_entry: attributes })
   .then((response) => {
     if (response.data.error) { return false; }
 
