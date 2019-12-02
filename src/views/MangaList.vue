@@ -19,43 +19,45 @@
           v-model='searchTerm'
         )
       .mx-5.mb-5.max-sm_mx-2
-        el-button.sm_shadow-md(
-          v-show="entriesSelected"
-          ref="removeSeriesButton"
-          type="danger"
-          size="medium"
-          @click="removeSeries"
-          round
-        )
-          i.el-icon-delete.mr-1
-          | Remove
-        el-button.sm_shadow-md(
-          v-show="entriesSelected"
-          ref="editMangaEntriesButton"
-          type="info"
-          size="medium"
-          @click="editDialogVisible = true"
-          round
-        )
-          i.el-icon-edit.mr-1
-          | Edit
-        el-button.sm_shadow-md.float-right(
-          ref="openAddMangaModalButton"
-          type="primary"
-          size="medium"
-          @click="dialogVisible = true"
-          round
-        )
-          i.el-icon-plus.mr-1
-          | Add Manga
-        el-button.sm_shadow-md.float-right.mr-3(
-          type="success"
-          size="medium"
-          @click="importDialogVisible = true"
-          round
-        )
-          i.el-icon-upload2.mr-1
-          | Import
+        .bulk-actions.inline-block.max-sm_mb-5.max-sm_float-right
+          el-button.sm_shadow-md(
+            v-show="entriesSelected"
+            ref="removeSeriesButton"
+            type="danger"
+            size="medium"
+            @click="removeSeries"
+            round
+          )
+            i.el-icon-delete.mr-1
+            | Remove
+          el-button.sm_shadow-md(
+            v-show="entriesSelected"
+            ref="editMangaEntriesButton"
+            type="info"
+            size="medium"
+            @click="editDialogVisible = true"
+            round
+          )
+            i.el-icon-edit.mr-1
+            | Edit
+        .actions.inline-block.float-right
+          el-button.sm_shadow-md(
+            ref="openAddMangaModalButton"
+            type="primary"
+            size="medium"
+            @click="dialogVisible = true"
+            round
+          )
+            i.el-icon-plus.mr-1
+            | Add Manga
+          el-button.sm_shadow-md(
+            type="success"
+            size="medium"
+            @click="importDialogVisible = true"
+            round
+          )
+            i.el-icon-upload2.mr-1
+            | Import
       .flex-grow.sm_mx-5.mx-0
         the-manga-list(
           :tableData='filteredEntries || currentListEntries'
