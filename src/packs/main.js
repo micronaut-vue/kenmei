@@ -20,7 +20,7 @@ Vue.use(VueAnalytics, {
   debug: {
     sendHitTask: process.env.NODE_ENV === 'production',
   },
-  ignoreRoutes: ['User Confirmation', 'Reset Password']
+  ignoreRoutes: ['User Confirmation', 'Reset Password'],
 });
 
 if (process.env.NODE_ENV === 'production') {
