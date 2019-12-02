@@ -22,22 +22,25 @@ Vue.use(VueAnalytics, {
   },
   ignoreRoutes: ['User Confirmation', 'Reset Password']
 });
-Vue.use(Rollbar, {
-  accessToken: process.env.ROLLBAR_CLIENT_TOKEN,
-  captureUncaught: true,
-  captureUnhandledRejections: true,
-  enabled: true,
-  environment: process.env.NODE_ENV,
-  payload: {
-    client: {
-      javascript: {
-        code_version: '1.0',
-        source_map_enabled: true,
-        guess_uncaught_frames: true,
+
+if (process.env.NODE_ENV === 'production') {
+  Vue.use(Rollbar, {
+    accessToken: process.env.ROLLBAR_CLIENT_TOKEN,
+    captureUncaught: true,
+    captureUnhandledRejections: true,
+    enabled: true,
+    environment: process.env.NODE_ENV,
+    payload: {
+      client: {
+        javascript: {
+          code_version: '1.0',
+          source_map_enabled: true,
+          guess_uncaught_frames: true,
+        },
       },
     },
-  },
-});
+  });
+}
 
 Vue.config.errorHandler = (err, _vm, _info) => { Vue.rollbar.error(err); };
 
