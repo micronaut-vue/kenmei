@@ -125,28 +125,36 @@ describe('API', () => {
     });
   });
 
-  describe('deleteMangaEntry()', () => {
+  describe('bulkDeleteMangaEntries()', () => {
+    let ids;
+
+    beforeEach(() => {
+      ids = [1, 2];
+    });
+
+    afterEach(() => {
+      expect(axios.delete).toHaveBeenCalledWith(
+        '/api/v1/manga_entries/bulk_destroy',
+        { data: { ids } }
+      );
+    });
+
     it('makes a request to the API and returns true on success', async () => {
-      const axiosSpy = jest.spyOn(axios, 'delete');
+      axios.delete.mockResolvedValue();
 
-      axiosSpy.mockResolvedValue();
-
-      const data = await apiService.deleteMangaEntry(1);
-      expect(axiosSpy).toHaveBeenCalledWith('/api/v1/manga_entries/1');
+      const data = await apiService.bulkDeleteMangaEntries(ids);
       expect(data).toBeTruthy();
     });
 
-    it('makes a request to the API and returns not_found status if series not found', async () => {
-      const axiosSpy     = jest.spyOn(axios, 'delete');
+    it('makes a request to the API and returns false if request failed', async () => {
       const mockResponse = {
         response: { data: { error: 'Can only delete own entry' } },
       };
 
-      axiosSpy.mockRejectedValue(mockResponse);
+      axios.delete.mockRejectedValue(mockResponse);
 
-      const data = await apiService.deleteMangaEntry(1);
-      expect(axiosSpy).toHaveBeenCalledWith('/api/v1/manga_entries/1');
-      expect(data).not.toBeTruthy();
+      const data = await apiService.bulkDeleteMangaEntries(ids);
+      expect(data).toBeFalsy();
     });
   });
 

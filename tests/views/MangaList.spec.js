@@ -223,6 +223,68 @@ describe('MangaList.vue', () => {
       });
     });
   });
+  describe('when deleting manga entries', () => {
+    let store;
+    let mangaList;
+    let mangaEntry;
+    let bulkDeleteMangaEntriesMock;
+
+    beforeEach(() => {
+      bulkDeleteMangaEntriesMock = jest.spyOn(api, 'bulkDeleteMangaEntries');
+      mangaEntry = mangaEntryFactory.build({ id: '1' });
+
+      store = new Vuex.Store({
+        modules: {
+          lists: {
+            namespaced: true,
+            state: {
+              lists: [mangaListFactory.build({ id: '1' })],
+              entries: [mangaEntry],
+            },
+            actions: lists.actions,
+            getters: lists.getters,
+            mutations: lists.mutations,
+          },
+        },
+      });
+      mangaList = shallowMount(MangaList, { store, localVue });
+      mangaList.setData({ selectedSeriesIDs: ['1'], currentListID: '1' });
+    });
+
+    afterEach(() => {
+      expect(bulkDeleteMangaEntriesMock).toHaveBeenCalledWith(['1']);
+      jest.restoreAllMocks();
+    });
+
+    describe('if deletion was successful', () => {
+      beforeEach(() => { bulkDeleteMangaEntriesMock.mockResolvedValue(true); });
+
+      it('removes deleted entries', async () => {
+        mangaList.vm.removeSeries();
+
+        await flushPromises();
+
+        expect(mangaList.vm.currentListEntries).not.toContain(mangaEntry);
+      });
+    });
+
+    describe('if deletion was unsuccessful', () => {
+      it('shows deletion fail message and keeps entry persisted', async () => {
+        const errorMessageMock = jest.spyOn(Message, 'error');
+
+        bulkDeleteMangaEntriesMock.mockResolvedValue(false);
+
+        mangaList.vm.removeSeries();
+
+        await flushPromises();
+
+        expect(mangaList.vm.currentListEntries).toContain(mangaEntry);
+        expect(errorMessageMock).toHaveBeenCalledWith(
+          'Deletion failed. Try reloading the page before trying again'
+        );
+      });
+    });
+  });
   describe('watchers', () => {
     let store;
 
