@@ -259,6 +259,16 @@ describe('MangaList.vue', () => {
     describe('if deletion was successful', () => {
       beforeEach(() => { bulkDeleteMangaEntriesMock.mockResolvedValue(true); });
 
+      it('tells user how many entries have been deleted', async () => {
+        const infoMessageMock = jest.spyOn(Message, 'info');
+
+        mangaList.vm.removeSeries();
+
+        await flushPromises();
+
+        expect(infoMessageMock).toHaveBeenCalledWith('1 entries deleted');
+      });
+
       it('removes deleted entries', async () => {
         mangaList.vm.removeSeries();
 

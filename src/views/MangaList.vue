@@ -227,6 +227,7 @@
         const successful = await bulkDeleteMangaEntries(this.selectedSeriesIDs);
 
         if (successful) {
+          Message.info(`${this.selectedSeriesIDs.length} entries deleted`);
           this.removeEntries(this.selectedSeriesIDs);
         } else {
           Message.error(
