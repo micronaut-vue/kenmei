@@ -34,10 +34,10 @@ export const bulkUpdateMangaEntry = (ids, attributes) => secure
   })
   .catch(_error => false);
 
-export const deleteMangaEntry = seriesID => secure
-  .delete(`/api/v1/manga_entries/${seriesID}`)
-  .then(_response => true)
-  .catch(_request => false);
+export const bulkDeleteMangaEntries = seriesIDs => secure
+  .delete('/api/v1/manga_entries/bulk_destroy', { data: { ids: seriesIDs } })
+  .then(() => true)
+  .catch(() => false);
 
 export const addMangaEntries = urls => secure
   .post('/api/v1/manga_entries/bulk', { urls })

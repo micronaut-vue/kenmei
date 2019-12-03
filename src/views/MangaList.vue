@@ -129,7 +129,7 @@
   import Importers from '@/components/TheImporters';
   import TheMangaList from '@/components/TheMangaList';
   import {
-    addMangaEntry, bulkUpdateMangaEntry, deleteMangaEntry,
+    addMangaEntry, bulkUpdateMangaEntry, bulkDeleteMangaEntries,
   } from '@/services/api';
 
   export default {
@@ -224,9 +224,16 @@
         this.currentListID = this.currentListID || this.lists[0].id;
       },
       async removeSeries() {
-        await this.selectedSeriesIDs.map(id => deleteMangaEntry(id));
+        const successful = await bulkDeleteMangaEntries(this.selectedSeriesIDs);
 
-        this.removeEntries(this.selectedSeriesIDs);
+        if (successful) {
+          Message.info(`${this.selectedSeriesIDs.length} entries deleted`);
+          this.removeEntries(this.selectedSeriesIDs);
+        } else {
+          Message.error(
+            'Deletion failed. Try reloading the page before trying again'
+          );
+        }
       },
       completeImport() {
         // Request all lists again to get new lists if created
