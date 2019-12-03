@@ -145,7 +145,15 @@ describe('MangaList.vue', () => {
           },
         },
       });
-      mangaList = shallowMount(MangaList, { store, localVue });
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        methods: {
+          clearTableSelection() {
+            return true;
+          },
+        },
+      });
       mangaList.setData({
         selectedSeriesIDs: ['1'],
         currentListID: '1',
@@ -247,7 +255,15 @@ describe('MangaList.vue', () => {
           },
         },
       });
-      mangaList = shallowMount(MangaList, { store, localVue });
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        methods: {
+          clearTableSelection() {
+            return true;
+          },
+        },
+      });
       mangaList.setData({ selectedSeriesIDs: ['1'], currentListID: '1' });
     });
 

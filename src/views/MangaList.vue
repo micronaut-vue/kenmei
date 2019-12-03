@@ -60,6 +60,7 @@
             | Import
       .flex-grow.sm_mx-5.mx-0
         the-manga-list(
+          ref='mangaList'
           :tableData='filteredEntries || currentListEntries'
           @seriesSelected="handleSelection"
         )
@@ -275,9 +276,13 @@
         this.editDialogVisible = false;
         this.newListID = null;
       },
+      clearTableSelection() {
+        this.$refs.mangaList.$refs.mangaListTable.clearSelection();
+      },
       resetSelectedAttributes() {
         this.selectedSeriesIDs = [];
         this.newListID = null;
+        this.clearTableSelection();
       },
     },
   };
