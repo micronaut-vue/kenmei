@@ -108,14 +108,21 @@
             :label="list.attributes.name"
             :value="list.id"
           )
-        span(slot="footer" class="dialog-footer")
-          el-button(@click="closeEditModal") Cancel
+        .dialog-footer.text-left(slot="footer")
           el-button(
-            ref="updateEntryButton"
-            type="primary"
-            @click="updateMangaEntries"
+            ref="reportEntryErrorButton"
+            type="danger"
+            @click="reportEntryError"
           )
-            | Update
+            | Wrong Info?
+          .float-right
+            el-button(@click="closeEditModal") Cancel
+            el-button(
+              ref="updateEntryButton"
+              type="primary"
+              @click="updateMangaEntries"
+            )
+              | Update
 </template>
 
 <script>
@@ -129,6 +136,9 @@
 
   import Importers from '@/components/TheImporters';
   import TheMangaList from '@/components/TheMangaList';
+  import {
+    postMangaEntriesErrors,
+  } from '@/services/endpoints/MangaEntriesErrors';
   import {
     addMangaEntry, bulkUpdateMangaEntry, bulkDeleteMangaEntries,
   } from '@/services/api';
@@ -233,6 +243,22 @@
         } else {
           Message.error(
             'Deletion failed. Try reloading the page before trying again'
+          );
+        }
+      },
+      async reportEntryError() {
+        const successful = await postMangaEntriesErrors(this.selectedSeriesIDs);
+
+        if (successful) {
+          this.closeEditModal();
+          this.resetSelectedAttributes();
+          Message.success(
+            'Issue reported. Entries will be updated'
+              + ' automatically shortly or investigated in detail later'
+          );
+        } else {
+          Message.error(
+            'Failed to report. Try reloading the page before trying again'
           );
         }
       },

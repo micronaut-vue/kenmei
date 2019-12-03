@@ -7,6 +7,7 @@ import TheMangaList from '@/components/TheMangaList.vue';
 import TheImporters from '@/components/TheImporters.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
+import * as mangaEntriesErrors from '@/services/endpoints/MangaEntriesErrors';
 
 import mangaEntryFactory from '../factories/mangaEntry';
 import mangaListFactory from '../factories/mangaList';
@@ -229,6 +230,83 @@ describe('MangaList.vue', () => {
         );
       });
     });
+  });
+  describe('when reporting manga entries', () => {
+    let store;
+    let mangaList;
+    let postMangaEntriesErrorsMock;
+
+    beforeEach(() => {
+      postMangaEntriesErrorsMock = jest.spyOn(
+        mangaEntriesErrors, 'postMangaEntriesErrors'
+      );
+
+      store = new Vuex.Store({
+        modules: {
+          lists: {
+            namespaced: true,
+            state: {
+              lists: mangaListFactory.buildList(1),
+              entries: mangaEntryFactory.buildList(1),
+            },
+            actions: lists.actions,
+            getters: lists.getters,
+            mutations: lists.mutations,
+          },
+        },
+      });
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        methods: {
+          clearTableSelection() {
+            return true;
+          },
+        },
+      });
+      mangaList.setData({
+        selectedSeriesIDs: ['1'],
+        currentListID: '1',
+        newListID: '2',
+      });
+    });
+
+    afterEach(() => {
+      expect(postMangaEntriesErrorsMock).toHaveBeenCalledWith(['1']);
+    });
+
+    describe('if report was successful', () => {
+      it('shows successful message', async () => {
+        const infoMessageMock = jest.spyOn(Message, 'success');
+
+        postMangaEntriesErrorsMock.mockResolvedValue(true);
+
+        mangaList.vm.reportEntryError();
+
+        await flushPromises();
+
+        expect(infoMessageMock).toHaveBeenCalledWith(
+          'Issue reported. Entries will be updated'
+            + ' automatically shortly or investigated in detail later'
+        );
+      });
+    });
+
+    describe('if report was unsuccessful', () => {
+      it('shows failure message', async () => {
+        const errorMessageMock = jest.spyOn(Message, 'error');
+
+        postMangaEntriesErrorsMock.mockResolvedValue(false);
+
+        mangaList.vm.reportEntryError();
+
+        await flushPromises();
+
+        expect(errorMessageMock).toHaveBeenCalledWith(
+          'Failed to report. Try reloading the page before trying again'
+        );
+      });
+    })
   });
   describe('when deleting manga entries', () => {
     let store;
