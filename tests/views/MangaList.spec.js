@@ -19,6 +19,10 @@ localVue.use(Vuex);
 localVue.directive('loading', true);
 
 describe('MangaList.vue', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   describe('when adding new MangaDex entry', () => {
     let store;
     let mangaList;
@@ -42,10 +46,6 @@ describe('MangaList.vue', () => {
 
       mangaList.setData({ mangaURL: 'example.url/manga/1' });
       mangaList.find({ ref: 'openAddMangaModalButton' }).trigger('click');
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks();
     });
 
     it('adds new Manga entry on successful API lookup', async () => {
@@ -167,7 +167,6 @@ describe('MangaList.vue', () => {
       expect(updateMangaEntriesMock).toHaveBeenCalledWith(
         ['1'], { manga_list_id: '2' }
       );
-      jest.restoreAllMocks();
     });
 
     describe('if update was successful', () => {
@@ -269,7 +268,6 @@ describe('MangaList.vue', () => {
 
     afterEach(() => {
       expect(bulkDeleteMangaEntriesMock).toHaveBeenCalledWith(['1']);
-      jest.restoreAllMocks();
     });
 
     describe('if deletion was successful', () => {
