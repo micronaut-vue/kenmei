@@ -7,6 +7,7 @@ import TheMangaList from '@/components/TheMangaList.vue';
 import TheImporters from '@/components/TheImporters.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
+import * as mangaEntriesErrors from '@/services/endpoints/MangaEntriesErrors';
 
 import mangaEntryFactory from '../factories/mangaEntry';
 import mangaListFactory from '../factories/mangaList';
@@ -19,6 +20,10 @@ localVue.use(Vuex);
 localVue.directive('loading', true);
 
 describe('MangaList.vue', () => {
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
   describe('when adding new MangaDex entry', () => {
     let store;
     let mangaList;
@@ -42,10 +47,6 @@ describe('MangaList.vue', () => {
 
       mangaList.setData({ mangaURL: 'example.url/manga/1' });
       mangaList.find({ ref: 'openAddMangaModalButton' }).trigger('click');
-    });
-
-    afterEach(() => {
-      jest.restoreAllMocks();
     });
 
     it('adds new Manga entry on successful API lookup', async () => {
@@ -145,7 +146,15 @@ describe('MangaList.vue', () => {
           },
         },
       });
-      mangaList = shallowMount(MangaList, { store, localVue });
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        methods: {
+          clearTableSelection() {
+            return true;
+          },
+        },
+      });
       mangaList.setData({
         selectedSeriesIDs: ['1'],
         currentListID: '1',
@@ -159,7 +168,6 @@ describe('MangaList.vue', () => {
       expect(updateMangaEntriesMock).toHaveBeenCalledWith(
         ['1'], { manga_list_id: '2' }
       );
-      jest.restoreAllMocks();
     });
 
     describe('if update was successful', () => {
@@ -223,6 +231,83 @@ describe('MangaList.vue', () => {
       });
     });
   });
+  describe('when reporting manga entries', () => {
+    let store;
+    let mangaList;
+    let postMangaEntriesErrorsMock;
+
+    beforeEach(() => {
+      postMangaEntriesErrorsMock = jest.spyOn(
+        mangaEntriesErrors, 'postMangaEntriesErrors'
+      );
+
+      store = new Vuex.Store({
+        modules: {
+          lists: {
+            namespaced: true,
+            state: {
+              lists: mangaListFactory.buildList(1),
+              entries: mangaEntryFactory.buildList(1),
+            },
+            actions: lists.actions,
+            getters: lists.getters,
+            mutations: lists.mutations,
+          },
+        },
+      });
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        methods: {
+          clearTableSelection() {
+            return true;
+          },
+        },
+      });
+      mangaList.setData({
+        selectedSeriesIDs: ['1'],
+        currentListID: '1',
+        newListID: '2',
+      });
+    });
+
+    afterEach(() => {
+      expect(postMangaEntriesErrorsMock).toHaveBeenCalledWith(['1']);
+    });
+
+    describe('if report was successful', () => {
+      it('shows successful message', async () => {
+        const infoMessageMock = jest.spyOn(Message, 'success');
+
+        postMangaEntriesErrorsMock.mockResolvedValue(true);
+
+        mangaList.vm.reportEntryError();
+
+        await flushPromises();
+
+        expect(infoMessageMock).toHaveBeenCalledWith(
+          'Issue reported. Entries will be updated'
+            + ' automatically shortly or investigated in detail later'
+        );
+      });
+    });
+
+    describe('if report was unsuccessful', () => {
+      it('shows failure message', async () => {
+        const errorMessageMock = jest.spyOn(Message, 'error');
+
+        postMangaEntriesErrorsMock.mockResolvedValue(false);
+
+        mangaList.vm.reportEntryError();
+
+        await flushPromises();
+
+        expect(errorMessageMock).toHaveBeenCalledWith(
+          'Failed to report. Try reloading the page before trying again'
+        );
+      });
+    })
+  });
   describe('when deleting manga entries', () => {
     let store;
     let mangaList;
@@ -247,13 +332,20 @@ describe('MangaList.vue', () => {
           },
         },
       });
-      mangaList = shallowMount(MangaList, { store, localVue });
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        methods: {
+          clearTableSelection() {
+            return true;
+          },
+        },
+      });
       mangaList.setData({ selectedSeriesIDs: ['1'], currentListID: '1' });
     });
 
     afterEach(() => {
       expect(bulkDeleteMangaEntriesMock).toHaveBeenCalledWith(['1']);
-      jest.restoreAllMocks();
     });
 
     describe('if deletion was successful', () => {

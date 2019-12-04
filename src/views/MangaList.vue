@@ -42,6 +42,14 @@
             | Edit
         .actions.inline-block.float-right
           el-button.sm_shadow-md(
+            type="success"
+            size="medium"
+            @click="importDialogVisible = true"
+            round
+          )
+            i.el-icon-upload2.mr-1
+            | Import
+          el-button.sm_shadow-md(
             ref="openAddMangaModalButton"
             type="primary"
             size="medium"
@@ -50,16 +58,9 @@
           )
             i.el-icon-plus.mr-1
             | Add Manga
-          el-button.sm_shadow-md(
-            type="success"
-            size="medium"
-            @click="importDialogVisible = true"
-            round
-          )
-            i.el-icon-upload2.mr-1
-            | Import
       .flex-grow.sm_mx-5.mx-0
         the-manga-list(
+          ref='mangaList'
           :tableData='filteredEntries || currentListEntries'
           @seriesSelected="handleSelection"
         )
@@ -107,14 +108,21 @@
             :label="list.attributes.name"
             :value="list.id"
           )
-        span(slot="footer" class="dialog-footer")
-          el-button(@click="closeEditModal") Cancel
+        .dialog-footer.text-left(slot="footer")
           el-button(
-            ref="updateEntryButton"
-            type="primary"
-            @click="updateMangaEntries"
+            ref="reportEntryErrorButton"
+            type="danger"
+            @click="reportEntryError"
           )
-            | Update
+            | Wrong Info?
+          .float-right
+            el-button(@click="closeEditModal") Cancel
+            el-button(
+              ref="updateEntryButton"
+              type="primary"
+              @click="updateMangaEntries"
+            )
+              | Update
 </template>
 
 <script>
@@ -128,6 +136,9 @@
 
   import Importers from '@/components/TheImporters';
   import TheMangaList from '@/components/TheMangaList';
+  import {
+    postMangaEntriesErrors,
+  } from '@/services/endpoints/MangaEntriesErrors';
   import {
     addMangaEntry, bulkUpdateMangaEntry, bulkDeleteMangaEntries,
   } from '@/services/api';
@@ -235,6 +246,22 @@
           );
         }
       },
+      async reportEntryError() {
+        const successful = await postMangaEntriesErrors(this.selectedSeriesIDs);
+
+        if (successful) {
+          this.closeEditModal();
+          this.resetSelectedAttributes();
+          Message.success(
+            'Issue reported. Entries will be updated'
+              + ' automatically shortly or investigated in detail later'
+          );
+        } else {
+          Message.error(
+            'Failed to report. Try reloading the page before trying again'
+          );
+        }
+      },
       completeImport() {
         // Request all lists again to get new lists if created
         // TODO: Figure out based on relationships if there was a new list added
@@ -275,9 +302,13 @@
         this.editDialogVisible = false;
         this.newListID = null;
       },
+      clearTableSelection() {
+        this.$refs.mangaList.$refs.mangaListTable.clearSelection();
+      },
       resetSelectedAttributes() {
         this.selectedSeriesIDs = [];
         this.newListID = null;
+        this.clearTableSelection();
       },
     },
   };
