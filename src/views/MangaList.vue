@@ -42,6 +42,14 @@
             | Edit
         .actions.inline-block.float-right
           el-button.sm_shadow-md(
+            type="success"
+            size="medium"
+            @click="importDialogVisible = true"
+            round
+          )
+            i.el-icon-upload2.mr-1
+            | Import
+          el-button.sm_shadow-md(
             ref="openAddMangaModalButton"
             type="primary"
             size="medium"
@@ -50,14 +58,6 @@
           )
             i.el-icon-plus.mr-1
             | Add Manga
-          el-button.sm_shadow-md(
-            type="success"
-            size="medium"
-            @click="importDialogVisible = true"
-            round
-          )
-            i.el-icon-upload2.mr-1
-            | Import
       .flex-grow.sm_mx-5.mx-0
         the-manga-list(
           ref='mangaList'
