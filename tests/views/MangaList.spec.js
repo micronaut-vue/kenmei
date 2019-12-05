@@ -387,52 +387,6 @@ describe('MangaList.vue', () => {
       });
     });
   });
-  describe('watchers', () => {
-    let store;
-
-    beforeEach(() => {
-      jest.useFakeTimers();
-      store = new Vuex.Store({
-        modules: {
-          lists: {
-            namespaced: true,
-            state: lists.store,
-            actions: lists.actions,
-            getters: lists.getters,
-            mutations: lists.mutations,
-          },
-        },
-      });
-    });
-
-    it('searchTerm - adds filtered series to the filteredEntries', () => {
-      const entry1 = mangaEntryFactory.build(
-        { attributes: { title: 'Boku no Hero' } }
-      );
-      const entry2 = mangaEntryFactory.build(
-        { attributes: { title: 'Attack on Titan' } }
-      );
-      const mangaList = shallowMount(MangaList, {
-        store,
-        localVue,
-        computed: {
-          currentListEntries: () => [entry1, entry2],
-        },
-      });
-
-      expect(mangaList.vm.filteredEntries).toBe(null);
-
-      mangaList.setData({ searchTerm: 'Boku no' });
-      jest.runAllTimers();
-
-      expect(mangaList.vm.filteredEntries).toContain(entry1);
-
-      mangaList.setData({ searchTerm: 'Attack' });
-      jest.runAllTimers();
-
-      expect(mangaList.vm.filteredEntries).toContain(entry2);
-    });
-  });
   describe('@events', () => {
     let mangaList;
     let store;
@@ -473,6 +427,13 @@ describe('MangaList.vue', () => {
     let mangaList;
     let store;
 
+    const entry1 = mangaEntryFactory.build(
+      { id: 1, attributes: { title: 'Boku no Hero' } }
+    );
+    const entry2 = mangaEntryFactory.build(
+      { id: 2, attributes: { title: 'Attack on Titan' } }
+    );
+
     beforeEach(() => {
       store = new Vuex.Store({
         modules: {
@@ -480,10 +441,7 @@ describe('MangaList.vue', () => {
             namespaced: true,
             state: {
               lists: mangaListFactory.buildList(1),
-              entries: [
-                mangaEntryFactory.build({ id: 1 }),
-                mangaEntryFactory.build({ id: 2 }),
-              ],
+              entries: [entry1, entry2],
             },
             actions: lists.actions,
             getters: lists.getters,
@@ -492,20 +450,37 @@ describe('MangaList.vue', () => {
         },
       });
       mangaList = shallowMount(MangaList, { store, localVue });
-
-      mangaList.setData({ selectedSeriesIDs: ['2'] });
     });
 
     it(':selectedSeries - if present, can remove them by pressing Remove button', () => {
+      mangaList.setData({ selectedSeriesIDs: ['2'] });
+
       mangaList.vm.removeSeries();
 
-      expect(mangaList.vm.currentListEntries).not.toContain({
-        id: '2',
-        type: 'manga_entry',
-        attributes: {},
-        relationships: {},
-        links: {},
+      expect(mangaList.vm.currentListEntries).not.toContain(entry2);
+    });
+
+    it(':searchTerm - if present, filters manga entries', () => {
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        computed: {
+          currentListEntries: () => [entry1, entry2],
+        },
       });
+      jest.useFakeTimers();
+
+      expect(mangaList.vm.filteredEntries).toEqual([entry1, entry2]);
+
+      mangaList.vm.debouncedSearchTerm = 'Boku no';
+      jest.runAllTimers();
+
+      expect(mangaList.vm.filteredEntries).toEqual([entry1]);
+
+      mangaList.setData({ searchTerm: 'Attack' });
+      jest.runAllTimers();
+
+      expect(mangaList.vm.filteredEntries).toEqual([entry2]);
     });
   });
 });
