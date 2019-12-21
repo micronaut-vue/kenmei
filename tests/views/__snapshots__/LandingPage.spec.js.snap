@@ -20,7 +20,7 @@ exports[`LandingPage.vue renders the page 1`] = `
       >
         <p>
           Welcome to Kenmei, a new manga tracking website currently in
-development.
+alpha.
         </p>
         <p>
           Inspired by
@@ -28,7 +28,7 @@ development.
           <el-link-stub
             class="inline align-baseline"
             href="https://www.trackr.moe"
-            type="default"
+            type="primary"
           >
             trackr.moe
           </el-link-stub>
@@ -37,7 +37,7 @@ development.
           <el-link-stub
             class="inline align-baseline"
             href="https://blog.codeanimu.net/posts/2019/07/trackr-moe-the-future/"
-            type="default"
+            type="primary"
           >
             that is now slated to be closed
           </el-link-stub>
@@ -45,8 +45,7 @@ development.
 and provide even more features, for all manga fans out there!
         </p>
         <p>
-          If you would like to get notified, when registrations open, please
-leave your email below.
+          To get development updates, please leave your email below.
         </p>
       </div>
       <div

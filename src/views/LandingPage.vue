@@ -6,26 +6,26 @@
         .welcome-text.font-size-b.font-line-height-secondary
           p
             | Welcome to Kenmei, a new manga tracking website currently in
-            | development.
+            | alpha.
           p
             | Inspired by
             |
             el-link.inline.align-baseline(
-              href="https://www.trackr.moe" :underline="false"
+              href="https://www.trackr.moe" type="primary" :underline="false"
             )
               | trackr.moe
             |, the best manga tracking website,
             |
             el-link.inline.align-baseline(
               href="https://blog.codeanimu.net/posts/2019/07/trackr-moe-the-future/"
+              type="primary"
               :underline="false"
             )
               | that is now slated to be closed
             |, Kenmei is here to replace it
             | and provide even more features, for all manga fans out there!
           p
-            | If you would like to get notified, when registrations open, please
-            | leave your email below.
+            | To get development updates, please leave your email below.
         .email-form
           form(
             action='https://tinyletter.com/kenmei'
