@@ -13,11 +13,13 @@
             :value="list.id"
           )
       .mx-5.mb-5.max-sm_mx-2
-        el-input.sm_shadow-md.rounded.float-right.w-64(
-          prefix-icon="el-icon-search"
-          placeholder="Input manga title"
-          v-model='searchTerm'
-        )
+        .el-input.el-input--prefix.sm_shadow-md.rounded.float-right.w-64
+          input.el-input__inner(
+            placeholder="Input manga title"
+            v-model='debouncedSearchTerm'
+          )
+          span.el-input__prefix
+            i.el-input__icon.el-icon-search
       .mx-5.mb-5.max-sm_mx-2
         .bulk-actions.inline-block.max-sm_mb-5.max-sm_float-right
           el-button.sm_shadow-md(
@@ -158,7 +160,6 @@
     data() {
       return {
         selectedSeriesIDs: [],
-        filteredEntries: null,
         currentListID: null,
         newListID: null,
         mangaURL: '',
@@ -182,12 +183,21 @@
       currentListEntries() {
         return this.getEntriesByListId(this.currentListID);
       },
-    },
-    watch: {
-      searchTerm(newVal, oldVal) {
-        if (newVal === oldVal) { return; }
-        this.setListsLoading(true);
-        this.search(newVal.toLowerCase());
+      debouncedSearchTerm: {
+        get() {
+          return this.searchTerm;
+        },
+        set: debounce(function(newVal) { //eslint-disable-line
+          if (newVal !== this.searchTerm) { this.searchTerm = newVal; }
+        }, 250),
+      },
+      filteredEntries() {
+        if (this.searchTerm === '') { return this.currentListEntries; }
+
+        return this.currentListEntries.filter(
+          entry => entry.attributes.title.toLowerCase()
+            .includes(this.searchTerm.toLowerCase())
+        );
       },
     },
     mounted() {
@@ -221,12 +231,6 @@
           Message.error("Couldn't update. Try refreshing the page");
         }
       },
-      search: debounce(function search(searchTerm) {
-        this.filteredEntries = this.currentListEntries.filter(
-          entry => entry.attributes.title.toLowerCase().includes(searchTerm)
-        );
-        this.setListsLoading(false);
-      }, 250),
       handleSelection(selectedSeriesIDs) {
         this.selectedSeriesIDs = selectedSeriesIDs;
       },
