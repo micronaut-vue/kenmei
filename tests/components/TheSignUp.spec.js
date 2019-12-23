@@ -13,30 +13,37 @@ const localVue = createLocalVue();
 localVue.use(Vuex);
 
 describe('TheSignUp.vue', () => {
-  describe(':data', () => {
-    let signUp;
-    let store;
+  let signUp;
+  let store;
 
-    beforeEach(() => {
-      store = new Vuex.Store({
-        modules: {
-          user: {
-            namespaced: true,
-            state: user.state,
-            actions: {
-              signUp: jest.fn(),
-            },
-            getters: user.getters,
+  beforeEach(() => {
+    store = new Vuex.Store({
+      modules: {
+        user: {
+          namespaced: true,
+          state: user.state,
+          actions: {
+            signUp: jest.fn(),
           },
+          getters: user.getters,
         },
-      });
-
-      signUp = mount(TheSignUp, {
-        store,
-        localVue,
-      });
+      },
     });
 
+    signUp = mount(TheSignUp, {
+      store,
+      localVue,
+    });
+  });
+
+  describe('@events', () => {
+    it('@click - when pressing Sign In link, emits componentChanged with TheSignIn', () => {
+      signUp.find('.el-link').trigger('click');
+
+      expect(signUp.emitted('componentChanged')[0]).toEqual(['TheSignIn']);
+    });
+  });
+  describe(':data', () => {
     describe(':user - is valid', () => {
       beforeEach(() => {
         signUp.setData({
