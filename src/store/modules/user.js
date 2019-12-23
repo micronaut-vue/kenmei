@@ -11,7 +11,7 @@ const getters = {
 
 const actions = {
   signIn({ commit }, data) {
-    const loading = Loading.service({ target: '#sign-on-card' });
+    const loading = Loading.service({ target: '.sign-on-dialog' });
 
     return plain.post('/api/v1/sessions/', { user: data })
       .then((response) => {
