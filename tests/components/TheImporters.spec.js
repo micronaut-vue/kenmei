@@ -1,6 +1,7 @@
 import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import { Message } from 'element-ui';
+import axios from 'axios';
 import flushPromises from 'flush-promises';
 import TheImporters from '@/components/TheImporters.vue';
 import lists from '@/store/modules/lists';
@@ -118,6 +119,65 @@ describe('TheImporters.vue', () => {
       await flushPromises();
 
       expect(infoMessageMock).toHaveBeenCalledWith('Nothing new to import');
+    });
+  });
+
+  describe('when importing MangaDex entries from MangaDex MDList', () => {
+    let store;
+    let importers;
+
+    beforeEach(() => {
+      store = new Vuex.Store({
+        modules: {
+          lists: {
+            namespaced: true,
+            state: {
+              lists: [],
+              entries: [],
+            },
+            actions: lists.actions,
+            getters: lists.getters,
+            mutations: lists.mutations,
+          },
+        },
+      });
+      importers = shallowMount(TheImporters, { store, localVue });
+      importers.setData({ importURL: 'https://mangadex.org/list/007' });
+    });
+
+    afterEach(() => {
+      jest.restoreAllMocks();
+    });
+
+    it('queues MangaDex MDList import if successful', async () => {
+      const axiosSpy = jest.spyOn(axios, 'post');
+
+      axiosSpy.mockResolvedValue({ status: 200 });
+
+      importers.vm.importMangaDex();
+
+      await flushPromises();
+
+      expect(axiosSpy).toHaveBeenCalledWith(
+        '/api/v1/importers/mangadex', { url: 'https://mangadex.org/list/007' }
+      );
+      expect(importers.text()).toContain('Your MangaDex MDList import');
+    });
+
+    it('shows Something went wrong message if import failed', async () => {
+      const errorMessageMock = jest.spyOn(Message, 'error');
+      const axiosSpy         = jest.spyOn(axios, 'post');
+
+      axiosSpy.mockRejectedValue();
+
+      importers.vm.importMangaDex();
+
+      await flushPromises();
+
+      expect(errorMessageMock).toHaveBeenCalledWith(
+        'Something went wrong, try again later or contact hi@kenmei.co'
+      );
+      expect(importers.text()).not.toContain('Your MangaDex MDList import');
     });
   });
 });
