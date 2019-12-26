@@ -10,28 +10,43 @@ const localVue = createLocalVue();
 localVue.use(Vuex);
 
 describe('TheSignIn.vue', () => {
-  describe(':props', () => {
-    let signIn;
-    let store;
+  let signIn;
+  let store;
 
-    beforeEach(() => {
-      store = new Vuex.Store({
-        modules: {
-          user: {
-            namespaced: true,
-            state: user.state,
-            actions: user.actions,
-            getters: user.getters,
-          },
+  beforeEach(() => {
+    store = new Vuex.Store({
+      modules: {
+        user: {
+          namespaced: true,
+          state: user.state,
+          actions: user.actions,
+          getters: user.getters,
         },
-      });
-
-      signIn = mount(TheSignIn, {
-        store,
-        localVue,
-      });
+      },
     });
 
+    signIn = mount(TheSignIn, {
+      store,
+      localVue,
+    });
+  });
+
+  describe('@events', () => {
+    it('@click - when pressing Forgot your password? link, emits componentChanged with TheResetPassword', () => {
+      signIn.find('.el-link:first-of-type').trigger('click');
+
+      expect(signIn.emitted('componentChanged')[0])
+        .toEqual(['TheResetPassword']);
+    });
+
+    it('@click - when pressing Register link, emits componentChanged with TheSignUp', () => {
+      signIn.find('.el-link:last-of-type').trigger('click');
+
+      expect(signIn.emitted('componentChanged')[0]).toEqual(['TheSignUp']);
+    });
+  });
+
+  describe(':props', () => {
     it.skip('delegates to store to sign in user if form is valid', async () => {
       signIn.setData({ email: 'text@example.com', password: 'password' });
 

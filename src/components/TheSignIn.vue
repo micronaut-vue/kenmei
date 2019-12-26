@@ -28,18 +28,27 @@
         type='primary'
         @click='submitForm'
       ) Sign In
-      .text-center
-        el-link(
-          @click.native="$emit('resetPassword')"
-          :underline="false"
-        )
-          | Forgot your password?
+    .text-center
+      el-link.mt-4(
+        @click.native="$emit('componentChanged', 'TheResetPassword')"
+        :underline="false"
+      )
+        | Forgot your password?
+      el-divider.my-4
+      span
+        | Don't have an account?
+        |
+      el-link.align-baseline(
+        @click.native="$emit('componentChanged', 'TheSignUp')"
+        :underline="false"
+      )
+        | Register
 </template>
 
 <script>
   import { mapActions, mapGetters } from 'vuex';
   import {
-    Form, FormItem, Button, Input, Checkbox, Link,
+    Form, FormItem, Button, Input, Checkbox, Link, Divider,
   } from 'element-ui';
 
   export default {
@@ -50,6 +59,7 @@
       'el-button': Button,
       'el-checkbox': Checkbox,
       'el-link': Link,
+      'el-divider': Divider,
     },
     data() {
       return {
@@ -99,7 +109,10 @@
       },
       async trySignIn() {
         await this.signIn(this.user);
-        if (this.signedIn) { this.$router.push({ name: 'manga-list' }); }
+        if (this.signedIn) {
+          this.$emit('signOnFinished');
+          this.$router.push({ name: 'manga-list' });
+        }
       },
     },
   };
