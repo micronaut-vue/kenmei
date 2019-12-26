@@ -5,20 +5,15 @@
     :model='user'
     label-position='top'
   )
-    el-link.mb-3.text-base(
-      icon="el-icon-arrow-left"
-      @click.native="goBack"
-      :underline="false"
-    )
     template(v-if="resetInitiated")
-      p.leading-normal.text-gray-600.text-center
+      p.leading-normal.text-gray-600.text-center.break-normal
         | Check your
         |
         strong {{ user.email }}
         |  inbox for instructions from us on how to reset your password
     template(v-else)
-      el-form-item(prop='email')
-        p.leading-normal.text-gray-600
+      el-form-item.mb-6(prop='email')
+        p.leading-normal.text-gray-600.mt-0
           | Enter your email address below
           | and we'll send you a link to reset your password.
         el-input(
@@ -34,11 +29,21 @@
           type='primary'
           @click='submitForm'
         ) Reset Password
+      .text-center
+        el-divider.my-4
+        span
+          | Already have an account?
+          |
+        el-link.align-baseline(
+          @click.native="$emit('componentChanged', 'TheSignIn')"
+          :underline="false"
+        )
+          | Sign In
 </template>
 
 <script>
   import {
-    Form, FormItem, Button, Input, Link, Message, Loading,
+    Form, FormItem, Button, Input, Link, Message, Loading, Divider,
   } from 'element-ui';
 
   import { plain } from '@/modules/axios';
@@ -50,6 +55,7 @@
       'el-input': Input,
       'el-button': Button,
       'el-link': Link,
+      'el-divider': Divider,
     },
     data() {
       return {
@@ -74,10 +80,6 @@
       };
     },
     methods: {
-      goBack() {
-        this.resetInitiated = false;
-        this.$emit('componentChanged', 'TheSignOnTabs');
-      },
       submitForm() {
         this.$refs.resetPasswordForm.validate((valid) => {
           if (valid) { this.resetPassword(); }
@@ -86,7 +88,7 @@
         });
       },
       resetPassword() {
-        const loading = Loading.service({ target: '#sign-on-card' });
+        const loading = Loading.service({ target: '.sign-on-dialog' });
 
         return plain.post('/auth/passwords', { email: this.user.email })
           .then(() => {

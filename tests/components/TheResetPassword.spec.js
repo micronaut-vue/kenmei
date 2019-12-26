@@ -13,12 +13,12 @@ describe('TheResetPassword.vue', () => {
   });
 
   describe('@events', () => {
-    it('@click - when pressing go back button, emits TheSignOnTabs and resets resetInitiated', () => {
+    it('@click - when pressing Sign In link, emits componentChanged', () => {
       resetPassword = mount(TheResetPassword);
 
       resetPassword.find('.el-link').trigger('click');
 
-      expect(resetPassword.emitted('componentChanged')[0]).toEqual(['TheSignOnTabs']);
+      expect(resetPassword.emitted('componentChanged')[0]).toEqual(['TheSignIn']);
       expect(resetPassword.vm.$data.resetInitiated).not.toBeTruthy();
     });
   });
