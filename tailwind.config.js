@@ -12,7 +12,11 @@ module.exports = {
       'max-lg': { max: '1024px' },
       'max-xl': { max: '1280px' },
     },
-    extend: {},
+    extend: {
+      margin: {
+        '10px': '0.65rem',
+      },
+    },
   },
   variants: {},
   plugins: [],
