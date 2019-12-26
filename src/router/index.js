@@ -24,20 +24,7 @@ export default new Router({
           next();
         } else {
           Message.error('Please sign in first');
-          next('/sign-in');
-        }
-      },
-    },
-    {
-      path: '/sign-in',
-      name: 'Sign In',
-      component: () => import(/* webpackChunkName: "sign_in" */ '@/views/SignOn.vue'),
-      beforeEnter: (to, from, next) => {
-        if (store.getters["user/signedIn"]) {
-          Message.info('You are already signed in');
-          next('/manga-list');
-        } else {
-          next();
+          next('/');
         }
       },
     },
