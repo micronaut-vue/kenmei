@@ -20,6 +20,7 @@ module.exports = {
     'vue',
   ],
   rules: {
+    'no-nested-ternary': 'off',
     'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     'comma-dangle': ['error', 'always-multiline'],
     'no-shadow': 'off',
