@@ -2,6 +2,14 @@
   .container.mx-auto.w-full.h-full.flex.flex-col.items-center
     .flex.flex-col.w-full.max-w-6xl.pt-24.sm_pb-16
       .mx-5.mb-5.max-sm_mx-2
+        el-alert(
+          title="MangaDex is down"
+          type="warning"
+          :description="warning"
+          show-icon
+          :closable="false"
+        )
+      .mx-5.mb-5.max-sm_mx-2
         el-select.sm_shadow-md.rounded.float-right.w-48(
           v-model="currentListID"
           placeholder="Select"
@@ -133,7 +141,7 @@
     mapActions, mapState, mapMutations, mapGetters,
   } from 'vuex';
   import {
-    Message, Loading, Dialog, Button, Input, Link, Select, Option,
+    Message, Loading, Dialog, Button, Input, Link, Select, Option, Alert,
   } from 'element-ui';
 
   import Importers from '@/components/TheImporters';
@@ -156,6 +164,7 @@
       'el-link': Link,
       'el-select': Select,
       'el-option': Option,
+      'el-alert': Alert,
     },
     data() {
       return {
@@ -167,6 +176,12 @@
         dialogVisible: false,
         importDialogVisible: false,
         editDialogVisible: false,
+        warning: `
+          For the next 72hr, there won't be any new updates coming from
+          MangaDex. You might still be able to add series into your list,
+          but some will fail. It's also impossible to do MangaDex MDList import
+          while the site is down. Sorry for the inconvenience.
+        `,
       };
     },
     computed: {
