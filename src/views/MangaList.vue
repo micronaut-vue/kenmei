@@ -3,8 +3,8 @@
     .flex.flex-col.w-full.max-w-6xl.pt-24.sm_pb-16
       .mx-5.mb-5.max-sm_mx-2
         el-alert(
-          title="MangaDex is down"
-          type="warning"
+          title="MangaDex is operational"
+          type="success"
           :description="warning"
           show-icon
           :closable="false"
@@ -90,7 +90,7 @@
         label.font-size-b.primary-text MangaDex series URL
         el-input.mt-3(
           v-model="mangaURL"
-          placeholder="https://mangadex.org/title/7139/one-punch-man"
+          placeholder="https://mangadex.cc/title/7139/one-punch-man"
         )
         span(slot="footer" class="dialog-footer")
           el-button(@click="dialogVisible = false") Cancel
@@ -177,10 +177,10 @@
         importDialogVisible: false,
         editDialogVisible: false,
         warning: `
-          For the next 72hr, there won't be any new updates coming from
-          MangaDex. You might still be able to add series into your list,
-          but some will fail. It's also impossible to do MangaDex MDList import
-          while the site is down. Sorry for the inconvenience.
+          MangaDex is working again. If you tried to import from MDList or
+          Trackr recently and failed, importing again should now work as usual.
+          Do keep in mind, that its mangadex.cc, not mangadex.org for now. Until
+          MangaDex starts using the old domain, links using .org will fail
         `,
       };
     },

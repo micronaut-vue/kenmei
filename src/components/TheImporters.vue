@@ -31,7 +31,7 @@
       template(v-else)
         el-input(
           v-model="importURL"
-          placeholder="https://mangadex.org/list/3"
+          placeholder="https://mangadex.cc/list/3"
           prefix-icon="el-icon-link"
         )
         p.text-gray-600.text-xs.italic
@@ -82,7 +82,7 @@
         'entryAlreadyExists',
       ]),
       validUrl() {
-        return this.importURL.match(/(mangadex.org\/list[/])\d+$/) !== null;
+        return this.importURL.match(/(mangadex.(cc|org)\/list[/])\d+$/) !== null;
       },
     },
     methods: {
