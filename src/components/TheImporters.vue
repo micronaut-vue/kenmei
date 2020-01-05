@@ -82,7 +82,7 @@
         'entryAlreadyExists',
       ]),
       validUrl() {
-        return this.importURL.match(/(mangadex.org\/list[/])\d+$/) !== null;
+        return this.importURL.match(/(mangadex.(cc|org)\/list[/])\d+$/) !== null;
       },
     },
     methods: {
