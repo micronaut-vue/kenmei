@@ -100,7 +100,7 @@
   import he from 'he';
   import relativeTime from 'dayjs/plugin/relativeTime';
 
-  import { updateMangaEntry } from '@/services/api';
+  import { updateMangaEntry, extractSeriesID } from '@/services/api';
   import sortBy from '@/services/sorters';
 
   dayjs.extend(relativeTime);
@@ -162,7 +162,7 @@
         } = entry.links;
 
         return last_chapter_available_url
-          && (last_chapter_read_url !== last_chapter_available_url);
+          && (extractSeriesID(last_chapter_read_url) !== extractSeriesID(last_chapter_available_url));
       },
       unread(entry) {
         const {
@@ -170,7 +170,7 @@
         } = entry.links;
 
         return last_chapter_read_url
-          && (last_chapter_read_url !== last_chapter_available_url);
+          && (extractSeriesID(last_chapter_read_url) !== extractSeriesID(last_chapter_available_url));
       },
       /* eslint-enable camelcase */
       async setLastRead(entry) {
