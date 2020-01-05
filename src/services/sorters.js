@@ -1,3 +1,5 @@
+import { extractSeriesID } from '@/services/api';
+
 /* eslint-disable camelcase */
 const unread = (entry) => {
   const {
@@ -5,7 +7,7 @@ const unread = (entry) => {
   } = entry.links;
 
   return last_chapter_read_url
-    && (last_chapter_read_url !== last_chapter_available_url);
+    && (extractSeriesID(last_chapter_read_url) !== extractSeriesID(last_chapter_available_url));
 };
 
 const titleSort = (entryA, entryB) => {

@@ -11,8 +11,8 @@ export default new Factory()
   })
   .attr('links', {
     series_url: 'example.url/manga/1',
-    last_chapter_read_url: 'example.url/manga/1/chapter/1',
-    last_chapter_available_url: 'example.url/manga/1/chapter/2',
+    last_chapter_read_url: 'example.url/chapter/1',
+    last_chapter_available_url: 'example.url/chapter/2',
   })
   .attr('relationships', {
     manga_list: {
