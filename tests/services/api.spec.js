@@ -9,13 +9,17 @@ describe('API', () => {
   });
 
   describe('extractSeriesID()', () => {
-    it('extracts an ID from a MangaDex series or chapter URL', () => {
+    it('returns MangaDex ID from a MangaDex series or chapter URL', () => {
       expect(
         apiService.extractSeriesID('https://mangadex.org/chapter/671525')
       ).toEqual('671525');
       expect(
         apiService.extractSeriesID('https://mangadex.org/title/65')
       ).toEqual('65');
+    });
+
+    it('returns empty string if URL is null', () => {
+      expect(apiService.extractSeriesID(null)).toEqual(null);
     });
   });
 
