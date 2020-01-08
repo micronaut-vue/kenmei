@@ -13,6 +13,14 @@ export default new Router({
       component: () => import(/* webpackChunkName: "landing_page" */ '@/views/LandingPage.vue')
     },
     {
+      path: '/supported-sites',
+      name: 'sources',
+      // route level code-splitting
+      // this generates a separate chunk (about.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import(/* webpackChunkName: "manga_list" */ '@/views/Sources.vue'),
+    },
+    {
       path: '/manga-list',
       name: 'manga-list',
       // route level code-splitting

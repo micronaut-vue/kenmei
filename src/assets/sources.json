@@ -1,0 +1,85 @@
+[{
+    "name": "MangaDex",
+    "url": "https://mangadex.org/",
+    "status": "Supported",
+    "logo": "mangadex_logo.png"
+  },
+  {
+    "name": "Jaimini's Box",
+    "url": "https://jaiminisbox.com/",
+    "status": "Supported",
+    "logo": "jaiminis_logo.jpg"
+  },
+  {
+    "name": "Sense Scans",
+    "url": "http://sensescans.com/",
+    "status": "Supported",
+    "logo": "sense_scans_logo.png"
+  },
+  {
+    "name": "Leviatan Scans",
+    "url": "https://leviatanscans.com/",
+    "status": "Supported",
+    "logo": "leviatan_scans_logo.jpg"
+  },
+  {
+    "name": "Hatigarm Scans",
+    "url": "https://hatigarmscanz.net/",
+    "status": "Supported",
+    "logo": "hatigarm_scans_logo.jpg"
+  },
+  {
+    "name": "Zero Scans",
+    "url": "https://zeroscans.com/",
+    "status": "Supported",
+    "logo": "zero_scans_logo.jpg"
+  },
+  {
+    "name": "HelveticaScans",
+    "url": "https://helveticascans.com/",
+    "status": "Supported",
+    "logo": "helvetica_logo.png"
+  },
+  {
+    "name": "Kirei Cake",
+    "url": "https://kireicake.com/",
+    "status": "Supported",
+    "logo": "kirei_cake_logo.png"
+  },
+  {
+    "name": "Death Toll Scans",
+    "url": "https://www.deathtollscans.net/",
+    "status": "Supported",
+    "logo": "deathtolls_logo.jpg"
+  },
+  {
+    "name": "Silent Sky",
+    "url": "https://www.silentsky-scans.net/",
+    "status": "In Development",
+    "logo": "silent_sky_logo.jpg"
+  },
+  {
+    "name": "Mangatellers",
+    "url": "http://www.mangatellers.gr/",
+    "status": "In Development",
+    "logo": "mangatellers-wide.jpeg"
+  },
+  {
+    "name": "World Three",
+    "url": "http://www.world-three.org/",
+    "status": "In Development",
+    "logo": "world_three_logo.jpg"
+  },
+  {
+    "name": "WebToon",
+    "url": "https://www.webtoons.com/",
+    "status": "Requested",
+    "logo": "webtoon_logo.jpg"
+  },
+  {
+    "name": "MangaKakalot",
+    "url": "https://mangakakalot.com/",
+    "status": "Requested",
+    "logo": "mangakakalot_logo.png"
+  }
+]
