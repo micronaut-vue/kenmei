@@ -190,7 +190,6 @@
       ]),
       ...mapGetters('lists', [
         'getEntriesByListId',
-        'entryAlreadyExists',
       ]),
       entriesSelected() {
         return this.selectedSeriesIDs.length > 0;
@@ -287,12 +286,6 @@
         this.retrieveLists();
       },
       mangaDexSearch() {
-        if (this.entryAlreadyExists(this.mangaURL)) {
-          Message.info('Manga already added');
-          this.dialogVisible = false;
-          return;
-        }
-
         const loading = Loading.service({ target: '.el-dialog' });
         addMangaEntry(this.mangaURL, this.currentListID)
           .then((newMangaEntry) => {
@@ -305,6 +298,9 @@
               loading.close();
             } else if (error.response.status === 404) {
               Message.info('Manga was not found');
+              loading.close();
+            } else if (error.response.status === 406) {
+              Message.info('Manga already added');
               loading.close();
             } else {
               Message.error('Something went wrong');

@@ -51,7 +51,6 @@
 </template>
 
 <script>
-  import { mapGetters } from 'vuex';
   import {
     Tabs, TabPane, Input, Link, Upload, Button, Message, Loading,
   } from 'element-ui';
@@ -82,9 +81,6 @@
       };
     },
     computed: {
-      ...mapGetters('lists', [
-        'entryAlreadyExists',
-      ]),
       validUrl() {
         return this.importURL.match(/(mangadex.(cc|org)\/list[/])\d+$/) !== null;
       },
