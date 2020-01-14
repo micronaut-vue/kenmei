@@ -25,7 +25,7 @@ Vue.use(VueAnalytics, {
 
 if (process.env.NODE_ENV === 'production') {
   Vue.use(Rollbar, {
-    accessToken: process.env.ROLLBAR_CLIENT_TOKEN,
+    accessToken: '24ea50e0bffd4fa9ad42ed86399fa5b6',
     captureUncaught: true,
     captureUnhandledRejections: true,
     enabled: true,
