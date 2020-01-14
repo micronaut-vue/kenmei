@@ -18,8 +18,12 @@ describe('API', () => {
       ).toEqual('65');
     });
 
-    it('returns empty string if URL is null', () => {
+    it('returns null if URL is null', () => {
       expect(apiService.extractSeriesID(null)).toEqual(null);
+    });
+
+    it("returns null if can't find ID", () => {
+      expect(apiService.extractSeriesID('test')).toEqual(null);
     });
   });
 
