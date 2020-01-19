@@ -80,16 +80,19 @@ describe('MangaList.vue', () => {
       expect(infoMessageMock).toHaveBeenCalledWith('Manga was not found');
     });
 
-    it('shows Manga already added if it has already been added', () => {
+    it('shows Manga already added if it has already been added', async () => {
+      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
       const infoMessageMock = jest.spyOn(Message, 'info');
-
-      store.state.lists.entries = [mangaEntryFactory.build()];
 
       mangaList = shallowMount(MangaList, { store, localVue });
 
       mangaList.setData({ mangaURL: 'example.url/manga/1' });
 
+      addMangaEntryMock.mockRejectedValue({ response: { status: 406 } });
+
       mangaList.vm.mangaDexSearch();
+
+      await flushPromises();
 
       expect(infoMessageMock).toHaveBeenCalledWith('Manga already added');
     });
