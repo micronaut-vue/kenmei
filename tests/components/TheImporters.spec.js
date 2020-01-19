@@ -6,6 +6,7 @@ import flushPromises from 'flush-promises';
 import TheImporters from '@/components/TheImporters.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
+import * as importersEndpoint from '@/services/endpoints/importers';
 
 import mangaEntryFactory from '../factories/mangaEntry';
 
@@ -19,7 +20,6 @@ localVue.directive('loading', true);
 describe('TheImporters.vue', () => {
   describe('when importing MangaDex entries from Trackr.moe JSON', () => {
     let importedList;
-    let mangaEntry;
     let store;
     let importers;
 
@@ -42,7 +42,6 @@ describe('TheImporters.vue', () => {
           },
         },
       };
-      mangaEntry = mangaEntryFactory.build();
       store = new Vuex.Store({
         modules: {
           lists: {
@@ -81,44 +80,31 @@ describe('TheImporters.vue', () => {
       expect(fileReaderReadTextMock).toHaveBeenCalled();
     });
 
-    it('adds new manga entries and updates progress percentage if successful', async () => {
-      const addMangaEntriesMock = jest.spyOn(api, 'addMangaEntries');
+    it('shows success message', async () => {
+      const postTrackrMoeMock = jest.spyOn(importersEndpoint, 'postTrackrMoe');
 
-      addMangaEntriesMock.mockResolvedValue({ data: [mangaEntry] });
+      postTrackrMoeMock.mockResolvedValue(true);
 
       importers.vm.processMangaDexList(importedList);
 
       await flushPromises();
 
-      // TODO: Find out why this is not woring anymore
-      // expect(mangaList.vm.currentListEntries).toContain(mangaEntry);
-      expect(importers.vm.$data.importProgress).toEqual(100);
-      expect(importers.emitted('importCompleted')).toBeTruthy();
+      expect(importers.text()).toContain('Your Trackr.moe import has started');
     });
 
     it('shows Something went wrong message if import failed', async () => {
-      const errorMessageMock    = jest.spyOn(Message, 'error');
-      const addMangaEntriesMock = jest.spyOn(api, 'addMangaEntries');
+      const errorMessageMock  = jest.spyOn(Message, 'error');
+      const postTrackrMoeMock = jest.spyOn(importersEndpoint, 'postTrackrMoe');
 
-      addMangaEntriesMock.mockRejectedValue();
-
-      importers.vm.processMangaDexList(importedList);
-
-      await flushPromises();
-
-      expect(errorMessageMock).toHaveBeenCalledWith('Something went wrong');
-    });
-
-    it('ignores already existing entries', async () => {
-      const infoMessageMock = jest.spyOn(Message, 'info');
-
-      store.state.lists.entries = [mangaEntry];
+      postTrackrMoeMock.mockResolvedValue(false);
 
       importers.vm.processMangaDexList(importedList);
 
       await flushPromises();
 
-      expect(infoMessageMock).toHaveBeenCalledWith('Nothing new to import');
+      expect(errorMessageMock).toHaveBeenCalledWith(
+        'Something went wrong, try again later or contact hi@kenmei.co'
+      );
     });
   });
 
