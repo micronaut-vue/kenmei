@@ -13,14 +13,4 @@ describe('Importer', () => {
       // TODO: Test only MangaDex is being returned
     });
   });
-
-  describe('sliceIntoBatches', () => {
-    it('slices lists into chunks of 20', () => {
-      const response = Importer.sliceIntoBatches(filteredList);
-
-      expect(response).toHaveLength(2);
-      expect(response[0].reading).toHaveLength(20);
-      expect(response[1].reading).toHaveLength(2);
-    });
-  });
 });
