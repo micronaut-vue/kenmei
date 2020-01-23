@@ -43,11 +43,3 @@ export const bulkDeleteMangaEntries = seriesIDs => secure
   .delete('/api/v1/manga_entries/bulk_destroy', { data: { ids: seriesIDs } })
   .then(() => true)
   .catch(() => false);
-
-export const addMangaEntries = urls => secure
-  .post('/api/v1/manga_entries/bulk', { urls })
-  .then((response) => {
-    if (response.data.error) { return []; }
-
-    return response.data;
-  });

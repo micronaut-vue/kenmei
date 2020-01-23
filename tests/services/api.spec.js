@@ -165,35 +165,4 @@ describe('API', () => {
       expect(data).toBeFalsy();
     });
   });
-
-  describe('addMangaEntries()', () => {
-    it('makes a request to the API bulk endpoint and returns new entries', async () => {
-      const mockData = {
-        successful: {
-          1: mangaEntryFactory.build(),
-          2: mangaEntryFactory.build(),
-        },
-        failed: ['3'],
-      };
-
-      axios.post.mockResolvedValue({ status: 200, data: mockData });
-
-      const data = await apiService.addMangaEntries(
-        'example.url/manga/1 example.url/manga/2'
-      );
-
-      expect(data).toEqual(mockData);
-    });
-
-    it('makes a request to the API and returns empty object if not found', async () => {
-      axios.post.mockResolvedValue({
-        status: 200, data: { error: 'not_found' },
-      });
-
-      const data = await apiService.addMangaEntries(
-        'example.url/manga/1 example.url/manga/2'
-      );
-      expect(data).toEqual([]);
-    });
-  });
 });
