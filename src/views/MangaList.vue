@@ -87,10 +87,11 @@
         custom-class="custom-dialog"
         width="400px"
       )
-        label.font-size-b.primary-text MangaDex series URL
+        label.font-size-b.primary-text Manga URL
         el-input.mt-3(
           v-model="mangaURL"
-          placeholder="https://mangadex.cc/title/7139/one-punch-man"
+          placeholder="https://mangadex.org/title/7139/"
+          prefix-icon="el-icon-link"
         )
         span(slot="footer" class="dialog-footer")
           el-button(@click="dialogVisible = false") Cancel
