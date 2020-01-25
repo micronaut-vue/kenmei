@@ -87,53 +87,21 @@
         custom-class="custom-dialog"
         width="400px"
       )
-        label.font-size-b.primary-text Manga URL
-        el-input.mt-3(
-          v-model="mangaURL"
-          placeholder="https://mangadex.org/title/7139/"
-          prefix-icon="el-icon-link"
+        add-manga-entry(
+          :currentListID='currentListID'
+          @dialogClosed='dialogVisible = false'
         )
-        span(slot="footer" class="dialog-footer")
-          el-button(@click="dialogVisible = false") Cancel
-          el-button(
-            ref="addMangaButton"
-            type="primary"
-            @click="mangaDexSearch"
-            :disabled="mangaURL.length === 0"
-          )
-            | Add
       el-dialog(
         title="Edit Manga Entry"
         custom-class="custom-dialog edit-manga-entry-dialog"
         width="400px"
         :visible.sync="editDialogVisible"
-        :before-close="closeEditModal"
       )
-        el-select.rounded.w-full(
-          v-model="newListID"
-          placeholder="Select new list"
+        edit-manga-entries(
+          :selectedSeriesIDs='selectedSeriesIDs'
+          @cancelEdit='editDialogVisible = false'
+          @editComplete='resetEditEntries'
         )
-          el-option(
-            v-for="list in lists"
-            :key="list.id"
-            :label="list.attributes.name"
-            :value="list.id"
-          )
-        .dialog-footer.text-left(slot="footer")
-          el-button(
-            ref="reportEntryErrorButton"
-            type="danger"
-            @click="reportEntryError"
-          )
-            | Wrong Info?
-          .float-right
-            el-button(@click="closeEditModal") Cancel
-            el-button(
-              ref="updateEntryButton"
-              type="primary"
-              @click="updateMangaEntries"
-            )
-              | Update
 </template>
 
 <script>
@@ -142,27 +110,25 @@
     mapActions, mapState, mapMutations, mapGetters,
   } from 'vuex';
   import {
-    Message, Loading, Dialog, Button, Input, Link, Select, Option, Alert,
+    Message, Dialog, Button, Input, Select, Option, Alert,
   } from 'element-ui';
 
   import Importers from '@/components/TheImporters';
+  import AddMangaEntry from '@/components/manga_entries/AddMangaEntry';
+  import EditMangaEntries from '@/components/manga_entries/EditMangaEntries';
   import TheMangaList from '@/components/TheMangaList';
-  import {
-    postMangaEntriesErrors,
-  } from '@/services/endpoints/MangaEntriesErrors';
-  import {
-    addMangaEntry, bulkUpdateMangaEntry, bulkDeleteMangaEntries,
-  } from '@/services/api';
+  import { bulkDeleteMangaEntries } from '@/services/api';
 
   export default {
     name: 'MangaList',
     components: {
       Importers,
+      AddMangaEntry,
+      EditMangaEntries,
       TheMangaList,
       'el-button': Button,
       'el-dialog': Dialog,
       'el-input': Input,
-      'el-link': Link,
       'el-select': Select,
       'el-option': Option,
       'el-alert': Alert,
@@ -171,8 +137,6 @@
       return {
         selectedSeriesIDs: [],
         currentListID: null,
-        newListID: null,
-        mangaURL: '',
         searchTerm: '',
         dialogVisible: false,
         importDialogVisible: false,
@@ -223,29 +187,9 @@
         'getLists',
       ]),
       ...mapMutations('lists', [
-        'addEntry',
-        'updateEntry',
         'removeEntries',
         'setListsLoading',
       ]),
-      async updateMangaEntries() {
-        const loading = Loading.service({ target: '.edit-manga-entry-dialog' });
-        const response = await bulkUpdateMangaEntry(
-          this.selectedSeriesIDs, { manga_list_id: this.newListID }
-        );
-
-        loading.close();
-
-        this.editDialogVisible = false;
-
-        if (response) {
-          Message.info(`${this.selectedSeriesIDs.length} entries updated`);
-          this.resetSelectedAttributes();
-          response.map(e => this.updateEntry(e));
-        } else {
-          Message.error("Couldn't update. Try refreshing the page");
-        }
-      },
       handleSelection(selectedSeriesIDs) {
         this.selectedSeriesIDs = selectedSeriesIDs;
       },
@@ -265,65 +209,20 @@
           );
         }
       },
-      async reportEntryError() {
-        const successful = await postMangaEntriesErrors(this.selectedSeriesIDs);
-
-        if (successful) {
-          this.closeEditModal();
-          this.resetSelectedAttributes();
-          Message.success(
-            'Issue reported. Entries will be updated'
-              + ' automatically shortly or investigated in detail later'
-          );
-        } else {
-          Message.error(
-            'Failed to report. Try reloading the page before trying again'
-          );
-        }
-      },
       completeImport() {
         // Request all lists again to get new lists if created
         // TODO: Figure out based on relationships if there was a new list added
         this.retrieveLists();
       },
-      mangaDexSearch() {
-        const loading = Loading.service({ target: '.el-dialog' });
-        addMangaEntry(this.mangaURL, this.currentListID)
-          .then((newMangaEntry) => {
-            this.addEntry(newMangaEntry.data);
-            this.closeModal(loading);
-          })
-          .catch((error) => {
-            if (error.response.status === 400) {
-              Message.error('URL is incorrect');
-              loading.close();
-            } else if (error.response.status === 404) {
-              Message.info('Manga was not found');
-              loading.close();
-            } else if (error.response.status === 406) {
-              Message.info('Manga already added');
-              loading.close();
-            } else {
-              Message.error('Something went wrong');
-              this.closeModal(loading);
-            }
-          });
-      },
-      closeModal(loading) {
-        this.dialogVisible = false;
-        loading.close();
-        this.mangaURL = '';
-      },
-      closeEditModal() {
+      resetEditEntries() {
         this.editDialogVisible = false;
-        this.newListID = null;
+        this.resetSelectedAttributes();
       },
       clearTableSelection() {
         this.$refs.mangaList.$refs.mangaListTable.clearSelection();
       },
       resetSelectedAttributes() {
         this.selectedSeriesIDs = [];
-        this.newListID = null;
         this.clearTableSelection();
       },
     },
