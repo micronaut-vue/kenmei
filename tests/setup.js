@@ -16,3 +16,13 @@ globalComponentFiles.forEach((fileName) => {
 
   Vue.component(componentName, componentConfig.default || componentConfig);
 });
+
+// ===
+// Configure Vue
+// ===
+
+// Don't warn about not using the production build of Vue, as
+// we care more about the quality of errors than performance
+// for tests. Same for the Vue devtools
+Vue.config.productionTip = false;
+Vue.config.devtools = false;
