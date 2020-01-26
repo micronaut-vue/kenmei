@@ -5,9 +5,10 @@ import flushPromises from 'flush-promises';
 import MangaList from '@/views/MangaList.vue';
 import TheMangaList from '@/components/TheMangaList.vue';
 import TheImporters from '@/components/TheImporters.vue';
+import AddMangaEntry from '@/components/manga_entries/AddMangaEntry.vue';
+import EditMangaEntries from '@/components/manga_entries/EditMangaEntries.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
-import * as mangaEntriesErrors from '@/services/endpoints/MangaEntriesErrors';
 
 import mangaEntryFactory from '../factories/mangaEntry';
 import mangaListFactory from '../factories/mangaList';
@@ -20,335 +21,128 @@ localVue.use(Vuex);
 localVue.directive('loading', true);
 
 describe('MangaList.vue', () => {
+  let store;
+  let firstMangaList;
+  let entry1;
+  let entry2;
+
+  beforeEach(() => {
+    firstMangaList = mangaListFactory.build({ id: '1' });
+    entry1 = mangaEntryFactory.build(
+      { id: 1, attributes: { title: 'Boku no Hero' } }
+    );
+    entry2 = mangaEntryFactory.build(
+      { id: 2, attributes: { title: 'Attack on Titan' } }
+    );
+
+    store = new Vuex.Store({
+      modules: {
+        lists: {
+          namespaced: true,
+          state: {
+            lists: [firstMangaList],
+            entries: [entry1, entry2],
+          },
+          actions: lists.actions,
+          getters: lists.getters,
+          mutations: lists.mutations,
+        },
+      },
+    });
+  });
+
   afterEach(() => {
     jest.restoreAllMocks();
   });
 
   describe('when adding new MangaDex entry', () => {
-    let store;
     let mangaList;
 
     beforeEach(() => {
-      store = new Vuex.Store({
-        modules: {
-          lists: {
-            namespaced: true,
-            state: {
-              lists: [mangaListFactory.build()],
-              entries: [],
-            },
-            actions: lists.actions,
-            getters: lists.getters,
-            mutations: lists.mutations,
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        data() {
+          return {
+            selectedSeriesIDs: [entry1.id],
+            currentListID: firstMangaList.id,
+          };
+        },
+        methods: {
+          clearTableSelection() {
+            return true;
           },
         },
       });
-      mangaList = shallowMount(MangaList, { store, localVue });
-
-      mangaList.setData({ mangaURL: 'example.url/manga/1' });
-      mangaList.find({ ref: 'openAddMangaModalButton' }).trigger('click');
     });
 
-    it('adds new Manga entry on successful API lookup', async () => {
-      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
-      const mangaEntry        = mangaEntryFactory.build();
+    describe('@events', () => {
+      it('@dialogClosed - closes add manga dialog', () => {
+        mangaList.find(AddMangaEntry).vm.$emit('dialogClosed');
 
-      mangaList.setData({
-        mangaURL: 'example.url/manga/1', currentListID: '1',
+        expect(mangaList.vm.$data.dialogVisible).toBe(false);
       });
-
-      addMangaEntryMock.mockResolvedValue({ data: mangaEntry });
-
-      expect(mangaList.vm.currentListEntries).not.toContain(mangaEntry);
-
-      mangaList.vm.mangaDexSearch();
-
-      await flushPromises();
-
-      expect(mangaList.vm.currentListEntries).toContain(mangaEntry);
-    });
-
-    it('shows Manga not found message if API returns nothing', async () => {
-      const infoMessageMock   = jest.spyOn(Message, 'info');
-      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
-
-      addMangaEntryMock.mockRejectedValue({ response: { status: 404 } });
-
-      mangaList.vm.mangaDexSearch();
-
-      await flushPromises();
-      expect(infoMessageMock).toHaveBeenCalledWith('Manga was not found');
-    });
-
-    it('shows Manga already added if it has already been added', async () => {
-      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
-      const infoMessageMock = jest.spyOn(Message, 'info');
-
-      mangaList = shallowMount(MangaList, { store, localVue });
-
-      mangaList.setData({ mangaURL: 'example.url/manga/1' });
-
-      addMangaEntryMock.mockRejectedValue({ response: { status: 406 } });
-
-      mangaList.vm.mangaDexSearch();
-
-      await flushPromises();
-
-      expect(infoMessageMock).toHaveBeenCalledWith('Manga already added');
-    });
-
-    it('shows URL is incorrect message if response is 400', async () => {
-      const infoMessageMock   = jest.spyOn(Message, 'error');
-      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
-
-      addMangaEntryMock.mockRejectedValue({ response: { status: 400 } });
-
-      mangaList.vm.mangaDexSearch();
-
-      await flushPromises();
-      expect(infoMessageMock).toHaveBeenCalledWith('URL is incorrect');
-    });
-
-    it('shows error message on unsuccessful API lookup', async () => {
-      const errorMessageMock  = jest.spyOn(Message, 'error');
-      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
-
-      addMangaEntryMock.mockRejectedValue({ response: { status: 500 } });
-
-      mangaList.vm.mangaDexSearch();
-
-      await flushPromises();
-
-      expect(errorMessageMock).toHaveBeenCalledWith('Something went wrong');
     });
   });
   describe('when updating manga entries', () => {
-    let store;
     let mangaList;
-    let mangaEntry;
-    let updateMangaEntriesMock;
 
     beforeEach(() => {
-      updateMangaEntriesMock = jest.spyOn(api, 'bulkUpdateMangaEntry');
-      mangaEntry = mangaEntryFactory.build({ id: 1 });
-
-      store = new Vuex.Store({
-        modules: {
-          lists: {
-            namespaced: true,
-            state: {
-              lists: [
-                mangaListFactory.build({ id: '1' }),
-                mangaListFactory.build({ id: '2' }),
-              ],
-              entries: [mangaEntry],
-            },
-            actions: lists.actions,
-            getters: lists.getters,
-            mutations: lists.mutations,
-          },
-        },
-      });
       mangaList = shallowMount(MangaList, {
         store,
         localVue,
+        data() {
+          return {
+            selectedSeriesIDs: [entry1.id],
+            currentListID: firstMangaList.id,
+          };
+        },
         methods: {
           clearTableSelection() {
             return true;
           },
         },
       });
-      mangaList.setData({
-        selectedSeriesIDs: ['1'],
-        currentListID: '1',
-        newListID: '2',
-        editDialogVisible: true,
-      });
-      mangaList.find({ ref: 'editMangaEntriesButton' }).trigger('click');
     });
 
-    afterEach(() => {
-      expect(updateMangaEntriesMock).toHaveBeenCalledWith(
-        ['1'], { manga_list_id: '2' }
-      );
-    });
-
-    describe('if update was successful', () => {
-      let updatedMangaEntry;
-
-      beforeEach(() => {
-        updatedMangaEntry = mangaEntryFactory.build(
-          { relationships: { manga_list: { data: { id: '2' } } } }
-        );
-
-        updateMangaEntriesMock.mockResolvedValue([updatedMangaEntry]);
+    describe('@events', () => {
+      it('@cancelEdit - closes edit manga entries dialog', () => {
+        mangaList.find(EditMangaEntries).vm.$emit('cancelEdit');
       });
+      it('@editComplete - resets selected manga entries and closes modal', () => {
+        mangaList.find(EditMangaEntries).vm.$emit('editComplete');
 
-      it('resets edit manga entries modal', async () => {
-        mangaList.vm.updateMangaEntries();
-
-        await flushPromises();
-
-        expect(mangaList.vm.$data.selectedSeriesIDs).toEqual([]);
         expect(mangaList.vm.$data.editDialogVisible).toBe(false);
-        expect(mangaList.vm.$data.newListID).toBe(null);
-      });
-
-      it('tells user how many entries have been updated', async () => {
-        const infoMessageMock = jest.spyOn(Message, 'info');
-
-        mangaList.vm.updateMangaEntries();
-
-        await flushPromises();
-
-        expect(infoMessageMock).toHaveBeenCalledWith('1 entries updated');
-      });
-
-      it("changes manga entry's manga list", async () => {
-        mangaList.vm.updateMangaEntries();
-
-        await flushPromises();
-
-        expect(mangaList.vm.currentListEntries).not.toContain(mangaEntry);
-
-        mangaList.setData({ currentListID: '2' });
-
-        expect(mangaList.vm.currentListEntries).toContain(updatedMangaEntry);
+        expect(mangaList.vm.$data.selectedSeriesIDs).toEqual([]);
       });
     });
-
-    describe('if update was unsuccessful', () => {
-      it("shows couldn't update message and keeps entry the same", async () => {
-        const errorMessageMock = jest.spyOn(Message, 'error');
-
-        updateMangaEntriesMock.mockResolvedValue(false);
-
-        mangaList.vm.updateMangaEntries();
-
-        await flushPromises();
-
-        expect(mangaList.vm.currentListEntries).toContain(mangaEntry);
-        expect(errorMessageMock).toHaveBeenCalledWith(
-          "Couldn't update. Try refreshing the page"
-        );
-      });
-    });
-  });
-  describe('when reporting manga entries', () => {
-    let store;
-    let mangaList;
-    let postMangaEntriesErrorsMock;
-
-    beforeEach(() => {
-      postMangaEntriesErrorsMock = jest.spyOn(
-        mangaEntriesErrors, 'postMangaEntriesErrors'
-      );
-
-      store = new Vuex.Store({
-        modules: {
-          lists: {
-            namespaced: true,
-            state: {
-              lists: mangaListFactory.buildList(1),
-              entries: mangaEntryFactory.buildList(1),
-            },
-            actions: lists.actions,
-            getters: lists.getters,
-            mutations: lists.mutations,
-          },
-        },
-      });
-      mangaList = shallowMount(MangaList, {
-        store,
-        localVue,
-        methods: {
-          clearTableSelection() {
-            return true;
-          },
-        },
-      });
-      mangaList.setData({
-        selectedSeriesIDs: ['1'],
-        currentListID: '1',
-        newListID: '2',
-      });
-    });
-
-    afterEach(() => {
-      expect(postMangaEntriesErrorsMock).toHaveBeenCalledWith(['1']);
-    });
-
-    describe('if report was successful', () => {
-      it('shows successful message', async () => {
-        const infoMessageMock = jest.spyOn(Message, 'success');
-
-        postMangaEntriesErrorsMock.mockResolvedValue(true);
-
-        mangaList.vm.reportEntryError();
-
-        await flushPromises();
-
-        expect(infoMessageMock).toHaveBeenCalledWith(
-          'Issue reported. Entries will be updated'
-            + ' automatically shortly or investigated in detail later'
-        );
-      });
-    });
-
-    describe('if report was unsuccessful', () => {
-      it('shows failure message', async () => {
-        const errorMessageMock = jest.spyOn(Message, 'error');
-
-        postMangaEntriesErrorsMock.mockResolvedValue(false);
-
-        mangaList.vm.reportEntryError();
-
-        await flushPromises();
-
-        expect(errorMessageMock).toHaveBeenCalledWith(
-          'Failed to report. Try reloading the page before trying again'
-        );
-      });
-    })
   });
   describe('when deleting manga entries', () => {
-    let store;
     let mangaList;
-    let mangaEntry;
     let bulkDeleteMangaEntriesMock;
 
     beforeEach(() => {
       bulkDeleteMangaEntriesMock = jest.spyOn(api, 'bulkDeleteMangaEntries');
-      mangaEntry = mangaEntryFactory.build({ id: '1' });
 
-      store = new Vuex.Store({
-        modules: {
-          lists: {
-            namespaced: true,
-            state: {
-              lists: [mangaListFactory.build({ id: '1' })],
-              entries: [mangaEntry],
-            },
-            actions: lists.actions,
-            getters: lists.getters,
-            mutations: lists.mutations,
-          },
-        },
-      });
       mangaList = shallowMount(MangaList, {
         store,
         localVue,
+        data() {
+          return {
+            selectedSeriesIDs: [entry1.id],
+            currentListID: firstMangaList.id,
+          };
+        },
         methods: {
           clearTableSelection() {
             return true;
           },
         },
       });
-      mangaList.setData({ selectedSeriesIDs: ['1'], currentListID: '1' });
     });
 
     afterEach(() => {
-      expect(bulkDeleteMangaEntriesMock).toHaveBeenCalledWith(['1']);
+      expect(bulkDeleteMangaEntriesMock).toHaveBeenCalledWith([entry1.id]);
     });
 
     describe('if deletion was successful', () => {
@@ -369,7 +163,7 @@ describe('MangaList.vue', () => {
 
         await flushPromises();
 
-        expect(mangaList.vm.currentListEntries).not.toContain(mangaEntry);
+        expect(mangaList.vm.currentListEntries).not.toContain(entry1);
       });
     });
 
@@ -383,7 +177,7 @@ describe('MangaList.vue', () => {
 
         await flushPromises();
 
-        expect(mangaList.vm.currentListEntries).toContain(mangaEntry);
+        expect(mangaList.vm.currentListEntries).toContain(entry1);
         expect(errorMessageMock).toHaveBeenCalledWith(
           'Deletion failed. Try reloading the page before trying again'
         );
@@ -392,24 +186,17 @@ describe('MangaList.vue', () => {
   });
   describe('@events', () => {
     let mangaList;
-    let store;
 
     beforeEach(() => {
-      store = new Vuex.Store({
-        modules: {
-          lists: {
-            namespaced: true,
-            state: {
-              lists: [mangaListFactory.build()],
-              entries: [mangaEntryFactory.build()],
-            },
-            actions: lists.actions,
-            getters: lists.getters,
-            mutations: lists.mutations,
-          },
+      mangaList = shallowMount(MangaList, {
+        store,
+        localVue,
+        data() {
+          return {
+            currentListID: firstMangaList.id,
+          };
         },
       });
-      mangaList = shallowMount(MangaList, { store, localVue });
     });
 
     it('@seriesSelected - toggles delete button and sets selected series', () => {
@@ -427,46 +214,15 @@ describe('MangaList.vue', () => {
     });
   });
   describe(':data', () => {
-    let mangaList;
-    let store;
-
-    const entry1 = mangaEntryFactory.build(
-      { id: 1, attributes: { title: 'Boku no Hero' } }
-    );
-    const entry2 = mangaEntryFactory.build(
-      { id: 2, attributes: { title: 'Attack on Titan' } }
-    );
-
-    beforeEach(() => {
-      store = new Vuex.Store({
-        modules: {
-          lists: {
-            namespaced: true,
-            state: {
-              lists: mangaListFactory.buildList(1),
-              entries: [entry1, entry2],
-            },
-            actions: lists.actions,
-            getters: lists.getters,
-            mutations: lists.mutations,
-          },
-        },
-      });
-      mangaList = shallowMount(MangaList, { store, localVue });
-    });
-
-    it(':selectedSeries - if present, can remove them by pressing Remove button', () => {
-      mangaList.setData({ selectedSeriesIDs: ['2'] });
-
-      mangaList.vm.removeSeries();
-
-      expect(mangaList.vm.currentListEntries).not.toContain(entry2);
-    });
-
     it(':searchTerm - if present, filters manga entries', () => {
-      mangaList = shallowMount(MangaList, {
+      const mangaList = shallowMount(MangaList, {
         store,
         localVue,
+        data() {
+          return {
+            currentListID: firstMangaList.id,
+          };
+        },
         computed: {
           currentListEntries: () => [entry1, entry2],
         },
