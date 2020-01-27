@@ -5,10 +5,7 @@ import axios from 'axios';
 import flushPromises from 'flush-promises';
 import TheImporters from '@/components/TheImporters.vue';
 import lists from '@/store/modules/lists';
-import * as api from '@/services/api';
 import * as importersEndpoint from '@/services/endpoints/importers';
-
-import mangaEntryFactory from '../factories/mangaEntry';
 
 const localVue = createLocalVue();
 
