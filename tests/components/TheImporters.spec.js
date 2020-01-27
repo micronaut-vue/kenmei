@@ -60,48 +60,61 @@ describe('TheImporters.vue', () => {
       jest.restoreAllMocks();
     });
 
-    it('parses manga list from a json file', async () => {
-      const file = new File(
-        [importedList], 'list.json', { type: 'application/json' }
-      );
-      const fileReaderReadTextMock = jest.spyOn(window, 'FileReader');
+    describe('when file is valid', () => {
+      it('parses manga list', async () => {
+        const file = new File(
+          [importedList], 'list.json', { type: 'application/json' }
+        );
+        const fileReaderReadTextMock = jest.spyOn(window, 'FileReader');
 
-      fileReaderReadTextMock.mockImplementation(() => ({
-        readAsText: jest.fn(),
-      }));
+        fileReaderReadTextMock.mockImplementation(() => ({
+          readAsText: jest.fn(),
+        }));
 
-      importers.vm.processUpload({ file });
+        importers.vm.processUpload({ file });
 
-      await flushPromises();
+        await flushPromises();
 
-      expect(fileReaderReadTextMock).toHaveBeenCalled();
+        expect(fileReaderReadTextMock).toHaveBeenCalled();
+      });
+
+      it('shows success message', async () => {
+        const postTrackrMoeMock = jest.spyOn(
+          importersEndpoint, 'postTrackrMoe'
+        );
+
+        postTrackrMoeMock.mockResolvedValue(true);
+
+        importers.vm.processMangaDexList(importedList);
+
+        await flushPromises();
+
+        expect(importers.text()).toContain(
+          'Your Trackr.moe import has started'
+        );
+      });
+
+      it('shows Something went wrong message if import failed', async () => {
+        const errorMessageMock  = jest.spyOn(Message, 'error');
+        const postTrackrMoeMock = jest.spyOn(
+          importersEndpoint, 'postTrackrMoe'
+        );
+
+        postTrackrMoeMock.mockResolvedValue(false);
+
+        importers.vm.processMangaDexList(importedList);
+
+        await flushPromises();
+
+        expect(errorMessageMock).toHaveBeenCalledWith(
+          'Something went wrong, try again later or contact hi@kenmei.co'
+        );
+      });
     });
 
-    it('shows success message', async () => {
-      const postTrackrMoeMock = jest.spyOn(importersEndpoint, 'postTrackrMoe');
-
-      postTrackrMoeMock.mockResolvedValue(true);
-
-      importers.vm.processMangaDexList(importedList);
-
-      await flushPromises();
-
-      expect(importers.text()).toContain('Your Trackr.moe import has started');
-    });
-
-    it('shows Something went wrong message if import failed', async () => {
-      const errorMessageMock  = jest.spyOn(Message, 'error');
-      const postTrackrMoeMock = jest.spyOn(importersEndpoint, 'postTrackrMoe');
-
-      postTrackrMoeMock.mockResolvedValue(false);
-
-      importers.vm.processMangaDexList(importedList);
-
-      await flushPromises();
-
-      expect(errorMessageMock).toHaveBeenCalledWith(
-        'Something went wrong, try again later or contact hi@kenmei.co'
-      );
+    describe('when file is invalid', () => {
+      it.todo('raises an File is incorrect error if not trackr.moe file');
+      it.todo('raises a Partial list error if trackr.moe list is incomplete');
     });
   });
 

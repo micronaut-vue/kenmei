@@ -131,7 +131,19 @@
 
         reader.onload = ((theFile) => {
           const json = JSON.parse(theFile.target.result);
-          this.processMangaDexList(json);
+
+          if (json.series) {
+            this.processMangaDexList(json);
+          } else if (json.reading) {
+            Message.error(
+              `You are trying to import partial list. Please use export from
+              Trakr.moe settings page.`
+            );
+          } else {
+            Message.error(
+              'File is incorrect. Make sure you are uploading Trackr.moe export'
+            );
+          }
         });
 
         reader.readAsText(file.file);
