@@ -75,7 +75,6 @@
       return {
         activeTab: 'trackrMoe',
         importURL: '',
-        importProgress: 0,
         mangaDexImportInitiated: false,
         trackrMoeimportInitiated: false,
       };
@@ -128,9 +127,6 @@
         loading.close();
       },
       processUpload(file) {
-        // Reset import progress
-        this.importProgress = 0;
-
         const reader = new FileReader();
 
         reader.onload = ((theFile) => {
