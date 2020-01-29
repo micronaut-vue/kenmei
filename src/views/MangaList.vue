@@ -84,7 +84,7 @@
       el-dialog(
         title="Add Manga"
         :visible.sync="dialogVisible"
-        custom-class="custom-dialog"
+        custom-class="custom-dialog add-manga-entry-dialog"
         width="400px"
       )
         add-manga-entry(
