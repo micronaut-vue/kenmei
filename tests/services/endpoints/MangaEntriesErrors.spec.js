@@ -8,17 +8,23 @@ describe('MangaEntriesErrors', () => {
 
   describe('postMangaEntriesErrors()', () => {
     it('makes a request to the resource and returns true', async () => {
-      axios.post.mockResolvedValue({ status: 200 });
+      const reportMangaEntriesMock = jest.spyOn(axios, 'post');
 
-      const successful = await resource.postMangaEntriesErrors({ ids: ['1'] });
+      reportMangaEntriesMock.mockResolvedValue({ status: 200 });
+
+      const successful = await resource.postMangaEntriesErrors(['1'], 0);
 
       expect(successful).toBeTruthy();
+      expect(reportMangaEntriesMock).toHaveBeenCalledWith(
+        '/api/v1/manga_entries_errors/',
+        { ids: ['1'], issue_id: 0 }
+      );
     });
 
     it('makes a request to the resource and returns false if failed', async () => {
       axios.post.mockRejectedValue({ status: 500 });
 
-      const successful = await resource.postMangaEntriesErrors({ ids: [] });
+      const successful = await resource.postMangaEntriesErrors([], 0);
       expect(successful).toBeFalsy();
     });
   });
