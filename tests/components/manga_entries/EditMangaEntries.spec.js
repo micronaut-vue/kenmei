@@ -5,7 +5,6 @@ import flushPromises from 'flush-promises';
 import EditMangaEntries from '@/components/manga_entries/EditMangaEntries.vue';
 import lists from '@/store/modules/lists';
 import * as api from '@/services/api';
-import * as mangaEntriesErrors from '@/services/endpoints/MangaEntriesErrors';
 
 import mangaEntryFactory from '../../factories/mangaEntry';
 import mangaListFactory from '../../factories/mangaList';
@@ -115,53 +114,6 @@ describe('EditMangaEntries.vue', () => {
         expect(store.state.lists.entries).not.toContain(updatedMangaEntry);
         expect(errorMessageMock).toHaveBeenCalledWith(
           "Couldn't update. Try refreshing the page"
-        );
-      });
-    });
-  });
-  describe('when reporting manga entries', () => {
-    let postMangaEntriesErrorsMock;
-
-    beforeEach(() => {
-      postMangaEntriesErrorsMock = jest.spyOn(
-        mangaEntriesErrors, 'postMangaEntriesErrors'
-      );
-    });
-
-    afterEach(() => {
-      expect(postMangaEntriesErrorsMock).toHaveBeenCalledWith(['1']);
-    });
-
-    describe('if report was successful', () => {
-      it('shows successful message', async () => {
-        const infoMessageMock = jest.spyOn(Message, 'success');
-
-        postMangaEntriesErrorsMock.mockResolvedValue(true);
-
-        editMangaEntries.vm.reportEntryError();
-
-        await flushPromises();
-
-        expect(editMangaEntries.emitted('editComplete')).toBeTruthy();
-        expect(infoMessageMock).toHaveBeenCalledWith(
-          'Issue reported. Entries will be updated'
-            + ' automatically shortly or investigated in detail later'
-        );
-      });
-    });
-
-    describe('if report was unsuccessful', () => {
-      it('shows failure message', async () => {
-        const errorMessageMock = jest.spyOn(Message, 'error');
-
-        postMangaEntriesErrorsMock.mockResolvedValue(false);
-
-        editMangaEntries.vm.reportEntryError();
-
-        await flushPromises();
-
-        expect(errorMessageMock).toHaveBeenCalledWith(
-          'Failed to report. Try reloading the page before trying again'
         );
       });
     });

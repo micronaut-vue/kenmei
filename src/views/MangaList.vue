@@ -36,24 +36,37 @@
         .bulk-actions.inline-block.max-sm_mb-5.max-sm_float-right
           el-button.sm_shadow-md(
             v-show="entriesSelected"
+            content="Delete"
             ref="removeSeriesButton"
+            icon="el-icon-delete"
             type="danger"
             size="medium"
             @click="removeSeries"
-            round
+            circle
+            v-tippy
           )
-            i.el-icon-delete.mr-1
-            | Remove
           el-button.sm_shadow-md(
             v-show="entriesSelected"
+            content="Edit"
             ref="editMangaEntriesButton"
+            icon="el-icon-edit-outline"
             type="info"
             size="medium"
             @click="editDialogVisible = true"
-            round
+            circle
+            v-tippy
           )
-            i.el-icon-edit.mr-1
-            | Edit
+          el-button.sm_shadow-md(
+            v-show="entriesSelected"
+            content="Report manga issues"
+            ref="reportMangaEntriesButton"
+            icon="el-icon-document-delete"
+            type="warning"
+            size="medium"
+            @click="reportDialogVisible = true"
+            circle
+            v-tippy
+          )
         .actions.inline-block.float-right
           el-button.sm_shadow-md(
             type="success"
@@ -98,7 +111,7 @@
         )
       el-dialog(
         ref='editMangaEntryDialog'
-        :title="editMangaEntriesDialogTitle"
+        :title="mangaEntriesDialogTitle('Edit')"
         custom-class="custom-dialog edit-manga-entry-dialog"
         width="400px"
         :visible.sync="editDialogVisible"
@@ -106,7 +119,18 @@
         edit-manga-entries(
           :selectedEntriesIDs='selectedEntriesIDs'
           @cancelEdit='editDialogVisible = false'
-          @editComplete='resetEditEntries'
+          @editComplete="resetEntries('editDialogVisible')"
+        )
+      el-dialog(
+        ref='reportMangaEntryDialog'
+        custom-class="custom-dialog report-manga-entry-dialog"
+        width="400px"
+        :title="mangaEntriesDialogTitle('Report')"
+        :visible.sync="reportDialogVisible"
+      )
+        report-manga-entries(
+          :selectedEntriesIDs='selectedEntriesIDs'
+          @closeDialog="resetEntries('reportDialogVisible')"
         )
 </template>
 
@@ -122,6 +146,7 @@
   import Importers from '@/components/TheImporters';
   import AddMangaEntry from '@/components/manga_entries/AddMangaEntry';
   import EditMangaEntries from '@/components/manga_entries/EditMangaEntries';
+  import ReportMangaEntries from '@/components/manga_entries/ReportMangaEntries';
   import TheMangaList from '@/components/TheMangaList';
   import { bulkDeleteMangaEntries } from '@/services/api';
 
@@ -131,6 +156,7 @@
       Importers,
       AddMangaEntry,
       EditMangaEntries,
+      ReportMangaEntries,
       TheMangaList,
       'el-button': Button,
       'el-dialog': Dialog,
@@ -148,6 +174,7 @@
         dialogVisible: false,
         importDialogVisible: false,
         editDialogVisible: false,
+        reportDialogVisible: false,
         alertMessage: `
           UI improvements, add manga using chapter URL, bug fixes and more in
           the newest update. Click to learn more
@@ -161,11 +188,6 @@
       ...mapGetters('lists', [
         'getEntriesByListId',
       ]),
-      editMangaEntriesDialogTitle() {
-        return this.selectedEntriesIDs.length > 1
-          ? 'Edit Manga Entries'
-          : 'Edit Manga Entry';
-      },
       currentListEntries() {
         return this.getEntriesByListId(this.currentListID);
       },
@@ -199,6 +221,11 @@
         'removeEntries',
         'setListsLoading',
       ]),
+      mangaEntriesDialogTitle(action) {
+        return this.selectedEntriesIDs.length > 1
+          ? `${action} Manga Entries`
+          : `${action} Manga Entry`;
+      },
       handleSelection(selectedEntriesIDs) {
         this.entriesSelected = selectedEntriesIDs.length > 0;
         this.selectedEntriesIDs = selectedEntriesIDs;
@@ -227,8 +254,8 @@
         // TODO: Figure out based on relationships if there was a new list added
         this.retrieveLists();
       },
-      resetEditEntries() {
-        this.editDialogVisible = false;
+      resetEntries(dialogName) {
+        this[dialogName] = false;
         this.resetSelectedAttributes();
       },
       clearTableSelection() {
