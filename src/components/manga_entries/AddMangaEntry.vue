@@ -46,7 +46,7 @@
         'addEntry',
       ]),
       mangaDexSearch() {
-        const loading = Loading.service({ target: '.el-dialog' });
+        const loading = Loading.service({ target: '.add-manga-entry-dialog' });
         addMangaEntry(this.mangaURL, this.currentListID)
           .then((newMangaEntry) => {
             this.addEntry(newMangaEntry.data);
