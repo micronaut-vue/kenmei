@@ -74,7 +74,7 @@
             placement="top-start"
           )
             el-button(
-              v-if="lastChapterNotSet(scope.row)"
+              v-if="unread(scope.row)"
               ref="updateEntryButton"
               icon="el-icon-check"
               size="mini"
@@ -100,8 +100,8 @@
   import he from 'he';
   import relativeTime from 'dayjs/plugin/relativeTime';
 
-  import { updateMangaEntry, extractSeriesID } from '@/services/api';
-  import sortBy from '@/services/sorters';
+  import { updateMangaEntry } from '@/services/api';
+  import { unread, sortBy } from '@/services/sorters';
 
   dayjs.extend(relativeTime);
 
@@ -152,27 +152,10 @@
       },
     },
     methods: {
+      unread,
       ...mapMutations('lists', [
         'updateEntry',
       ]),
-      /* eslint-disable camelcase */
-      lastChapterNotSet(entry) {
-        const {
-          last_chapter_read_url, last_chapter_available_url,
-        } = entry.links;
-
-        return last_chapter_available_url
-          && (extractSeriesID(last_chapter_read_url) !== extractSeriesID(last_chapter_available_url));
-      },
-      unread(entry) {
-        const {
-          last_chapter_read_url, last_chapter_available_url,
-        } = entry.links;
-
-        return last_chapter_read_url
-          && (extractSeriesID(last_chapter_read_url) !== extractSeriesID(last_chapter_available_url));
-      },
-      /* eslint-enable camelcase */
       async setLastRead(entry) {
         const attributes = {
           last_chapter_read: entry.attributes.last_chapter_available,
