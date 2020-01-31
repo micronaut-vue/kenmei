@@ -1,13 +1,9 @@
-import { extractSeriesID } from '@/services/api';
-
 /* eslint-disable camelcase */
-const unread = (entry) => {
-  const {
-    last_chapter_read_url, last_chapter_available_url,
-  } = entry.links;
+export const unread = (entry) => {
+  const { last_chapter_read, last_chapter_available } = entry.attributes;
 
-  return last_chapter_read_url
-    && (extractSeriesID(last_chapter_read_url) !== extractSeriesID(last_chapter_available_url));
+  return (parseFloat(last_chapter_available) || 0)
+    > (parseFloat(last_chapter_read) || 0);
 };
 
 const titleSort = (entryA, entryB) => {
@@ -31,7 +27,7 @@ const releasedAtSort = (a, b) => {
     || +(aReleasedAt < bReleasedAt);
 };
 
-export default function sortBy(array, sortType, order) {
+export function sortBy(array, sortType, order) {
   let sortedData = [];
 
   switch (sortType) {
