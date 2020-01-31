@@ -1,13 +1,5 @@
 import { secure } from '@/modules/axios';
 
-// This can extract both the series and chapter, we want to make use of that
-export const extractSeriesID = (url) => {
-  if (url == null) { return url; }
-
-  const match = url.match(/(?!\/)\d+/g);
-  return match !== null ? match[0] : null;
-};
-
 export const addMangaEntry = (seriesURL, mangaListID) => secure
   .post('/api/v1/manga_entries/', {
     manga_entry: {
