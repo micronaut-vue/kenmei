@@ -1,9 +1,10 @@
 /* eslint-disable camelcase */
 export const unread = (entry) => {
-  const { last_chapter_read, last_chapter_available } = entry.attributes;
+  const { last_chapter_read_url, last_chapter_available_url } = entry.links;
 
-  return (parseFloat(last_chapter_available) || 0)
-    > (parseFloat(last_chapter_read) || 0);
+
+  return last_chapter_available_url
+    && last_chapter_read_url !== last_chapter_available_url;
 };
 
 const titleSort = (entryA, entryB) => {

@@ -16,6 +16,10 @@ describe('Sorters', () => {
           last_chapter_available: '2',
           last_released_at: '2019-01-10T00:00:00.000Z',
         },
+        links: {
+          last_chapter_read_url: 'example.url/manga/1/chapter/1',
+          last_chapter_available_url: 'example.url/manga/1/chapter/2',
+        },
       }
     );
     entry2 = mangaEntryFactory.build(
@@ -25,6 +29,10 @@ describe('Sorters', () => {
           last_chapter_read: '3',
           last_chapter_available: '4',
           last_released_at: '2019-01-01T00:00:00.000Z',
+        },
+        links: {
+          last_chapter_read_url: 'example.url/manga/1/chapter/1',
+          last_chapter_available_url: 'example.url/manga/1/chapter/2',
         },
       }
     );
@@ -36,17 +44,21 @@ describe('Sorters', () => {
           last_chapter_available: '5',
           last_released_at: null,
         },
+        links: {
+          last_chapter_read_url: 'example.url/manga/1/chapter/1',
+          last_chapter_available_url: 'example.url/manga/1/chapter/2',
+        },
       }
     );
   });
   describe('unread', () => {
-    describe('when last chapter availiable is bigger than last read', () => {
+    describe('when last chapter availiable is different than last read', () => {
       it('returns true', () => {
         const entry = mangaEntryFactory.build(
           {
-            attributes: {
-              last_chapter_read: '4',
-              last_chapter_available: '5',
+            links: {
+              last_chapter_read_url: 'example.url/manga/1/chapter/4',
+              last_chapter_available_url: 'example.url/manga/1/chapter/5',
             },
           }
         );
@@ -58,23 +70,9 @@ describe('Sorters', () => {
       it('returns true', () => {
         const entry = mangaEntryFactory.build(
           {
-            attributes: {
-              last_chapter_read: null,
-              last_chapter_available: '5',
-            },
-          }
-        );
-
-        expect(unread(entry)).toBeTruthy();
-      });
-    });
-    describe('when comparing a chapter as a title with last available', () => {
-      it('returns true', () => {
-        const entry = mangaEntryFactory.build(
-          {
-            attributes: {
-              last_chapter_read: 'Oneshot',
-              last_chapter_available: '5',
+            links: {
+              last_chapter_read_url: null,
+              last_chapter_available_url: 'example.url/manga/1/chapter/5',
             },
           }
         );
@@ -86,9 +84,9 @@ describe('Sorters', () => {
       it('returns false', () => {
         const entry = mangaEntryFactory.build(
           {
-            attributes: {
-              last_chapter_read: '2',
-              last_chapter_available: null,
+            links: {
+              last_chapter_read_url: 'example.url/manga/1/chapter/5',
+              last_chapter_available_url: null,
             },
           }
         );
