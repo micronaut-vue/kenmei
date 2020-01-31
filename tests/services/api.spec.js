@@ -8,25 +8,6 @@ describe('API', () => {
     jest.restoreAllMocks();
   });
 
-  describe('extractSeriesID()', () => {
-    it('returns MangaDex ID from a MangaDex series or chapter URL', () => {
-      expect(
-        apiService.extractSeriesID('https://mangadex.org/chapter/671525')
-      ).toEqual('671525');
-      expect(
-        apiService.extractSeriesID('https://mangadex.org/title/65')
-      ).toEqual('65');
-    });
-
-    it('returns null if URL is null', () => {
-      expect(apiService.extractSeriesID(null)).toEqual(null);
-    });
-
-    it("returns null if can't find ID", () => {
-      expect(apiService.extractSeriesID('test')).toEqual(null);
-    });
-  });
-
   describe('addMangaEntry()', () => {
     it('makes a request to the API and returns manga if found', async () => {
       const mangaURL = 'example.url/123';
