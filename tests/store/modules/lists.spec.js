@@ -143,9 +143,6 @@ describe('lists', () => {
 
         expect(axiosSpy).toHaveBeenCalledWith('/api/v1/manga_lists/');
         expect(commit).toHaveBeenCalledWith('setLists', initLists);
-        expect(commit).toHaveBeenCalledWith('setEntries', entries);
-        expect(commit).toHaveBeenCalledWith('setListsLoading', true);
-        expect(commit).toHaveBeenLastCalledWith('setListsLoading', false);
       });
 
       it('shows error message if request has failed', async () => {
@@ -166,6 +163,44 @@ describe('lists', () => {
           mockResponse.response.data.error
         );
         expect(commit).not.toHaveBeenCalledWith('setLists', mockResponse);
+      });
+    });
+
+    describe('getEntries', () => {
+      it('retrieves manga entries from the api', async () => {
+        const axiosSpy = jest.spyOn(axios, 'get');
+        const entries  = mangaEntryFactory.buildList(1);
+
+        axiosSpy.mockResolvedValue({ status: 200, data: { data: entries } });
+
+        lists.actions.getEntries({ commit });
+
+        await flushPromises();
+
+        expect(axiosSpy).toHaveBeenCalledWith('/api/v1/manga_entries/');
+        expect(commit).toHaveBeenCalledWith('setEntries', entries);
+        expect(commit).toHaveBeenCalledWith('setListsLoading', true);
+        expect(commit).toHaveBeenLastCalledWith('setListsLoading', false);
+      });
+
+      it('shows error message if request has failed', async () => {
+        const axiosSpy        = jest.spyOn(axios, 'get');
+        const errorMessageSpy = jest.spyOn(Message, 'error');
+        const mockResponse    = {
+          response: { data: { error: 'Entries not found' } },
+        };
+
+        axiosSpy.mockRejectedValue(mockResponse);
+
+        lists.actions.getEntries({ commit });
+
+        await flushPromises();
+
+        expect(axiosSpy).toHaveBeenCalledWith('/api/v1/manga_entries/');
+        expect(errorMessageSpy).toHaveBeenLastCalledWith(
+          mockResponse.response.data.error
+        );
+        expect(commit).not.toHaveBeenCalledWith('setEntries', mockResponse);
       });
     });
   });

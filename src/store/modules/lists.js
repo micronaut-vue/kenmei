@@ -15,12 +15,18 @@ const getters = {
 
 const actions = {
   getLists({ commit }) {
-    commit('setListsLoading', true);
-
     return secure.get('/api/v1/manga_lists/')
       .then((response) => {
         commit('setLists', response.data.data);
-        commit('setEntries', response.data.included);
+      })
+      .catch((request) => { Message.error(request.response.data.error); });
+  },
+  getEntries({ commit }) {
+    commit('setListsLoading', true);
+
+    return secure.get('/api/v1/manga_entries/')
+      .then((response) => {
+        commit('setEntries', response.data.data);
       })
       .catch((request) => { Message.error(request.response.data.error); })
       .then(() => { commit('setListsLoading', false); });
