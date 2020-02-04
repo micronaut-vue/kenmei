@@ -181,10 +181,12 @@
     },
     mounted() {
       this.retrieveLists();
+      this.retrieveEntries();
     },
     methods: {
       ...mapActions('lists', [
         'getLists',
+        'getEntries',
       ]),
       ...mapMutations('lists', [
         'removeEntries',
@@ -196,6 +198,9 @@
       async retrieveLists() {
         await this.getLists();
         this.currentListID = this.currentListID || this.lists[0].id;
+      },
+      async retrieveEntries() {
+        await this.getEntries();
       },
       async removeSeries() {
         const successful = await bulkDeleteMangaEntries(this.selectedSeriesIDs);
