@@ -136,6 +136,7 @@
     data() {
       return {
         selectedEntriesIDs: [],
+        entriesSelected: false,
         currentListID: null,
         searchTerm: '',
         dialogVisible: false,
@@ -156,9 +157,6 @@
       ...mapGetters('lists', [
         'getEntriesByListId',
       ]),
-      entriesSelected() {
-        return this.selectedSeriesIDs.length > 0;
-      },
       currentListEntries() {
         return this.getEntriesByListId(this.currentListID);
       },
@@ -193,6 +191,7 @@
         'setListsLoading',
       ]),
       handleSelection(selectedEntriesIDs) {
+        this.entriesSelected = selectedEntriesIDs.length > 0;
         this.selectedEntriesIDs = selectedEntriesIDs;
       },
       async retrieveLists() {
