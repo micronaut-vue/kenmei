@@ -72,6 +72,7 @@
             effect="dark"
             content="Set last read to the latest chapter"
             placement="top-start"
+            :enterable="false"
           )
             el-button(
               v-if="unread(scope.row)"
@@ -192,7 +193,12 @@
     @apply rounded-r;
   }
   .actions > .cell {
+    opacity: 0;
+    transition: 0.2s ease-in-out;
     height: 28px; // matches the button height
+  }
+  tr:hover .actions > .cell {
+    opacity: 1;
   }
   .new-chapter-dot {
     background-color: #409EFF;
