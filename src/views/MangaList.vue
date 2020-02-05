@@ -93,7 +93,8 @@
           @dialogClosed='dialogVisible = false'
         )
       el-dialog(
-        title="Edit Manga Entry"
+        ref='editMangaEntryDialog'
+        :title="editMangaEntriesDialogTitle"
         custom-class="custom-dialog edit-manga-entry-dialog"
         width="400px"
         :visible.sync="editDialogVisible"
@@ -158,6 +159,11 @@
       ...mapGetters('lists', [
         'getEntriesByListId',
       ]),
+      editMangaEntriesDialogTitle() {
+        return this.selectedEntriesIDs.length > 1
+          ? 'Edit Manga Entries'
+          : 'Edit Manga Entry';
+      },
       currentListEntries() {
         return this.getEntriesByListId(this.currentListID);
       },
