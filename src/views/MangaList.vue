@@ -73,6 +73,7 @@
           ref='mangaList'
           :tableData='filteredEntries || currentListEntries'
           @seriesSelected="handleSelection"
+          @editEntry='showEditEntryDialog'
         )
       el-dialog(
         title="Import Manga List"
@@ -228,6 +229,10 @@
       resetSelectedAttributes() {
         this.selectedEntriesIDs = [];
         this.clearTableSelection();
+      },
+      showEditEntryDialog(entryID) {
+        this.selectedEntriesIDs = [entryID];
+        this.editDialogVisible = true;
       },
     },
   };
