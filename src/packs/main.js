@@ -2,17 +2,25 @@ import Vue from 'vue';
 import VueAnalytics from 'vue-analytics';
 import Rollbar from 'vue-rollbar';
 import { Loading } from 'element-ui';
+import VueTippy from 'vue-tippy';
 import Home from '@/views/Home.vue';
 import '@/plugins/element.js';
 import '@/components/_globals.js';
 import '@/stylesheets/global.scss';
 import '@/stylesheets/tailwind.css';
+import 'tippy.js/themes/light.css';
 
 import router from '@/router/';
 import store from '@/store/index';
 
 Vue.config.productionTip = false;
 
+Vue.use(VueTippy, {
+  directive: 'tippy',
+  animateFill: false,
+  animation: 'shift-toward',
+  theme: 'light',
+});
 Vue.use(Loading);
 Vue.use(VueAnalytics, {
   id: 'UA-145065333-1',
