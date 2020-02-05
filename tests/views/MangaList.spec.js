@@ -64,7 +64,7 @@ describe('MangaList.vue', () => {
         localVue,
         data() {
           return {
-            selectedSeriesIDs: [entry1.id],
+            selectedEntriesIDs: [entry1.id],
             currentListID: firstMangaList.id,
           };
         },
@@ -93,7 +93,7 @@ describe('MangaList.vue', () => {
         localVue,
         data() {
           return {
-            selectedSeriesIDs: [entry1.id],
+            selectedEntriesIDs: [entry1.id],
             currentListID: firstMangaList.id,
           };
         },
@@ -113,7 +113,7 @@ describe('MangaList.vue', () => {
         mangaList.find(EditMangaEntries).vm.$emit('editComplete');
 
         expect(mangaList.vm.$data.editDialogVisible).toBe(false);
-        expect(mangaList.vm.$data.selectedSeriesIDs).toEqual([]);
+        expect(mangaList.vm.$data.selectedEntriesIDs).toEqual([]);
       });
     });
   });
@@ -129,7 +129,7 @@ describe('MangaList.vue', () => {
         localVue,
         data() {
           return {
-            selectedSeriesIDs: [entry1.id],
+            selectedEntriesIDs: [entry1.id],
             currentListID: firstMangaList.id,
           };
         },
@@ -203,7 +203,7 @@ describe('MangaList.vue', () => {
       mangaList.find(TheMangaList).vm.$emit('seriesSelected', ['1']);
 
       expect(mangaList.html()).toContain('Remove');
-      expect(mangaList.vm.$data.selectedSeriesIDs).toContain('1');
+      expect(mangaList.vm.$data.selectedEntriesIDs).toContain('1');
     });
 
     it('@importCompleted - refreshes manga list', () => {

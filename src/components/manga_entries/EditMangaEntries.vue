@@ -45,7 +45,7 @@
       'el-option': Option,
     },
     props: {
-      selectedSeriesIDs: {
+      selectedEntriesIDs: {
         type: Array,
         required: true,
       },
@@ -67,13 +67,13 @@
       async updateMangaEntries() {
         const loading = Loading.service({ target: '.edit-manga-entry-dialog' });
         const response = await bulkUpdateMangaEntry(
-          this.selectedSeriesIDs, { manga_list_id: this.newListID }
+          this.selectedEntriesIDs, { manga_list_id: this.newListID }
         );
 
         loading.close();
 
         if (response) {
-          Message.info(`${this.selectedSeriesIDs.length} entries updated`);
+          Message.info(`${this.selectedEntriesIDs.length} entries updated`);
           response.map(e => this.updateEntry(e));
           this.closeEditModal('editComplete');
         } else {
@@ -81,7 +81,7 @@
         }
       },
       async reportEntryError() {
-        const successful = await postMangaEntriesErrors(this.selectedSeriesIDs);
+        const successful = await postMangaEntriesErrors(this.selectedEntriesIDs);
 
         if (successful) {
           this.closeEditModal('editComplete');
