@@ -46,7 +46,7 @@ describe('EditMangaEntries.vue', () => {
         };
       },
       propsData: {
-        selectedSeriesIDs: ['1'],
+        selectedEntriesIDs: ['1'],
       },
     });
   });

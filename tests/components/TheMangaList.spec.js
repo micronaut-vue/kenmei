@@ -95,12 +95,26 @@ describe('TheMangaList.vue', () => {
   });
 
   describe('@events', () => {
-    it.skip('@handleSelectionChange - when selecting rows, emits seriesSelected', async () => {
-      await flushPromises();
+    const entry1 = mangaEntryFactory.build({ id: '1' });
+    const entry2 = mangaEntryFactory.build({ id: '2' });
 
-      mangaList.find('.el-checkbox').trigger('click');
+    beforeEach(() => {
+      mangaList.setData({ sortedData: [entry1, entry2] });
+    });
 
-      expect(mangaList.emitted('seriesSelected')).toBeTruthy();
+    it('@handleSelectionChange - when selecting rows, emits seriesSelected', async () => {
+      mangaList.findAll('.el-checkbox').trigger('click');
+
+      expect(mangaList.emitted('seriesSelected')[1][0]).toEqual(
+        [entry1.id, entry2.id]
+      );
+    });
+
+    it('@editEntry - when editing an entry, emits editEntry', async () => {
+      mangaList.find({ ref: 'editEntryButton' }).trigger('click');
+
+      expect(mangaList.emitted('editEntry')).toBeTruthy();
+      expect(mangaList.emitted('editEntry')[0]).toEqual([entry2.id]);
     });
   });
 

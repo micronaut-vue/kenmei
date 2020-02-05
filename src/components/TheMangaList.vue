@@ -66,12 +66,20 @@
             | {{ scope.row.attributes.last_released_at | timeAgo }}
           template(v-else)
             | Unknown
-      el-table-column(width="50" class-name="actions")
+      el-table-column(width="100" class-name="actions")
         template(slot-scope="scope")
+          el-button(
+            ref="editEntryButton"
+            icon="el-icon-edit-outline"
+            size="mini"
+            @click="editMangaEntry(scope.row)"
+            circle
+          )
           el-tooltip(
             effect="dark"
             content="Set last read to the latest chapter"
             placement="top-start"
+            :enterable="false"
           )
             el-button(
               v-if="unread(scope.row)"
@@ -177,6 +185,9 @@
         const ids = val.map(entry => entry.id);
         this.$emit('seriesSelected', ids);
       },
+      editMangaEntry(entry) {
+        this.$emit('editEntry', entry.id);
+      },
     },
   };
 </script>
@@ -192,7 +203,13 @@
     @apply rounded-r;
   }
   .actions > .cell {
+    opacity: 0;
+    transition: 0.2s ease-in-out;
+    @apply float-right;
     height: 28px; // matches the button height
+  }
+  tr:hover .actions > .cell {
+    opacity: 1;
   }
   .new-chapter-dot {
     background-color: #409EFF;

@@ -64,7 +64,7 @@ describe('MangaList.vue', () => {
         localVue,
         data() {
           return {
-            selectedSeriesIDs: [entry1.id],
+            selectedEntriesIDs: [entry1.id],
             currentListID: firstMangaList.id,
           };
         },
@@ -93,7 +93,7 @@ describe('MangaList.vue', () => {
         localVue,
         data() {
           return {
-            selectedSeriesIDs: [entry1.id],
+            selectedEntriesIDs: [entry1.id],
             currentListID: firstMangaList.id,
           };
         },
@@ -113,7 +113,13 @@ describe('MangaList.vue', () => {
         mangaList.find(EditMangaEntries).vm.$emit('editComplete');
 
         expect(mangaList.vm.$data.editDialogVisible).toBe(false);
-        expect(mangaList.vm.$data.selectedSeriesIDs).toEqual([]);
+        expect(mangaList.vm.$data.selectedEntriesIDs).toEqual([]);
+      });
+      it('@editEntry - shows edit manga entry dialog with specific entry', () => {
+        mangaList.find(TheMangaList).vm.$emit('editEntry', entry1.id);
+
+        expect(mangaList.vm.$data.editDialogVisible).toBe(true);
+        expect(mangaList.vm.$data.selectedEntriesIDs).toEqual([entry1.id]);
       });
     });
   });
@@ -129,7 +135,7 @@ describe('MangaList.vue', () => {
         localVue,
         data() {
           return {
-            selectedSeriesIDs: [entry1.id],
+            selectedEntriesIDs: [entry1.id],
             currentListID: firstMangaList.id,
           };
         },
@@ -203,7 +209,7 @@ describe('MangaList.vue', () => {
       mangaList.find(TheMangaList).vm.$emit('seriesSelected', ['1']);
 
       expect(mangaList.html()).toContain('Remove');
-      expect(mangaList.vm.$data.selectedSeriesIDs).toContain('1');
+      expect(mangaList.vm.$data.selectedEntriesIDs).toContain('1');
     });
 
     it('@importCompleted - refreshes manga list', () => {
@@ -214,6 +220,31 @@ describe('MangaList.vue', () => {
     });
   });
   describe(':data', () => {
+    describe(':selectedEntriesIDs', () => {
+      let mangaList;
+      let dialog;
+
+      beforeEach(() => {
+        mangaList = shallowMount(MangaList, {
+          store,
+          localVue,
+          data() { return { currentListID: firstMangaList.id }; },
+        });
+        dialog = mangaList.find({ ref: 'editMangaEntryDialog' });
+      });
+
+      it('shows plural title in edit entry modal if there are more than one entry selected', () => {
+        mangaList.setData({ selectedEntriesIDs: [entry1.id, entry2.id] });
+
+        expect(dialog.attributes('title')).toEqual('Edit Manga Entries');
+      });
+
+      it('shows singular title in edit entry modal if there is one entry selected', () => {
+        mangaList.setData({ selectedEntriesIDs: [entry1.id] });
+
+        expect(dialog.attributes('title')).toEqual('Edit Manga Entry');
+      });
+    })
     it(':searchTerm - if present, filters manga entries', () => {
       const mangaList = shallowMount(MangaList, {
         store,
