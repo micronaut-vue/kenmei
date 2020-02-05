@@ -75,20 +75,16 @@
             @click="editMangaEntry(scope.row)"
             circle
           )
-          el-tooltip(
-            effect="dark"
+          el-button(
             content="Set last read to the latest chapter"
-            placement="top-start"
-            :enterable="false"
+            v-if="unread(scope.row)"
+            ref="updateEntryButton"
+            icon="el-icon-check"
+            size="mini"
+            @click="setLastRead(scope.row)"
+            circle
+            v-tippy
           )
-            el-button(
-              v-if="unread(scope.row)"
-              ref="updateEntryButton"
-              icon="el-icon-check"
-              size="mini"
-              @click="setLastRead(scope.row)"
-              circle
-            )
     .flex.flex-row.justify-center
       el-pagination.sm_shadow-lg.my-5.p-0(
         layout="prev, pager, next"
@@ -102,7 +98,7 @@
 <script>
   import { mapState, mapMutations } from 'vuex';
   import {
-    Table, TableColumn, Link, Button, Message, Tooltip, Pagination,
+    Table, TableColumn, Link, Button, Message, Pagination,
   } from 'element-ui';
   import dayjs from 'dayjs';
   import he from 'he';
@@ -119,7 +115,6 @@
       'el-table-column': TableColumn,
       'el-link': Link,
       'el-button': Button,
-      'el-tooltip': Tooltip,
       'el-pagination': Pagination,
     },
     filters: {
