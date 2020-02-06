@@ -2,13 +2,17 @@
   .container.mx-auto.w-full.h-full.flex.flex-col.items-center
     .flex.flex-col.w-full.max-w-6xl.pt-24.sm_pb-16
       .mx-5.mb-5.max-sm_mx-2
-        el-alert(
-          title="MangaDex is operational"
-          type="success"
-          :description="warning"
-          show-icon
-          :closable="false"
+        a.no-underline(
+          href="https://news.kenmei.co/updates/2020/update-11"
+          target="_blank"
         )
+          el-alert.cursor-pointer(
+            title="Update #11"
+            type="info"
+            :description="alertMessage"
+            :closable="false"
+            show-icon
+          )
       .mx-5.mb-5.max-sm_mx-2
         el-select.sm_shadow-md.rounded.float-right.w-48(
           v-model="currentListID"
@@ -144,11 +148,9 @@
         dialogVisible: false,
         importDialogVisible: false,
         editDialogVisible: false,
-        warning: `
-          MangaDex is working again. If you tried to import from MDList or
-          Trackr recently and failed, importing again should now work as usual.
-          Do keep in mind, that its mangadex.cc, not mangadex.org for now. Until
-          MangaDex starts using the old domain, links using .org will fail
+        alertMessage: `
+          UI improvements, add manga using chapter URL, bug fixes and more in
+          the newest update. Click to learn more
         `,
       };
     },
