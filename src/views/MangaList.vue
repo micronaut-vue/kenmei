@@ -186,8 +186,8 @@
         );
       },
     },
-    mounted() {
-      this.retrieveLists();
+    async mounted() {
+      await this.retrieveLists();
       this.retrieveEntries();
     },
     methods: {
