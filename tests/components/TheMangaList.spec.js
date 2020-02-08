@@ -12,6 +12,7 @@ import * as api from '@/services/api';
 const localVue = createLocalVue();
 
 localVue.directive('loading', true);
+localVue.directive('tippy', true);
 localVue.use(Vuex);
 
 describe('TheMangaList.vue', () => {

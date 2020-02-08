@@ -19,6 +19,7 @@ localVue.use(Vuex);
 
 // To avoid missing directive Vue warnings
 localVue.directive('loading', true);
+localVue.directive('tippy', true);
 
 describe('MangaList.vue', () => {
   let store;
@@ -205,10 +206,20 @@ describe('MangaList.vue', () => {
       });
     });
 
-    it('@seriesSelected - toggles delete button and sets selected series', () => {
+    it('@seriesSelected - toggles bulk actions and sets selected series', () => {
+      const deleteButton = mangaList.find({ ref: 'removeSeriesButton' });
+      const editButton = mangaList.find({ ref: 'editMangaEntriesButton' });
+      const reportButton = mangaList.find({ ref: 'reportMangaEntriesButton' });
+
+      expect(deleteButton.isVisible()).not.toBeTruthy();
+      expect(editButton.isVisible()).not.toBeTruthy();
+      expect(reportButton.isVisible()).not.toBeTruthy();
+
       mangaList.find(TheMangaList).vm.$emit('seriesSelected', ['1']);
 
-      expect(mangaList.html()).toContain('Remove');
+      expect(deleteButton.isVisible()).toBeTruthy();
+      expect(editButton.isVisible()).toBeTruthy();
+      expect(reportButton.isVisible()).toBeTruthy();
       expect(mangaList.vm.$data.selectedEntriesIDs).toContain('1');
     });
 
