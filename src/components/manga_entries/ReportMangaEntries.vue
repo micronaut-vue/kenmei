@@ -38,7 +38,7 @@
       'el-button': Button,
     },
     props: {
-      selectedEntriesIDs: {
+      selectedEntries: {
         type: Array,
         required: true,
       },
@@ -54,7 +54,7 @@
         const loading = Loading.service({ target: '.report-manga-entry-dialog' });
 
         const successful = await postMangaEntriesErrors(
-          this.selectedEntriesIDs, this.currentIssue
+          this.selectedEntries.map(e => e.id), this.currentIssue
         );
 
         loading.close();

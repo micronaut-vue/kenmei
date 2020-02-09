@@ -44,7 +44,7 @@ describe('EditMangaEntries.vue', () => {
         };
       },
       propsData: {
-        selectedEntriesIDs: ['1'],
+        selectedEntries: [mangaEntry],
       },
     });
   });
@@ -61,7 +61,7 @@ describe('EditMangaEntries.vue', () => {
 
     afterEach(() => {
       expect(updateMangaEntriesMock).toHaveBeenCalledWith(
-        ['1'], { manga_list_id: '2' }
+        [1], { manga_list_id: '2' }
       );
     });
 

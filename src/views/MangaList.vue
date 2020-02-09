@@ -118,7 +118,7 @@
         :visible.sync="editDialogVisible"
       )
         edit-manga-entries(
-          :selectedEntriesIDs='selectedEntriesIDs'
+          :selectedEntries='selectedEntries'
           @cancelEdit='editDialogVisible = false'
           @editComplete="resetEntries('editDialogVisible')"
         )
@@ -130,7 +130,7 @@
         :visible.sync="reportDialogVisible"
       )
         report-manga-entries(
-          :selectedEntriesIDs='selectedEntriesIDs'
+          :selectedEntries='selectedEntries'
           @closeDialog="resetEntries('reportDialogVisible')"
         )
 </template>
@@ -168,7 +168,7 @@
     },
     data() {
       return {
-        selectedEntriesIDs: [],
+        selectedEntries: [],
         entriesSelected: false,
         currentListID: null,
         searchTerm: '',
@@ -228,13 +228,13 @@
         'setListsLoading',
       ]),
       mangaEntriesDialogTitle(action) {
-        return this.selectedEntriesIDs.length > 1
+        return this.selectedEntries.length > 1
           ? `${action} Manga Entries`
           : `${action} Manga Entry`;
       },
-      handleSelection(selectedEntriesIDs) {
-        this.entriesSelected = selectedEntriesIDs.length > 0;
-        this.selectedEntriesIDs = selectedEntriesIDs;
+      handleSelection(selectedEntries) {
+        this.entriesSelected = selectedEntries.length > 0;
+        this.selectedEntries = selectedEntries;
       },
       async retrieveLists() {
         await this.getLists();
@@ -244,11 +244,12 @@
         await this.getEntries();
       },
       async removeSeries() {
-        const successful = await bulkDeleteMangaEntries(this.selectedEntriesIDs);
+        const ids = this.selectedEntries.map(entry => entry.id);
+        const successful = await bulkDeleteMangaEntries(ids);
 
         if (successful) {
-          Message.info(`${this.selectedEntriesIDs.length} entries deleted`);
-          this.removeEntries(this.selectedEntriesIDs);
+          Message.info(`${ids.length} entries deleted`);
+          this.removeEntries(ids);
         } else {
           Message.error(
             'Deletion failed. Try reloading the page before trying again'
@@ -268,11 +269,11 @@
         this.$refs.mangaList.$refs.mangaListTable.clearSelection();
       },
       resetSelectedAttributes() {
-        this.selectedEntriesIDs = [];
+        this.selectedEntries = [];
         this.clearTableSelection();
       },
-      showEditEntryDialog(entryID) {
-        this.selectedEntriesIDs = [entryID];
+      showEditEntryDialog(entry) {
+        this.selectedEntries = [entry];
         this.editDialogVisible = true;
       },
     },
