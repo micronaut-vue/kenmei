@@ -11,12 +11,21 @@
         :value="issue.type"
       )
     p.text-gray-600.text-xs.break-normal
-      | Select this option, if manga information is outdated or incorrect.
-      | Manga will attempt to update automatically, otherwise it will be
-      | investigated in detail later.
+      template(v-if="currentIssue === 0")
+        | Select this option, if manga information is outdated or incorrect.
+        | Manga will attempt to update automatically, otherwise it will be
+        | investigated in detail later.
+      template(v-else)
+        | Select this option, if manga titles are duplicated.
+        | They will be manually updated so that only a single manga is shown.
     .mt-8.-mb-2.text-right
       el-button(@click="$emit('closeDialog')") Cancel
-      el-button(ref="reportEntriesButton" type="danger" @click="report")
+      el-button(
+        ref="reportEntriesButton"
+        type="danger"
+        @click="report"
+        :disabled="issueInvalid"
+      )
         | Report
 </template>
 
@@ -45,16 +54,27 @@
     },
     data() {
       return {
-        issues: [{ type: 0, value: 'Incorrect Manga Data' }],
+        issues: [
+          { type: 0, value: 'Incorrect Manga Data' },
+          { type: 1, value: 'Duplicated Manga Series' },
+        ],
         currentIssue: 0,
       };
+    },
+    computed: {
+      selectedEntriesIDs() {
+        return this.selectedEntries.map(e => e.id);
+      },
+      issueInvalid() {
+        return this.currentIssue === 1 && this.selectedEntriesIDs.length < 2;
+      },
     },
     methods: {
       async report() {
         const loading = Loading.service({ target: '.report-manga-entry-dialog' });
 
         const successful = await postMangaEntriesErrors(
-          this.selectedEntries.map(e => e.id), this.currentIssue
+          this.selectedEntriesIDs, this.currentIssue
         );
 
         loading.close();
