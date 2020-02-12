@@ -179,8 +179,6 @@ describe('lists', () => {
 
         expect(axiosSpy).toHaveBeenCalledWith('/api/v1/manga_entries/');
         expect(commit).toHaveBeenCalledWith('setEntries', entries);
-        expect(commit).toHaveBeenCalledWith('setListsLoading', true);
-        expect(commit).toHaveBeenLastCalledWith('setListsLoading', false);
       });
 
       it('shows error message if request has failed', async () => {

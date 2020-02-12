@@ -17,6 +17,7 @@
         el-select.sm_shadow-md.rounded.float-right.w-48(
           v-model="currentListID"
           placeholder="Select"
+          :disabled="listsLoading"
         )
           el-option(
             v-for="list in lists"
@@ -184,6 +185,7 @@
     computed: {
       ...mapState('lists', [
         'lists',
+        'listsLoading',
       ]),
       ...mapGetters('lists', [
         'getEntriesByListId',
@@ -209,8 +211,12 @@
       },
     },
     async mounted() {
+      this.setListsLoading(true);
+
       await this.retrieveLists();
-      this.retrieveEntries();
+      await this.retrieveEntries();
+
+      this.setListsLoading(false);
     },
     methods: {
       ...mapActions('lists', [

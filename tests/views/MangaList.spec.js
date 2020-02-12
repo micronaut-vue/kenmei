@@ -284,4 +284,23 @@ describe('MangaList.vue', () => {
       expect(mangaList.vm.filteredEntries).toEqual([entry2]);
     });
   });
+  describe(':lifecycle', () => {
+    it(':mounted() - loads lists and entries, while toggling loading', async () => {
+      const retrieveListsSpy   = jest.spyOn(MangaList.methods, 'retrieveLists');
+      const retrieveEntriesSpy = jest.spyOn(MangaList.methods, 'retrieveEntries');
+
+      retrieveListsSpy.mockResolvedValue();
+
+      shallowMount(MangaList, {
+        store,
+        localVue,
+        data() { return { currentListID: firstMangaList.id }; },
+      });
+
+      await flushPromises();
+
+      expect(retrieveListsSpy).toHaveBeenCalled();
+      expect(retrieveEntriesSpy).toHaveBeenCalled();
+    });
+  });
 });

@@ -22,14 +22,11 @@ const actions = {
       .catch((request) => { Message.error(request.response.data.error); });
   },
   getEntries({ commit }) {
-    commit('setListsLoading', true);
-
     return secure.get('/api/v1/manga_entries/')
       .then((response) => {
         commit('setEntries', response.data.data);
       })
-      .catch((request) => { Message.error(request.response.data.error); })
-      .then(() => { commit('setListsLoading', false); });
+      .catch((request) => { Message.error(request.response.data.error); });
   },
 };
 
