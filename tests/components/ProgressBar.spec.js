@@ -1,4 +1,3 @@
-import { shallowMount } from '@vue/test-utils';
 import ProgressBar from '@/components/ProgressBar.vue';
 
 describe('ProgressBar.vue', () => {

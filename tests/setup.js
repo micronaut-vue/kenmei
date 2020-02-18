@@ -3,6 +3,24 @@ import fs from 'fs';
 import path from 'path';
 
 // ===
+// Utility functions
+// ===
+
+// https://vue-test-utils.vuejs.org/
+const vueTestUtils = require('@vue/test-utils');
+
+// ===
+// Global helpers
+// ===
+
+// https://vue-test-utils.vuejs.org/api/#mount
+global.mount = vueTestUtils.mount;
+// https://vue-test-utils.vuejs.org/api/#shallowmount
+global.shallowMount = vueTestUtils.shallowMount;
+// https://vue-test-utils.vuejs.org/api/#createlocalvue
+global.createLocalVue = vueTestUtils.createLocalVue;
+
+// ===
 // Register global components
 // Used https://github.com/chrisvfritz/vue-enterprise-boilerplate/ for reference
 // ===

@@ -45,5 +45,13 @@ module.exports = {
         'eol-last': 'off',
       },
     },
+    {
+      files: ['*.spec.js'],
+      globals: {
+        mount: false,
+        shallowMount: false,
+        createLocalVue: false,
+      },
+    },
   ],
 };

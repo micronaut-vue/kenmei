@@ -1,4 +1,3 @@
-import { shallowMount } from '@vue/test-utils';
 import { Message } from 'element-ui';
 import flushPromises from 'flush-promises';
 import ReportMangaEntries from '@/components/manga_entries/ReportMangaEntries.vue';

@@ -1,4 +1,3 @@
-import { shallowMount, mount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import axios from 'axios';
 import flushPromises from 'flush-promises';
