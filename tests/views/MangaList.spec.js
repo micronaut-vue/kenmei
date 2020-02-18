@@ -1,4 +1,3 @@
-import { shallowMount, createLocalVue } from '@vue/test-utils';
 import Vuex from 'vuex';
 import { Message } from 'element-ui';
 import flushPromises from 'flush-promises';
