@@ -53,14 +53,10 @@
             this.closeModal(loading);
           })
           .catch((error) => {
-            if (error.response.status === 400) {
-              Message.error('URL is incorrect');
-              loading.close();
-            } else if (error.response.status === 404) {
-              Message.info('Manga was not found');
-              loading.close();
-            } else if (error.response.status === 406) {
-              Message.info('Manga already added');
+            const { status, data } = error.response;
+
+            if (status === 404 || status === 406) {
+              Message.info(data);
               loading.close();
             } else {
               Message.error('Something went wrong');
