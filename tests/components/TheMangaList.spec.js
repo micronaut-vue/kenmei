@@ -105,16 +105,14 @@ describe('TheMangaList.vue', () => {
     it('@handleSelectionChange - when selecting rows, emits seriesSelected', async () => {
       mangaList.findAll('.el-checkbox').trigger('click');
 
-      expect(mangaList.emitted('seriesSelected')[1][0]).toEqual(
-        [entry1.id, entry2.id]
-      );
+      expect(mangaList.emitted('seriesSelected')[1][0]).toEqual([entry1, entry2]);
     });
 
     it('@editEntry - when editing an entry, emits editEntry', async () => {
       mangaList.find({ ref: 'editEntryButton' }).trigger('click');
 
       expect(mangaList.emitted('editEntry')).toBeTruthy();
-      expect(mangaList.emitted('editEntry')[0]).toEqual([entry2.id]);
+      expect(mangaList.emitted('editEntry')[0]).toEqual([entry2]);
     });
   });
 

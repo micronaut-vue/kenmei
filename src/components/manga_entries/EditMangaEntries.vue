@@ -35,7 +35,7 @@
       'el-option': Option,
     },
     props: {
-      selectedEntriesIDs: {
+      selectedEntries: {
         type: Array,
         required: true,
       },
@@ -57,13 +57,13 @@
       async updateMangaEntries() {
         const loading = Loading.service({ target: '.edit-manga-entry-dialog' });
         const response = await bulkUpdateMangaEntry(
-          this.selectedEntriesIDs, { manga_list_id: this.newListID }
+          this.selectedEntries.map(e => e.id), { manga_list_id: this.newListID }
         );
 
         loading.close();
 
         if (response) {
-          Message.info(`${this.selectedEntriesIDs.length} entries updated`);
+          Message.info(`${this.selectedEntries.length} entries updated`);
           response.map(e => this.updateEntry(e));
           this.closeEditModal('editComplete');
         } else {

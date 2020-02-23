@@ -176,12 +176,11 @@
         this.sortedData = sortBy(this.tableData, prop, order);
         this.currentPage = 1;
       },
-      handleSelectionChange(val) {
-        const ids = val.map(entry => entry.id);
-        this.$emit('seriesSelected', ids);
+      handleSelectionChange(entries) {
+        this.$emit('seriesSelected', entries);
       },
       editMangaEntry(entry) {
-        this.$emit('editEntry', entry.id);
+        this.$emit('editEntry', entry);
       },
     },
   };

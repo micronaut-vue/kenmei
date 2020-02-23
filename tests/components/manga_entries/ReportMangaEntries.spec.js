@@ -3,6 +3,8 @@ import flushPromises from 'flush-promises';
 import ReportMangaEntries from '@/components/manga_entries/ReportMangaEntries.vue';
 import * as mangaEntriesErrors from '@/services/endpoints/MangaEntriesErrors';
 
+import mangaEntryFactory from '../../factories/mangaEntry';
+
 describe('ReportMangaEntries.vue', () => {
   let reportMangaEntries;
   let postMangaEntriesErrorsMock;
@@ -15,7 +17,7 @@ describe('ReportMangaEntries.vue', () => {
         };
       },
       propsData: {
-        selectedEntriesIDs: ['1'],
+        selectedEntries: [mangaEntryFactory.build()],
       },
     });
     postMangaEntriesErrorsMock = jest.spyOn(
