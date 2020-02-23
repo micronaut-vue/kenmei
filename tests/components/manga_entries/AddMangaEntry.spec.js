@@ -62,41 +62,36 @@ describe('AddMangaEntry.vue', () => {
       expect(addMangaEntry.emitted('dialogClosed')).toBeTruthy();
     });
 
-    it('shows Manga not found message if API returns nothing', async () => {
-      const infoMessageMock   = jest.spyOn(Message, 'info');
-      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
+    describe('when receiving 404 status', () => {
+      it('shows info message with payload data', async () => {
+        const infoMessageMock   = jest.spyOn(Message, 'info');
+        const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
 
-      addMangaEntryMock.mockRejectedValue({ response: { status: 404 } });
+        addMangaEntryMock.mockRejectedValue(
+          { response: { status: 404, data: 'Manga was not found' } }
+        );
 
-      addMangaEntry.vm.mangaDexSearch();
+        addMangaEntry.vm.mangaDexSearch();
 
-      await flushPromises();
-      expect(infoMessageMock).toHaveBeenCalledWith('Manga was not found');
+        await flushPromises();
+        expect(infoMessageMock).toHaveBeenCalledWith('Manga was not found');
+      });
     });
 
-    it('shows Manga already added if it has already been added', async () => {
-      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
-      const infoMessageMock = jest.spyOn(Message, 'info');
+    describe('when receiving 406 status', () => {
+      it('shows info message with payload data', async () => {
+        const infoMessageMock   = jest.spyOn(Message, 'info');
+        const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
 
-      addMangaEntryMock.mockRejectedValue({ response: { status: 406 } });
+        addMangaEntryMock.mockRejectedValue(
+          { response: { status: 406, data: 'Manga already added' } }
+        );
 
-      addMangaEntry.vm.mangaDexSearch();
+        addMangaEntry.vm.mangaDexSearch();
 
-      await flushPromises();
-
-      expect(infoMessageMock).toHaveBeenCalledWith('Manga already added');
-    });
-
-    it('shows URL is incorrect message if response is 400', async () => {
-      const infoMessageMock   = jest.spyOn(Message, 'error');
-      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
-
-      addMangaEntryMock.mockRejectedValue({ response: { status: 400 } });
-
-      addMangaEntry.vm.mangaDexSearch();
-
-      await flushPromises();
-      expect(infoMessageMock).toHaveBeenCalledWith('URL is incorrect');
+        await flushPromises();
+        expect(infoMessageMock).toHaveBeenCalledWith('Manga already added');
+      });
     });
 
     it('shows error message on unsuccessful API lookup', async () => {
