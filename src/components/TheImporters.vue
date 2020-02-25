@@ -109,7 +109,7 @@
             .map(url => ({
               seriesURL: url.full_title_url,
               chapterURL: url.generated_current_data.url,
-              lastRead: url.title_data.current_chapter,
+              lastRead: url.generated_current_data.number,
             }));
         });
 
