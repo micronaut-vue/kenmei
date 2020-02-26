@@ -10,6 +10,9 @@
     "test:unit": "vue-cli-service test:unit"
   },
   "dependencies": {
+    "@tailwindcss/ui": "^0.1.2",
+    "add": "^2.0.6",
+    "alpinejs": "^2.0.1",
     "axios": "^0.19.2",
     "core-js": "^3.3.2",
     "dayjs": "^1.8.20",
