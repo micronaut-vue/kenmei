@@ -11,7 +11,7 @@
         :value="list.id"
       )
     .mt-8.-mb-2.text-right
-      el-button(@click="closeEditModal('cancelEdit')") Cancel
+      el-button(@click="$emit('cancelEdit')") Cancel
       el-button(
         ref="updateEntryButton"
         type="primary"
@@ -65,14 +65,10 @@
         if (response) {
           Message.info(`${this.selectedEntries.length} entries updated`);
           response.map(e => this.updateEntry(e));
-          this.closeEditModal('editComplete');
+          this.$emit('editComplete');
         } else {
           Message.error("Couldn't update. Try refreshing the page");
         }
-      },
-      closeEditModal(emitEvent) {
-        this.$emit(emitEvent);
-        this.newListID = null;
       },
     },
   };

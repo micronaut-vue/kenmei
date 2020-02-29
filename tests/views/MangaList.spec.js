@@ -106,19 +106,44 @@ describe('MangaList.vue', () => {
     });
 
     describe('@events', () => {
-      it('@cancelEdit - closes edit manga entries dialog', () => {
-        mangaList.find(EditMangaEntries).vm.$emit('cancelEdit');
+      it('@open - opening edit modal renders edit manga entry component', () => {
+        mangaList.find({ ref: 'editMangaEntryDialog' }).vm.$emit('open');
+
+        expect(mangaList.find(EditMangaEntries).exists()).toBeTruthy();
       });
+
+      it('@closed - when edit modal finished closing, destroys edit manga entry component', () => {
+        mangaList.setData({ editDialogBodyVisible: true });
+
+        mangaList.find({ ref: 'editMangaEntryDialog' }).vm.$emit('closed');
+
+        expect(mangaList.find(EditMangaEntries).exists()).toBeFalsy();
+      });
+
+      it('@cancelEdit - closes edit manga entries dialog', () => {
+        mangaList.setData(
+          { editDialogVisible: true, editDialogBodyVisible: true }
+        );
+
+        mangaList.find(EditMangaEntries).vm.$emit('cancelEdit');
+        expect(mangaList.vm.$data.editDialogVisible).toBeFalsy();
+      });
+
       it('@editComplete - resets selected manga entries and closes modal', () => {
+        mangaList.setData(
+          { editDialogVisible: true, editDialogBodyVisible: true }
+        );
+
         mangaList.find(EditMangaEntries).vm.$emit('editComplete');
 
-        expect(mangaList.vm.$data.editDialogVisible).toBe(false);
+        expect(mangaList.vm.$data.editDialogVisible).toBeFalsy();
         expect(mangaList.vm.$data.selectedEntries).toEqual([]);
       });
+
       it('@editEntry - shows edit manga entry dialog with specific entry', () => {
         mangaList.find(TheMangaList).vm.$emit('editEntry', entry1);
 
-        expect(mangaList.vm.$data.editDialogVisible).toBe(true);
+        expect(mangaList.vm.$data.editDialogVisible).toBeTruthy();
         expect(mangaList.vm.$data.selectedEntries).toEqual([entry1]);
       });
     });
