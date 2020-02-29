@@ -116,8 +116,11 @@
         custom-class="custom-dialog edit-manga-entry-dialog"
         width="400px"
         :visible.sync="editDialogVisible"
+        @open="toggleBody"
+        @closed="toggleBody"
       )
         edit-manga-entries(
+          v-if="editDialogBodyVisible"
           :selectedEntries='selectedEntries'
           @cancelEdit='editDialogVisible = false'
           @editComplete="resetEntries('editDialogVisible')"
@@ -175,6 +178,7 @@
         dialogVisible: false,
         importDialogVisible: false,
         editDialogVisible: false,
+        editDialogBodyVisible: false,
         reportDialogVisible: false,
         alertMessage: `
           UI improvements, add manga using chapter URL, bug fixes and more in
@@ -227,6 +231,9 @@
         'removeEntries',
         'setListsLoading',
       ]),
+      toggleBody() {
+        this.editDialogBodyVisible = !this.editDialogBodyVisible;
+      },
       mangaEntriesDialogTitle(action) {
         return this.selectedEntries.length > 1
           ? `${action} Manga Entries`

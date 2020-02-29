@@ -70,12 +70,11 @@ describe('EditMangaEntries.vue', () => {
         updateMangaEntriesMock.mockResolvedValue([updatedMangaEntry]);
       });
 
-      it('emits editComplete and sets newListID to null', async () => {
+      it('emits editComplete', async () => {
         editMangaEntries.vm.updateMangaEntries();
 
         await flushPromises();
 
-        expect(editMangaEntries.vm.$data.newListID).toEqual(null);
         expect(editMangaEntries.emitted('editComplete')).toBeTruthy();
       });
 
