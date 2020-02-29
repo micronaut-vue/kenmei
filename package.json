@@ -15,7 +15,7 @@
     "alpinejs": "^2.0.1",
     "axios": "^0.19.2",
     "core-js": "^3.3.2",
-    "dayjs": "^1.8.20",
+    "dayjs": "^1.8.21",
     "element-ui": "^2.12.0",
     "he": "^1.2.0",
     "jest-mock-axios": "^3.2.0",
