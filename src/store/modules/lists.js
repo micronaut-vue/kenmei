@@ -1,6 +1,11 @@
 import { Message } from 'element-ui';
 import { secure } from '@/modules/axios';
 
+// Can't access getter inside mutations, hence this has to be a plain function
+export const getEntryIndex = (state, id) => state.entries.findIndex(
+  e => e.id === id
+);
+
 const state = {
   lists: [],
   entries: [],
@@ -41,8 +46,10 @@ const mutations = {
     state.entries.push(data);
   },
   updateEntry(state, data) {
-    const index = state.entries.findIndex(entry => entry.id === data.id);
-    state.entries.splice(index, 1, data);
+    state.entries.splice(getEntryIndex(state, data.id), 1, data);
+  },
+  replaceEntry(state, { currentEntry, newEntry }) {
+    state.entries.splice(getEntryIndex(state, currentEntry.id), 1, newEntry);
   },
   removeEntries(state, entryIDs) {
     state.entries = state.entries.filter(

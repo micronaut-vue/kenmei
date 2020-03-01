@@ -36,18 +36,35 @@ describe('EditMangaEntries.vue', () => {
   });
 
   describe(':lifecycle', () => {
-    it(':mounted() - prefills manga entry data', async () => {
+    it(':mounted() - prefills manga entry data', () => {
       const editMangaEntries = shallowMount(EditMangaEntries, {
         store,
         localVue,
         propsData: { selectedEntries: [entry1] },
       });
 
-      await flushPromises();
-
       expect(editMangaEntries.vm.$data.listID).toEqual(
         entry1.relationships.manga_list.data.id
       );
+      expect(editMangaEntries.vm.$data.mangaSourceID).toEqual(
+        entry1.manga_source_id
+      );
+    });
+  });
+
+  describe(':props', () => {
+    it(':selectedEntries - shows manga source selector if less than 1 selected', () => {
+      const editMangaEntries = shallowMount(EditMangaEntries, {
+        store,
+        localVue,
+        propsData: { selectedEntries: [entry1] },
+      });
+
+      expect(editMangaEntries.text()).toContain('Manga Source Name');
+
+      editMangaEntries.setProps({ selectedEntries: [entry1, entry2] });
+
+      expect(editMangaEntries.text()).not.toContain('Manga Source Name');
     });
   });
 
@@ -66,7 +83,7 @@ describe('EditMangaEntries.vue', () => {
 
     afterEach(() => {
       expect(updateMangaEntryMock).toHaveBeenCalledWith(
-        1, { manga_list_id: '2' }
+        1, { manga_list_id: '2', manga_source_id: 1 }
       );
     });
 

@@ -89,6 +89,25 @@ describe('lists', () => {
       });
     });
 
+    describe('replaceEntry', () => {
+      it('replaces existing manga entry with the one passed', () => {
+        const currentEntry = mangaEntryFactory.build(
+          { id: 1, attributes: { title: 'Manga Title' } }
+        );
+
+        const state = { entries: [currentEntry] };
+
+        const newEntry = mangaEntryFactory.build(
+          { id: 3, attributes: { title: 'Updated Title' } }
+        );
+
+        lists.mutations.replaceEntry(state, { currentEntry, newEntry });
+
+        expect(state.entries.length).toBe(1);
+        expect(state.entries[0]).toEqual(newEntry);
+      });
+    });
+
     describe('removeEntries', () => {
       it('removes a manga entry', () => {
         const entryToStay = mangaEntryFactory.build({ id: '1' });
