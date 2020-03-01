@@ -70,10 +70,12 @@
         template(slot-scope="scope")
           el-button(
             ref="editEntryButton"
+            content="Edit"
             icon="el-icon-edit-outline"
             size="mini"
             @click="editMangaEntry(scope.row)"
             circle
+            v-tippy
           )
           el-button(
             content="Set last read to the latest chapter"
