@@ -26,7 +26,7 @@ describe('ReportMangaEntries.vue', () => {
   });
 
   afterEach(() => {
-    expect(postMangaEntriesErrorsMock).toHaveBeenCalledWith(['1'], 0);
+    expect(postMangaEntriesErrorsMock).toHaveBeenCalledWith([1], 0);
   });
 
   describe('if report was successful', () => {

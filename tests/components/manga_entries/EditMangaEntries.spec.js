@@ -14,12 +14,10 @@ localVue.use(Vuex);
 
 describe('EditMangaEntries.vue', () => {
   let store;
-  let editMangaEntries;
-  let mangaEntry;
+  const entry1 = mangaEntryFactory.build({ id: 1 });
+  const entry2 = mangaEntryFactory.build({ id: 2 });
 
   beforeEach(() => {
-    mangaEntry = mangaEntryFactory.build({ id: 1 });
-
     store = new Vuex.Store({
       modules: {
         lists: {
@@ -29,45 +27,103 @@ describe('EditMangaEntries.vue', () => {
               mangaListFactory.build({ id: '1' }),
               mangaListFactory.build({ id: '2' }),
             ],
-            entries: [mangaEntry],
+            entries: [entry1, entry2],
           },
           mutations: lists.mutations,
         },
       },
     });
-    editMangaEntries = shallowMount(EditMangaEntries, {
-      store,
-      localVue,
-      data() {
-        return {
-          newListID: '2',
-        };
-      },
-      propsData: {
-        selectedEntries: [mangaEntry],
-      },
+  });
+
+  describe(':lifecycle', () => {
+    it(':mounted() - prefills manga entry data', async () => {
+      const editMangaEntries = shallowMount(EditMangaEntries, {
+        store,
+        localVue,
+        propsData: { selectedEntries: [entry1] },
+      });
+
+      await flushPromises();
+
+      expect(editMangaEntries.vm.$data.listID).toEqual(
+        entry1.relationships.manga_list.data.id
+      );
     });
   });
-  describe('when updating manga entries', () => {
+
+  describe('when updating single manga entry', () => {
+    let editMangaEntries;
+    let updateMangaEntryMock;
+
+    beforeEach(() => {
+      updateMangaEntryMock = jest.spyOn(api, 'updateMangaEntry');
+      editMangaEntries = shallowMount(EditMangaEntries, {
+        store,
+        localVue,
+        propsData: { selectedEntries: [entry1] },
+      });
+    });
+
+    afterEach(() => {
+      expect(updateMangaEntryMock).toHaveBeenCalledWith(
+        1, { manga_list_id: '2' }
+      );
+    });
+
+    it('uses updateMangaEntry endpoint', async () => {
+      editMangaEntries.setData({ listID: '2' });
+      const updatedEntry = mangaEntryFactory.build(
+        {
+          id: 1,
+          relationships: {
+            manga_list: { data: { id: '2', type: 'manga_list' } },
+          },
+        }
+      );
+
+      updateMangaEntryMock.mockResolvedValue(updatedEntry);
+
+      editMangaEntries.vm.updateMangaEntries();
+
+      await flushPromises();
+
+      expect(store.state.lists.entries).not.toContain(entry1);
+      expect(store.state.lists.entries).toContain(updatedEntry);
+    });
+  });
+
+  describe('when updating multiple manga entries', () => {
+    let editMangaEntries;
     let updateMangaEntriesMock;
-    let updatedMangaEntry;
+    let updatedMangaEntries;
+
+    const newList = { manga_list: { data: { id: '2', type: 'manga_list' } } };
 
     beforeEach(() => {
       updateMangaEntriesMock = jest.spyOn(api, 'bulkUpdateMangaEntry');
-      updatedMangaEntry = mangaEntryFactory.build(
-        { relationships: { manga_list: { data: { id: '2' } } } }
-      );
+      editMangaEntries = shallowMount(EditMangaEntries, {
+        store,
+        localVue,
+        propsData: { selectedEntries: [entry1, entry2] },
+      });
+
+      updatedMangaEntries = [
+        mangaEntryFactory.build({ id: 1, relationships: newList }),
+        mangaEntryFactory.build({ id: 2, relationships: newList }),
+      ];
     });
 
     afterEach(() => {
       expect(updateMangaEntriesMock).toHaveBeenCalledWith(
-        [1], { manga_list_id: '2' }
+        [1, 2], { manga_list_id: '2' }
       );
     });
 
     describe('if update was successful', () => {
       beforeEach(() => {
-        updateMangaEntriesMock.mockResolvedValue([updatedMangaEntry]);
+        editMangaEntries.setData({ listID: '2' });
+
+        updateMangaEntriesMock.mockResolvedValue(updatedMangaEntries);
       });
 
       it('emits editComplete', async () => {
@@ -85,31 +141,31 @@ describe('EditMangaEntries.vue', () => {
 
         await flushPromises();
 
-        expect(infoMessageMock).toHaveBeenCalledWith('1 entries updated');
+        expect(infoMessageMock).toHaveBeenCalledWith('2 entries updated');
       });
 
-      it("changes manga entry's manga list", async () => {
+      it('changes manga entries manga list', async () => {
         editMangaEntries.vm.updateMangaEntries();
 
         await flushPromises();
 
-        expect(store.state.lists.entries).not.toContain(mangaEntry);
-        expect(store.state.lists.entries).toContain(updatedMangaEntry);
+        expect(store.state.lists.entries).toEqual(updatedMangaEntries);
       });
     });
 
     describe('if update was unsuccessful', () => {
-      it("shows couldn't update message and keeps entry the same", async () => {
+      it("shows couldn't update message and keeps same entries", async () => {
         const errorMessageMock = jest.spyOn(Message, 'error');
 
+        editMangaEntries.setData({ listID: '2' });
         updateMangaEntriesMock.mockResolvedValue(false);
 
         editMangaEntries.vm.updateMangaEntries();
 
         await flushPromises();
 
-        expect(store.state.lists.entries).toContain(mangaEntry);
-        expect(store.state.lists.entries).not.toContain(updatedMangaEntry);
+        expect(store.state.lists.entries).toEqual([entry1, entry2]);
+        expect(store.state.lists.entries).not.toEqual(updatedMangaEntries);
         expect(errorMessageMock).toHaveBeenCalledWith(
           "Couldn't update. Try refreshing the page"
         );

@@ -1,7 +1,7 @@
 <template lang="pug">
   #edit-manga-entries
     el-select.rounded.w-full(
-      v-model="newListID"
+      v-model="listID"
       placeholder="Select new list"
     )
       el-option(
@@ -25,7 +25,7 @@
   import {
     Message, Loading, Button, Select, Option,
   } from 'element-ui';
-  import { bulkUpdateMangaEntry } from '@/services/api';
+  import { updateMangaEntry, bulkUpdateMangaEntry } from '@/services/api';
 
   export default {
     name: 'EditMangaEntries',
@@ -42,13 +42,24 @@
     },
     data() {
       return {
-        newListID: null,
+        listID: null,
       };
     },
     computed: {
       ...mapState('lists', [
         'lists',
       ]),
+      selectedEntriesIDs() {
+        return this.selectedEntries.map(entry => entry.id);
+      },
+      isBulkUpdate() {
+        return this.selectedEntries.length > 1;
+      },
+    },
+    mounted() {
+      // TODO: Replace with selectedEntries[0].manga_list_id
+      // TODO: Remove this when we move to filters
+      this.listID = this.selectedEntries[0].relationships.manga_list.data.id;
     },
     methods: {
       ...mapMutations('lists', [
@@ -56,15 +67,23 @@
       ]),
       async updateMangaEntries() {
         const loading = Loading.service({ target: '.edit-manga-entry-dialog' });
-        const response = await bulkUpdateMangaEntry(
-          this.selectedEntries.map(e => e.id), { manga_list_id: this.newListID }
-        );
+        const params = { manga_list_id: this.listID };
+
+        const response = this.isBulkUpdate
+          ? await bulkUpdateMangaEntry(this.selectedEntriesIDs, params)
+          : await updateMangaEntry(this.selectedEntriesIDs[0], params);
 
         loading.close();
 
         if (response) {
           Message.info(`${this.selectedEntries.length} entries updated`);
-          response.map(e => this.updateEntry(e));
+
+          if (Array.isArray(response)) {
+            response.map(e => this.updateEntry(e));
+          } else {
+            this.updateEntry(response);
+          }
+
           this.$emit('editComplete');
         } else {
           Message.error("Couldn't update. Try refreshing the page");
