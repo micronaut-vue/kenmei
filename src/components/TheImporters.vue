@@ -38,7 +38,7 @@
           placeholder="https://mangadex.cc/list/3"
           prefix-icon="el-icon-link"
         )
-        p.text-gray-600.text-xs.italic
+        p.text-gray-600.text-xs.italic.break-normal
           | Provide your MangaDex MDList URL. It needs to be all lists link, not
           | specific ones like Reading or Completed.
         el-button.float-right(
