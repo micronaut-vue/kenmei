@@ -2,6 +2,7 @@
 [![Build Status](https://travis-ci.org/doutatsu/kenmei.svg?branch=master)](https://travis-ci.org/doutatsu/kenmei)
 [![Maintainability](https://api.codeclimate.com/v1/badges/e8a7e79a8d644f34fb8d/maintainability)](https://codeclimate.com/github/doutatsu/kenmei/maintainability)
 [![Coverage Status](https://coveralls.io/repos/github/doutatsu/kenmei/badge.svg?branch=master)](https://coveralls.io/github/doutatsu/kenmei?branch=master)
+[![Discord](https://img.shields.io/discord/674976622188691456.svg)](https://discord.gg/XeTFtYW)
 
 # Kenmei
 
