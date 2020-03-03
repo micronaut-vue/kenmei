@@ -1,4 +1,5 @@
 import axios from 'axios';
+import qs from 'qs';
 
 const DEV_API_URL = 'http://localhost:3000';
 const PRODUCTION_API_URL = 'https://api.kenmei.co';
@@ -22,6 +23,9 @@ const baseConfig = {
   baseURL: currentEnv(),
   headers: {
     'Content-Type': 'application/json',
+  },
+  paramsSerializer(params) {
+    return qs.stringify(params, { arrayFormat: 'repeat' });
   },
 };
 
