@@ -14,7 +14,7 @@ const state = {
 
 const getters = {
   getEntriesByListId: state => listID => state.entries.filter(
-    entry => entry.relationships.manga_list.data.id === listID
+    entry => entry.manga_list_id.toString() === listID
   ),
 };
 

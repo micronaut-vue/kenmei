@@ -12,14 +12,12 @@ describe('lists', () => {
       it('returns entries based on a list id', () => {
         const listID = '1';
         const expectedReturn = mangaEntryFactory.build(
-          { relationships: { manga_list: { data: { id: listID } } } }
+          { manga_list_id: listID }
         );
         const state = {
           entries: [
             expectedReturn,
-            mangaEntryFactory.build(
-              { relationships: { manga_list: { data: { id: '2' } } } }
-            ),
+            mangaEntryFactory.build({ manga_list_id: 2 }),
           ],
         };
 
