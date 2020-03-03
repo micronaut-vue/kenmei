@@ -57,16 +57,11 @@ describe('TheMangaList.vue', () => {
 
     it('mutates the state and shows success message', async () => {
       const infoMessageMock = jest.spyOn(Message, 'info');
-      const mangaEntry = mangaEntryFactory.build(
-        {
-          id: '1',
-          attributes: {
-            title: 'Manga Title',
-            last_chapter_read: '2',
-            last_chapter_available: '2',
-          },
-        }
-      );
+      const mangaEntry = mangaEntryFactory.build({ id: 1 });
+
+      mangaEntryFactory.attributes.title = 'Manga Title';
+      mangaEntryFactory.attributes.last_chapter_read = '2';
+      mangaEntryFactory.attributes.last_chapter_available = '2';
 
       updateMangaEntryMock.mockResolvedValue(mangaEntry);
 
@@ -118,13 +113,12 @@ describe('TheMangaList.vue', () => {
 
   describe('when no last chapter is available', () => {
     it('Released at column shows Unknown', async () => {
-      mangaList.setProps({
-        tableData: [
-          mangaEntryFactory.build(
-            { attributes: { title: 'Manga Title', last_released_at: null } }
-          ),
-        ],
-      });
+      const entry = mangaEntryFactory.build();
+
+      entry.attributes.title = 'Manga Title';
+      entry.attributes.last_released_at = null;
+
+      mangaList.setProps({ tableData: [entry] });
 
       await flushPromises();
 
@@ -148,15 +142,31 @@ describe('TheMangaList.vue', () => {
 
   describe(':props', () => {
     it(':tableData - sanitizes manga title to convert special characters', async () => {
-      mangaList.setProps({
-        tableData: [
-          mangaEntryFactory.build({ attributes: { title: '&Uuml;bel Blatt' } }),
-        ],
-      });
+      const entry = mangaEntryFactory.build();
+
+      entry.attributes.title = '&Uuml;bel Blatt';
+
+      mangaList.setProps({ tableData: [entry] });
 
       await flushPromises();
 
       expect(mangaList.find('.el-link--inner').text()).toContain('Übel Blatt');
+    });
+
+    it(':tableData - shows sites tracked if more than one', async () => {
+      const newMangaEntry = mangaEntryFactory.build();
+
+      newMangaEntry.attributes.tracked_entries.push({
+        id: 2,
+        manga_source_id: 2,
+        manga_series_id: 1,
+      });
+
+      mangaList.setProps({ tableData: [newMangaEntry] });
+
+      await flushPromises();
+
+      expect(mangaList.text()).toContain('2 sites tracked');
     });
   });
 });
