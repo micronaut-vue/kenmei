@@ -44,7 +44,7 @@ describe('EditMangaEntries.vue', () => {
       });
 
       expect(editMangaEntries.vm.$data.listID).toEqual(
-        entry1.relationships.manga_list.data.id
+        entry1.manga_list_id.toString()
       );
       expect(editMangaEntries.vm.$data.mangaSourceID).toEqual(
         entry1.manga_source_id
@@ -89,14 +89,7 @@ describe('EditMangaEntries.vue', () => {
 
     it('uses updateMangaEntry endpoint', async () => {
       editMangaEntries.setData({ listID: '2' });
-      const updatedEntry = mangaEntryFactory.build(
-        {
-          id: 1,
-          relationships: {
-            manga_list: { data: { id: '2', type: 'manga_list' } },
-          },
-        }
-      );
+      const updatedEntry = mangaEntryFactory.build({ id: 1, manga_list_id: 2 });
 
       updateMangaEntryMock.mockResolvedValue(updatedEntry);
 
@@ -114,8 +107,6 @@ describe('EditMangaEntries.vue', () => {
     let updateMangaEntriesMock;
     let updatedMangaEntries;
 
-    const newList = { manga_list: { data: { id: '2', type: 'manga_list' } } };
-
     beforeEach(() => {
       updateMangaEntriesMock = jest.spyOn(api, 'bulkUpdateMangaEntry');
       editMangaEntries = shallowMount(EditMangaEntries, {
@@ -125,8 +116,8 @@ describe('EditMangaEntries.vue', () => {
       });
 
       updatedMangaEntries = [
-        mangaEntryFactory.build({ id: 1, relationships: newList }),
-        mangaEntryFactory.build({ id: 2, relationships: newList }),
+        mangaEntryFactory.build({ id: 1, manga_list_id: 2 }),
+        mangaEntryFactory.build({ id: 2, manga_list_id: 2 }),
       ];
     });
 

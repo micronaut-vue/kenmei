@@ -79,9 +79,9 @@
       },
     },
     mounted() {
-      // TODO: Replace with selectedEntries[0].manga_list_id
       // TODO: Remove this when we move to filters
-      this.listID = this.selectedEntries[0].relationships.manga_list.data.id;
+      // TODO: Remove toString() when list serializer returns an int
+      this.listID = this.selectedEntries[0].manga_list_id.toString();
 
       if (!this.isBulkUpdate) {
         this.mangaSourceID = this.selectedEntries[0].manga_source_id;

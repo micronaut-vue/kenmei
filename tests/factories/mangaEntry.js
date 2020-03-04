@@ -3,7 +3,7 @@ import { Factory } from 'rosie';
 export default new Factory()
   .sequence('id')
   .attr('manga_source_id', 1)
-  .attr('type', 'manga_entry')
+  .attr('manga_list_id', 1)
   .attr('attributes', {
     title: 'Manga Title',
     last_chapter_read: '1',
@@ -21,12 +21,4 @@ export default new Factory()
     series_url: 'example.url/manga/1',
     last_chapter_read_url: 'example.url/chapter/1',
     last_chapter_available_url: 'example.url/chapter/2',
-  })
-  .attr('relationships', {
-    manga_list: {
-      data: {
-        id: '1',
-        type: 'manga_list',
-      },
-    },
   });
