@@ -16,6 +16,7 @@
       el-select.rounded.w-full.mt-3(
         v-model="mangaSourceID"
         placeholder="Select new source"
+        :disabled="loadingSources"
         filterable
       )
         el-option(
@@ -30,6 +31,7 @@
         ref="updateEntryButton"
         type="primary"
         @click="updateMangaEntries"
+        :disabled="loadingSources"
       )
         | Update
 </template>
@@ -40,6 +42,7 @@
     Message, Loading, Button, Select, Option,
   } from 'element-ui';
   import { updateMangaEntry, bulkUpdateMangaEntry } from '@/services/api';
+  import { getMangaSources } from '@/services/endpoints/MangaSources';
 
   export default {
     name: 'EditMangaEntries',
@@ -58,40 +61,57 @@
       return {
         listID: null,
         mangaSourceID: null,
+        availableSources: [],
+        loadingSources: false,
       };
     },
     computed: {
       ...mapState('lists', [
         'lists',
       ]),
+      selectedEntry() {
+        return this.selectedEntries[0];
+      },
       selectedEntriesIDs() {
         return this.selectedEntries.map(entry => entry.id);
       },
       isBulkUpdate() {
         return this.selectedEntries.length > 1;
       },
-      availableSources() {
-        const sources = this.selectedEntries
-          .map(entry => entry.attributes.available_sources);
-
-        // This flattens the arrays
-        return [].concat(...sources);
-      },
     },
     mounted() {
       // TODO: Remove this when we move to filters
       // TODO: Remove toString() when list serializer returns an int
-      this.listID = this.selectedEntries[0].manga_list_id.toString();
+      this.listID = this.selectedEntry.manga_list_id.toString();
 
-      if (!this.isBulkUpdate) {
-        this.mangaSourceID = this.selectedEntries[0].manga_source_id;
-      }
+      if (!this.isBulkUpdate) { this.loadAvailableSources(); }
     },
     methods: {
       ...mapMutations('lists', [
         'updateEntry',
         'replaceEntry',
       ]),
+      toggleLoading() {
+        this.loadingSources = !this.loadingSources;
+      },
+      async loadAvailableSources() {
+        this.toggleLoading();
+
+        const response = await getMangaSources(
+          this.selectedEntry.manga_series_id
+        );
+
+        if (response) {
+          this.toggleLoading();
+
+          this.availableSources = response.data;
+          this.mangaSourceID = this.selectedEntry.manga_source_id;
+        } else {
+          Message.error(
+            "Couldn't fetch available manga sites. Try refreshing the page"
+          );
+        }
+      },
       async updateMangaEntries() {
         const loading = Loading.service({ target: '.edit-manga-entry-dialog' });
         const params  = { manga_list_id: this.listID };
@@ -100,7 +120,7 @@
 
         const response = this.isBulkUpdate
           ? await bulkUpdateMangaEntry(this.selectedEntriesIDs, params)
-          : await updateMangaEntry(this.selectedEntriesIDs[0], params);
+          : await updateMangaEntry(this.selectedEntry.id, params);
 
         loading.close();
 
@@ -110,9 +130,9 @@
           if (Array.isArray(response)) {
             response.map(e => this.updateEntry(e));
           } else {
-            const currentEntry = this.selectedEntries[0];
-
-            this.replaceEntry({ currentEntry, newEntry: response });
+            this.replaceEntry({
+              currentEntry: this.selectedEntry, newEntry: response,
+            });
           }
 
           this.$emit('editComplete');

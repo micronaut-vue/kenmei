@@ -3,6 +3,7 @@ import { Factory } from 'rosie';
 export default new Factory()
   .sequence('id')
   .attr('manga_source_id', 1)
+  .attr('manga_series_id', 1)
   .attr('manga_list_id', 1)
   .attr('attributes', {
     title: 'Manga Title',
