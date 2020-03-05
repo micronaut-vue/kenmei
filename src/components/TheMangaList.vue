@@ -91,7 +91,7 @@
             circle
             v-tippy
           )
-    .flex.flex-row.justify-center
+    .flex.flex-row.justify-center(v-if="tableData.length > 0")
       el-pagination.sm_shadow-lg.my-5.p-0(
         layout="prev, pager, next"
         :page-size="50"
