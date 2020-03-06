@@ -28,6 +28,10 @@
             target="_blank"
           )
             | {{ scope.row.attributes.title | sanitize }}
+            .font-normal.text-sm.leading-5.text-gray-500(
+              v-if="scope.row.attributes.tracked_entries.length > 1"
+            )
+              | {{ scope.row.attributes.tracked_entries.length }} sites tracked
       el-table-column(
         prop="attributes.last_chapter_read"
         label="Last Chapter Read"
