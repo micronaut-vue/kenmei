@@ -16,6 +16,9 @@ const getters = {
   getEntriesByListId: state => listID => state.entries.filter(
     entry => entry.manga_list_id.toString() === listID
   ),
+  findEntryFromIDs: state => ids => state.entries.find(
+    entry => ids.includes(entry.id)
+  ),
 };
 
 const actions = {
