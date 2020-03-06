@@ -29,6 +29,7 @@ describe('AddMangaEntry.vue', () => {
               entries: [],
             },
             mutations: lists.mutations,
+            getters: lists.getters,
           },
         },
       });
@@ -46,20 +47,59 @@ describe('AddMangaEntry.vue', () => {
       });
     });
 
-    it('adds new Manga entry on successful API lookup', async () => {
-      const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
-      const mangaEntry        = mangaEntryFactory.build();
+    describe('when no manga sources are tracked', () => {
+      it('adds new Manga entry to the list', async () => {
+        const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
+        const mangaEntry        = mangaEntryFactory.build();
 
-      addMangaEntryMock.mockResolvedValue({ data: mangaEntry });
+        addMangaEntryMock.mockResolvedValue({ data: mangaEntry });
 
-      expect(store.state.lists.entries).toEqual([]);
+        addMangaEntry.vm.mangaDexSearch();
 
-      addMangaEntry.vm.mangaDexSearch();
+        await flushPromises();
 
-      await flushPromises();
+        expect(store.state.lists.entries).toContain(mangaEntry);
+        expect(addMangaEntry.emitted('dialogClosed')).toBeTruthy();
+      });
+    });
 
-      expect(store.state.lists.entries).toContain(mangaEntry);
-      expect(addMangaEntry.emitted('dialogClosed')).toBeTruthy();
+    describe('when other manga source is tracked', () => {
+      it('replaces currently tracked manga entry with the new one', async () => {
+        const oldEntry = mangaEntryFactory.build();
+        store.state.lists.entries = [oldEntry];
+
+        const addMangaEntryMock = jest.spyOn(api, 'addMangaEntry');
+        const newMangaEntry = mangaEntryFactory.build({
+          id: 2,
+          manga_source_id: 2,
+          manga_series_id: oldEntry.manga_series_id,
+          manga_list_id: oldEntry.manga_list_id,
+          attributes: {
+            tracked_entries: [
+              {
+                id: oldEntry.id,
+                manga_source_id: oldEntry.manga_series_id,
+                manga_series_id: oldEntry.manga_list_id,
+              },
+              {
+                id: 2,
+                manga_source_id: 2,
+                manga_series_id: oldEntry.manga_list_id,
+              },
+            ],
+          },
+        });
+
+        addMangaEntryMock.mockResolvedValue({ data: newMangaEntry });
+
+        addMangaEntry.vm.mangaDexSearch();
+
+        await flushPromises();
+
+        expect(store.state.lists.entries).not.toContain(oldEntry);
+        expect(store.state.lists.entries).toContain(newMangaEntry);
+        expect(addMangaEntry.emitted('dialogClosed')).toBeTruthy();
+      });
     });
 
     describe('when receiving 404 status', () => {

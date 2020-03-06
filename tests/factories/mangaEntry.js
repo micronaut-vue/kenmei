@@ -10,11 +10,11 @@ export default new Factory()
     last_chapter_read: '1',
     last_chapter_available: '2',
     last_released_at: '2019-01-01T00:00:00.000Z',
-    available_sources: [
+    tracked_entries: [
       {
         id: 1,
+        manga_source_id: 1,
         manga_series_id: 1,
-        name: 'MangaDex',
       },
     ],
   })

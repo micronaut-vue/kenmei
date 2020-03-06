@@ -26,6 +26,19 @@ describe('lists', () => {
         expect(getEntriesByListId(listID)).toEqual([expectedReturn]);
       });
     });
+
+    describe('findEntryFromIDs', () => {
+      it('returns first found entry based on entry IDs being passed', () => {
+        const entry = mangaEntryFactory.build();
+        const state = {
+          entries: [entry, mangaEntryFactory.build()],
+        };
+
+        const findEntryFromIDs = lists.getters.findEntryFromIDs(state);
+
+        expect(findEntryFromIDs([entry.id])).toEqual(entry);
+      });
+    });
   });
 
   describe('mutations', () => {

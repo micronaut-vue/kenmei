@@ -18,7 +18,7 @@
 </template>
 
 <script>
-  import { mapMutations } from 'vuex';
+  import { mapMutations, mapGetters } from 'vuex';
   import {
     Message, Button, Input, Loading,
   } from 'element-ui';
@@ -41,15 +41,31 @@
         mangaURL: '',
       };
     },
+    computed: {
+      ...mapGetters('lists', [
+        'findEntryFromIDs',
+      ]),
+    },
     methods: {
       ...mapMutations('lists', [
         'addEntry',
+        'replaceEntry',
       ]),
       mangaDexSearch() {
         const loading = Loading.service({ target: '.add-manga-entry-dialog' });
         addMangaEntry(this.mangaURL, this.currentListID)
           .then((newMangaEntry) => {
-            this.addEntry(newMangaEntry.data);
+            const { data } = newMangaEntry;
+            const currentEntry = this.findEntryFromIDs(
+              data.attributes.tracked_entries.map(e => e.id)
+            );
+
+            if (currentEntry) {
+              this.replaceEntry({ currentEntry, newEntry: data });
+            } else {
+              this.addEntry(newMangaEntry.data);
+            }
+
             this.closeModal(loading);
           })
           .catch((error) => {
