@@ -42,7 +42,7 @@
             icon="el-icon-delete"
             type="danger"
             size="medium"
-            @click="removeSeries"
+            @click="deleteEntries"
             circle
             v-tippy
           )
@@ -125,6 +125,11 @@
           @cancelEdit='editDialogVisible = false'
           @editComplete="resetEntries('editDialogVisible')"
         )
+      delete-manga-entries(
+        :visible='deleteDialogVisible'
+        @dialogClosed='deleteDialogVisible = false'
+        @confirmDeletion='deleteDialogVisible = false; removeSeries()'
+      )
       el-dialog(
         ref='reportMangaEntryDialog'
         custom-class="custom-dialog report-manga-entry-dialog"
@@ -149,6 +154,7 @@
 
   import Importers from '@/components/TheImporters';
   import AddMangaEntry from '@/components/manga_entries/AddMangaEntry';
+  import DeleteMangaEntries from '@/components/manga_entries/DeleteMangaEntries';
   import EditMangaEntries from '@/components/manga_entries/EditMangaEntries';
   import ReportMangaEntries from '@/components/manga_entries/ReportMangaEntries';
   import TheMangaList from '@/components/TheMangaList';
@@ -160,6 +166,7 @@
       Importers,
       AddMangaEntry,
       EditMangaEntries,
+      DeleteMangaEntries,
       ReportMangaEntries,
       TheMangaList,
       'el-button': Button,
@@ -179,6 +186,7 @@
         importDialogVisible: false,
         editDialogVisible: false,
         editDialogBodyVisible: false,
+        deleteDialogVisible: false,
         reportDialogVisible: false,
         alertMessage: `
           UI improvements, add manga using chapter URL, bug fixes and more in
@@ -196,6 +204,18 @@
       ]),
       currentListEntries() {
         return this.getEntriesByListId(this.currentListID);
+      },
+      selectedEntriesIDs() {
+        return this.selectedEntries.map(entry => entry.id);
+      },
+      trackedEntriesIDs() {
+        const trackedIDs = this.selectedEntries.map(
+          entry => entry.attributes.tracked_entries.map(
+            trackedEntry => trackedEntry.id
+          )
+        );
+
+        return [].concat(...trackedIDs);
       },
       debouncedSearchTerm: {
         get() {
@@ -243,6 +263,13 @@
         this.entriesSelected = selectedEntries.length > 0;
         this.selectedEntries = selectedEntries;
       },
+      deleteEntries() {
+        if (this.trackedEntriesIDs > this.selectedEntriesIDs) {
+          this.deleteDialogVisible = true;
+        } else {
+          this.removeSeries();
+        }
+      },
       async retrieveLists() {
         await this.getLists();
         this.currentListID = this.currentListID || this.lists[0].id;
@@ -251,12 +278,11 @@
         await this.getEntries();
       },
       async removeSeries() {
-        const ids = this.selectedEntries.map(entry => entry.id);
-        const successful = await bulkDeleteMangaEntries(ids);
+        const successful = await bulkDeleteMangaEntries(this.trackedEntriesIDs);
 
         if (successful) {
-          Message.info(`${ids.length} entries deleted`);
-          this.removeEntries(ids);
+          Message.info(`${this.trackedEntriesIDs.length} entries deleted`);
+          this.removeEntries(this.trackedEntriesIDs);
         } else {
           Message.error(
             'Deletion failed. Try reloading the page before trying again'
