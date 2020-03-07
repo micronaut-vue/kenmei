@@ -28,12 +28,9 @@ describe('MangaList.vue', () => {
 
   beforeEach(() => {
     firstMangaList = mangaListFactory.build({ id: '1' });
-    entry1 = mangaEntryFactory.build(
-      { id: 1, attributes: { title: 'Boku no Hero' } }
-    );
-    entry2 = mangaEntryFactory.build(
-      { id: 2, attributes: { title: 'Attack on Titan' } }
-    );
+
+    entry1 = mangaEntryFactory.build({ id: 1 });
+    entry2 = mangaEntryFactory.build({ id: 2 });
 
     store = new Vuex.Store({
       modules: {
@@ -281,6 +278,13 @@ describe('MangaList.vue', () => {
       });
     })
     it(':searchTerm - if present, filters manga entries', () => {
+      const entry1 = mangaEntryFactory.build(
+        { attributes: { title: 'Boku no Hero' } }
+      );
+      const entry2 = mangaEntryFactory.build(
+        { attributes: { title: 'Attack on Titan' } }
+      );
+
       const mangaList = shallowMount(MangaList, {
         store,
         localVue,
@@ -297,7 +301,7 @@ describe('MangaList.vue', () => {
 
       expect(mangaList.vm.filteredEntries).toEqual([entry1, entry2]);
 
-      mangaList.vm.debouncedSearchTerm = 'Boku no';
+      mangaList.setData({ searchTerm: 'Boku no' });
       jest.runAllTimers();
 
       expect(mangaList.vm.filteredEntries).toEqual([entry1]);
