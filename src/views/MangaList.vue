@@ -264,7 +264,7 @@
         this.selectedEntries = selectedEntries;
       },
       deleteEntries() {
-        if (this.trackedEntriesIDs > this.selectedEntriesIDs) {
+        if (this.trackedEntriesIDs.length > this.selectedEntriesIDs.length) {
           this.deleteDialogVisible = true;
         } else {
           this.removeSeries();
