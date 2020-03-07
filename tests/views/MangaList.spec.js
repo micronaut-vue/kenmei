@@ -147,11 +147,8 @@ describe('MangaList.vue', () => {
   });
   describe('when deleting manga entries', () => {
     let mangaList;
-    let bulkDeleteMangaEntriesMock;
 
     beforeEach(() => {
-      bulkDeleteMangaEntriesMock = jest.spyOn(api, 'bulkDeleteMangaEntries');
-
       mangaList = shallowMount(MangaList, {
         store,
         localVue,
@@ -169,46 +166,72 @@ describe('MangaList.vue', () => {
       });
     });
 
-    afterEach(() => {
-      expect(bulkDeleteMangaEntriesMock).toHaveBeenCalledWith([entry1.id]);
-    });
+    describe('when entry has multiple sources tracked', () => {
+      it('shows deleteMangaEntries modal', () => {
+        const entry3 = mangaEntryFactory.build({
+          id: 3,
+          attributes: { tracked_entries: [{ id: 3 }, { id: 12 }] },
+        });
 
-    describe('if deletion was successful', () => {
-      beforeEach(() => { bulkDeleteMangaEntriesMock.mockResolvedValue(true); });
+        mangaList.setData({
+          selectedEntries: [entry1, entry3],
+          currentListID: firstMangaList.id,
+        });
 
-      it('tells user how many entries have been deleted', async () => {
-        const infoMessageMock = jest.spyOn(Message, 'info');
+        mangaList.vm.deleteEntries();
 
-        mangaList.vm.removeSeries();
-
-        await flushPromises();
-
-        expect(infoMessageMock).toHaveBeenCalledWith('1 entries deleted');
-      });
-
-      it('removes deleted entries', async () => {
-        mangaList.vm.removeSeries();
-
-        await flushPromises();
-
-        expect(mangaList.vm.currentListEntries).not.toContain(entry1);
+        expect(mangaList.vm.$data.deleteDialogVisible).toBeTruthy();
       });
     });
 
-    describe('if deletion was unsuccessful', () => {
-      it('shows deletion fail message and keeps entry persisted', async () => {
-        const errorMessageMock = jest.spyOn(Message, 'error');
+    describe('when entry does not have multiple sources tracked', () => {
+      let bulkDeleteMangaEntriesMock;
 
-        bulkDeleteMangaEntriesMock.mockResolvedValue(false);
+      beforeEach(() => {
+        bulkDeleteMangaEntriesMock = jest.spyOn(api, 'bulkDeleteMangaEntries');
+      });
 
-        mangaList.vm.removeSeries();
+      afterEach(() => {
+        expect(bulkDeleteMangaEntriesMock).toHaveBeenCalledWith([entry1.id]);
+      });
 
-        await flushPromises();
+      describe('and deletion was successful', () => {
+        beforeEach(() => { bulkDeleteMangaEntriesMock.mockResolvedValue(true); });
 
-        expect(mangaList.vm.currentListEntries).toContain(entry1);
-        expect(errorMessageMock).toHaveBeenCalledWith(
-          'Deletion failed. Try reloading the page before trying again'
-        );
+        it('tells user how many entries have been deleted', async () => {
+          const infoMessageMock = jest.spyOn(Message, 'info');
+
+          mangaList.vm.deleteEntries();
+
+          await flushPromises();
+
+          expect(infoMessageMock).toHaveBeenCalledWith('1 entries deleted');
+        });
+
+        it('removes deleted entries', async () => {
+          mangaList.vm.deleteEntries();
+
+          await flushPromises();
+
+          expect(mangaList.vm.currentListEntries).not.toContain(entry1);
+        });
+      });
+
+      describe('and deletion was unsuccessful', () => {
+        it('shows deletion fail message and keeps entry persisted', async () => {
+          const errorMessageMock = jest.spyOn(Message, 'error');
+
+          bulkDeleteMangaEntriesMock.mockResolvedValue(false);
+
+          mangaList.vm.deleteEntries();
+
+          await flushPromises();
+
+          expect(mangaList.vm.currentListEntries).toContain(entry1);
+          expect(errorMessageMock).toHaveBeenCalledWith(
+            'Deletion failed. Try reloading the page before trying again'
+          );
+        });
       });
     });
   });
@@ -276,7 +299,7 @@ describe('MangaList.vue', () => {
 
         expect(dialog.attributes('title')).toEqual('Edit Manga Entry');
       });
-    })
+    });
     it(':searchTerm - if present, filters manga entries', () => {
       const entry1 = mangaEntryFactory.build(
         { attributes: { title: 'Boku no Hero' } }
