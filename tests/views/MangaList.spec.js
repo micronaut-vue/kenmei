@@ -52,8 +52,9 @@ describe('MangaList.vue', () => {
     jest.restoreAllMocks();
   });
 
-  describe('when adding new MangaDex entry', () => {
+  describe('when adding new manga entry', () => {
     let mangaList;
+    let modal;
 
     beforeEach(() => {
       mangaList = shallowMount(MangaList, {
@@ -71,6 +72,16 @@ describe('MangaList.vue', () => {
           },
         },
       });
+
+      modal = mangaList.find({ ref: 'addMangaEntryModal' });
+    });
+
+    it('shows add manga entry modal', async () => {
+      mangaList.find({ ref: 'addMangaEntryModalButton' }).trigger('click');
+
+      await nextTick();
+
+      expect(modal.isVisible()).toBeTruthy();
     });
 
     describe('@events', () => {
@@ -83,6 +94,7 @@ describe('MangaList.vue', () => {
   });
   describe('when updating manga entries', () => {
     let mangaList;
+    let modal;
 
     beforeEach(() => {
       mangaList = shallowMount(MangaList, {
@@ -100,40 +112,31 @@ describe('MangaList.vue', () => {
           },
         },
       });
+
+      modal = mangaList.find({ ref: 'editMangaEntryModal' });
+    });
+
+    it('shows edit manga entries modal', async () => {
+      mangaList.find({ ref: 'editMangaEntriesButton' }).trigger('click');
+
+      await nextTick();
+
+      expect(modal.isVisible()).toBeTruthy();
     });
 
     describe('@events', () => {
-      it('@open - opening edit modal renders edit manga entry component', async () => {
-        mangaList.find({ ref: 'editMangaEntryDialog' }).vm.$emit('open');
-
-        await nextTick();
-
-        expect(mangaList.find(EditMangaEntries).exists()).toBeTruthy();
-      });
-
-      it('@closed - when edit modal finished closing, destroys edit manga entry component', () => {
-        mangaList.setData({ editDialogBodyVisible: true });
-
-        mangaList.find({ ref: 'editMangaEntryDialog' }).vm.$emit('closed');
-
-        expect(mangaList.find(EditMangaEntries).exists()).toBeFalsy();
-      });
-
       it('@cancelEdit - closes edit manga entries dialog', async () => {
-        mangaList.setData(
-          { editDialogVisible: true, editDialogBodyVisible: true }
-        );
+        mangaList.setData({ editDialogVisible: true });
 
         await nextTick();
 
         mangaList.find(EditMangaEntries).vm.$emit('cancelEdit');
+
         expect(mangaList.vm.$data.editDialogVisible).toBeFalsy();
       });
 
       it('@editComplete - resets selected manga entries and closes modal', async () => {
-        mangaList.setData(
-          { editDialogVisible: true, editDialogBodyVisible: true }
-        );
+        mangaList.setData({ editDialogVisible: true });
 
         await nextTick();
 
@@ -283,33 +286,6 @@ describe('MangaList.vue', () => {
     });
   });
   describe(':data', () => {
-    describe(':selectedEntries', () => {
-      let mangaList;
-      let dialog;
-
-      beforeEach(() => {
-        mangaList = shallowMount(MangaList, {
-          store,
-          localVue,
-          data() { return { currentListID: firstMangaList.id }; },
-        });
-        dialog = mangaList.find({ ref: 'editMangaEntryDialog' });
-      });
-
-      it('shows plural title in edit entry modal if there are more than one entry selected', async () => {
-        mangaList.setData({ selectedEntries: [entry1, entry2] });
-
-        await nextTick();
-
-        expect(dialog.attributes('title')).toEqual('Edit Manga Entries');
-      });
-
-      it('shows singular title in edit entry modal if there is one entry selected', () => {
-        mangaList.setData({ selectedEntries: [entry1] });
-
-        expect(dialog.attributes('title')).toEqual('Edit Manga Entry');
-      });
-    });
     it(':searchTerm - if present, filters manga entries', () => {
       const entry1 = mangaEntryFactory.build(
         { attributes: { title: 'Boku no Hero' } }

@@ -71,7 +71,7 @@
         .actions.inline-block.float-right.sm_flex.sm_flex-row-reverse
           span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
             base-button(
-              ref="openAddMangaModalButton"
+              ref="addMangaEntryModalButton"
               @click="dialogVisible = true"
             )
               i.el-icon-plus.mr-1
@@ -87,54 +87,34 @@
           @seriesSelected="handleSelection"
           @editEntry='showEditEntryDialog'
         )
-      el-dialog(
-        title="Import Manga List"
-        :visible.sync="importDialogVisible"
-        custom-class="custom-dialog"
-        width="400px"
+      importers(
+        :visible='importDialogVisible'
+        @closeDialog="importDialogVisible = false"
+        @importCompleted="completeImport"
       )
-        importers(@importCompleted="completeImport")
-      el-dialog(
-        title="Add Manga"
-        :visible.sync="dialogVisible"
-        custom-class="custom-dialog add-manga-entry-dialog"
-        width="400px"
+      add-manga-entry(
+        ref='addMangaEntryModal'
+        :visible="dialogVisible"
+        :currentListID='currentListID'
+        @dialogClosed='dialogVisible = false'
       )
-        add-manga-entry(
-          :currentListID='currentListID'
-          @dialogClosed='dialogVisible = false'
-        )
-      el-dialog(
-        ref='editMangaEntryDialog'
-        :title="mangaEntriesDialogTitle('Edit')"
-        custom-class="custom-dialog edit-manga-entry-dialog"
-        width="400px"
-        :visible.sync="editDialogVisible"
-        @open="toggleBody"
-        @closed="toggleBody"
+      edit-manga-entries(
+        ref='editMangaEntryModal'
+        :visible='editDialogVisible'
+        :selectedEntries='selectedEntries'
+        @cancelEdit='editDialogVisible = false'
+        @editComplete="resetEntries('editDialogVisible')"
       )
-        edit-manga-entries(
-          v-if="editDialogBodyVisible"
-          :selectedEntries='selectedEntries'
-          @cancelEdit='editDialogVisible = false'
-          @editComplete="resetEntries('editDialogVisible')"
-        )
       delete-manga-entries(
         :visible='deleteDialogVisible'
         @dialogClosed='deleteDialogVisible = false'
         @confirmDeletion='deleteDialogVisible = false; removeSeries()'
       )
-      el-dialog(
-        ref='reportMangaEntryDialog'
-        custom-class="custom-dialog report-manga-entry-dialog"
-        width="400px"
-        :title="mangaEntriesDialogTitle('Report')"
-        :visible.sync="reportDialogVisible"
+      report-manga-entries(
+        :selectedEntries='selectedEntries'
+        :visible='reportDialogVisible'
+        @closeDialog="resetEntries('reportDialogVisible')"
       )
-        report-manga-entries(
-          :selectedEntries='selectedEntries'
-          @closeDialog="resetEntries('reportDialogVisible')"
-        )
 </template>
 
 <script>
@@ -143,7 +123,7 @@
     mapActions, mapState, mapMutations, mapGetters,
   } from 'vuex';
   import {
-    Message, Dialog, Button, Input, Select, Option, Alert,
+    Message, Button, Input, Select, Option, Alert,
   } from 'element-ui';
 
   import Importers from '@/components/TheImporters';
@@ -164,7 +144,6 @@
       ReportMangaEntries,
       TheMangaList,
       'el-button': Button,
-      'el-dialog': Dialog,
       'el-input': Input,
       'el-select': Select,
       'el-option': Option,
@@ -174,12 +153,11 @@
       return {
         selectedEntries: [],
         entriesSelected: false,
-        currentListID: null,
+        currentListID: '',
         searchTerm: '',
         dialogVisible: false,
         importDialogVisible: false,
         editDialogVisible: false,
-        editDialogBodyVisible: false,
         deleteDialogVisible: false,
         reportDialogVisible: false,
         alertMessage: `
@@ -245,14 +223,6 @@
         'removeEntries',
         'setListsLoading',
       ]),
-      toggleBody() {
-        this.editDialogBodyVisible = !this.editDialogBodyVisible;
-      },
-      mangaEntriesDialogTitle(action) {
-        return this.selectedEntries.length > 1
-          ? `${action} Manga Entries`
-          : `${action} Manga Entry`;
-      },
       handleSelection(selectedEntries) {
         this.entriesSelected = selectedEntries.length > 0;
         this.selectedEntries = selectedEntries;
@@ -310,11 +280,5 @@
 <style media="screen" lang="scss">
   .el-button.float-right + .el-button.float-right {
     @apply ml-0;
-  }
-
-  @media (max-width: 640px) {
-    .custom-dialog {
-      width: 100% !important;
-    }
   }
 </style>
