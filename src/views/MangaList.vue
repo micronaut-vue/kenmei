@@ -3,11 +3,11 @@
     .flex.flex-col.w-full.max-w-6xl.pt-24.sm_pb-16
       .mx-5.mb-5.max-sm_mx-2
         a.no-underline(
-          href="https://news.kenmei.co/updates/2020/update-11"
+          href="https://news.kenmei.co/updates/2020/update-12"
           target="_blank"
         )
           el-alert.cursor-pointer(
-            title="Update #11"
+            title="Update #12"
             type="info"
             :description="alertMessage"
             :closable="false"
@@ -189,8 +189,8 @@
         deleteDialogVisible: false,
         reportDialogVisible: false,
         alertMessage: `
-          UI improvements, add manga using chapter URL, bug fixes and more in
-          the newest update. Click to learn more
+          Support for 8 new sites, cross-site support,
+          speed improvements and much more in the biggest update to date!
         `,
       };
     },
