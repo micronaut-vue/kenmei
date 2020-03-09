@@ -14,8 +14,10 @@
             el-avatar.align-middle
               img(src='@/assets/default-avatar.png')
           el-menu-item.sm_hidden(index='/manga-list') Manga List
+          el-menu-item.sm_hidden(index='/supported-sites') Supported Sites
           el-menu-item(disabled) Settings
           el-menu-item(@click='signOutMethod') Logout
+        el-menu-item.max-sm_hidden.float-right(index='/supported-sites') Supported Sites
         el-menu-item.max-sm_hidden.float-right(index='/manga-list') Manga List
       template(v-else)
         el-button.mr-5.mt-10px.float-right(@click="openSignOnWith('TheSignUp')")
