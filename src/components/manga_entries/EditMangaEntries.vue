@@ -25,21 +25,22 @@
           :label="source.name"
           :value="source.id"
         )
-    .mt-8.-mb-2.text-right
-      el-button(@click="$emit('cancelEdit')") Cancel
-      el-button(
-        ref="updateEntryButton"
-        type="primary"
-        @click="updateMangaEntries"
-        :disabled="loadingSources"
-      )
-        | Update
+    .mt-8.-mb-2.sm_flex.sm_flex-row-reverse
+      span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+        base-button(
+          ref="updateEntryButton"
+          @click="updateMangaEntries"
+          :disabled="loadingSources"
+        )
+          | Update
+      span.mt-3.sm_mt-0.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+        base-button(type="secondary" @click="$emit('cancelEdit')") Cancel
 </template>
 
 <script>
   import { mapState, mapMutations } from 'vuex';
   import {
-    Message, Loading, Button, Select, Option,
+    Message, Loading, Select, Option,
   } from 'element-ui';
   import { updateMangaEntry, bulkUpdateMangaEntry } from '@/services/api';
   import { getMangaSources } from '@/services/endpoints/MangaSources';
@@ -47,7 +48,6 @@
   export default {
     name: 'EditMangaEntries',
     components: {
-      'el-button': Button,
       'el-select': Select,
       'el-option': Option,
     },
