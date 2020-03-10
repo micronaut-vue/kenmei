@@ -24,11 +24,8 @@
           prefix-icon="el-icon-message"
         )
       el-form-item.mb-0
-        el-button.w-full(
-          ref='resetPasswordSubmit'
-          type='primary'
-          @click='submitForm'
-        ) Reset Password
+        base-button(ref='resetPasswordSubmit' @click='submitForm')
+          | Reset Password
       .text-center
         el-divider.my-4
         span
@@ -43,7 +40,7 @@
 
 <script>
   import {
-    Form, FormItem, Button, Input, Link, Message, Loading, Divider,
+    Form, FormItem, Input, Link, Message, Loading, Divider,
   } from 'element-ui';
 
   import { plain } from '@/modules/axios';
@@ -53,7 +50,6 @@
       'el-form': Form,
       'el-form-item': FormItem,
       'el-input': Input,
-      'el-button': Button,
       'el-link': Link,
       'el-divider': Divider,
     },
