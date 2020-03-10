@@ -46,16 +46,10 @@
                     | use the edit button to switch to a different source.
           .bg-gray-50.px-4.py-3.sm_px-6.sm_flex.sm_flex-row-reverse
             span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
-              button.base-button-classes.btn-danger(
-                type='button'
-                @click="$emit('confirmDeletion')"
-              )
+              base-button(type="danger" @click="$emit('confirmDeletion')")
                 | Delete
             span.mt-3.flex.w-full.rounded-md.shadow-sm.sm_mt-0.sm_w-auto
-              button.base-button-classes.secondary-btn(
-                type='button'
-                @click="$emit('dialogClosed')"
-              )
+              base-button(type="secondary" @click="$emit('dialogClosed')")
                 | Cancel
 </template>
 
@@ -79,44 +73,6 @@
 
 <style lang="scss" media="screen" scoped>
   @tailwind base;
-
-  .base-button-classes {
-    @apply inline-flex justify-center w-full rounded-md border px-4 py-2;
-    @apply text-base leading-6 font-medium shadow-sm;
-    @apply transition ease-in-out duration-150;
-
-    &:focus {
-      @apply outline-none;
-    }
-
-    @screen sm {
-      @apply text-sm leading-5;
-    }
-  }
-
-  .btn-danger {
-    @apply border-transparent bg-red-600 text-white;
-
-    &:hover {
-      @apply bg-red-500;
-    }
-
-    &:focus {
-      @apply border-red-700 shadow-outline-red;
-    }
-  }
-
-  .secondary-btn {
-    @apply border-gray-300 bg-white text-gray-700;
-
-    &:hover {
-      @apply text-gray-500;
-    }
-
-    &:focus {
-      @apply border-blue-300 shadow-outline;
-    }
-  }
 
   .modal {
     @apply fixed bottom-0 inset-x-0 px-4 pb-4 z-50;
