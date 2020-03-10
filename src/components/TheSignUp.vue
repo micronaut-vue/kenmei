@@ -38,11 +38,7 @@
           @keyup.enter.native='signUp(user)'
         )
       el-form-item
-        el-button.w-full(
-          ref='signUpSubmit'
-          type='primary'
-          @click='submitForm'
-        ) Register
+        base-button(ref='signUpSubmit' @click='submitForm') Register
       .text-center
         el-divider.my-4
         span
@@ -58,7 +54,7 @@
 <script>
   import { mapGetters } from 'vuex';
   import {
-    Form, FormItem, Button, Input, Loading, Message, Divider, Link,
+    Form, FormItem, Input, Loading, Message, Divider, Link,
   } from 'element-ui';
 
   import { plain } from '@/modules/axios';
@@ -68,7 +64,6 @@
       'el-form': Form,
       'el-form-item': FormItem,
       'el-input': Input,
-      'el-button': Button,
       'el-divider': Divider,
       'el-link': Link,
     },
