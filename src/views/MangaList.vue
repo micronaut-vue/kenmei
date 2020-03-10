@@ -33,9 +33,9 @@
           )
           span.el-input__prefix
             i.el-input__icon.el-icon-search
-      .mx-5.mb-5.max-sm_mx-2
+      .mx-5.mb-5.max-sm_mx-2.max-sm_flex.max-sm_flex-col
         .bulk-actions.inline-block.max-sm_mb-5.max-sm_float-right
-          el-button.sm_shadow-md(
+          el-button.sm_shadow(
             v-show="entriesSelected"
             content="Delete"
             ref="removeSeriesButton"
@@ -46,7 +46,7 @@
             circle
             v-tippy
           )
-          el-button.sm_shadow-md(
+          el-button.sm_shadow(
             v-show="entriesSelected"
             content="Edit"
             ref="editMangaEntriesButton"
@@ -57,7 +57,7 @@
             circle
             v-tippy
           )
-          el-button.sm_shadow-md(
+          el-button.sm_shadow(
             v-show="entriesSelected"
             content="Report manga issues"
             ref="reportMangaEntriesButton"
@@ -68,24 +68,18 @@
             circle
             v-tippy
           )
-        .actions.inline-block.float-right
-          el-button.sm_shadow-md(
-            type="success"
-            size="medium"
-            @click="importDialogVisible = true"
-            round
-          )
-            i.el-icon-upload2.mr-1
-            | Import
-          el-button.sm_shadow-md(
-            ref="openAddMangaModalButton"
-            type="primary"
-            size="medium"
-            @click="dialogVisible = true"
-            round
-          )
-            i.el-icon-plus.mr-1
-            | Add Manga
+        .actions.inline-block.float-right.sm_flex.sm_flex-row-reverse
+          span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+            base-button(
+              ref="openAddMangaModalButton"
+              @click="dialogVisible = true"
+            )
+              i.el-icon-plus.mr-1
+              | Add Manga
+          span.flex.mt-3.sm_mt-0.w-full.rounded-md.shadow-sm.sm_w-auto
+            base-button(type="success" @click="importDialogVisible = true")
+              i.el-icon-upload2.mr-1
+              | Import
       .flex-grow.sm_mx-5.mx-0
         the-manga-list(
           ref='mangaList'
