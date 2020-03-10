@@ -41,18 +41,18 @@
         p.text-gray-600.text-xs.italic.break-normal
           | Provide your MangaDex MDList URL. It needs to be all lists link, not
           | specific ones like Reading or Completed.
-        el-button.float-right(
-          ref="importMangaDexButton"
-          type="primary"
-          @click="importMangaDex"
-          :disabled="!validUrl"
-        )
-          | Import
+        span.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+          base-button(
+            ref="importMangaDexButton"
+            @click="importMangaDex"
+            :disabled="!validUrl"
+          )
+            | Import
 </template>
 
 <script>
   import {
-    Tabs, TabPane, Input, Link, Upload, Button, Message, Loading,
+    Tabs, TabPane, Input, Link, Upload, Message, Loading,
   } from 'element-ui';
 
   import { secure } from '@/modules/axios';
@@ -69,7 +69,6 @@
       'el-upload': Upload,
       'el-tabs': Tabs,
       'el-tab-pane': TabPane,
-      'el-button': Button,
     },
     data() {
       return {
