@@ -7,18 +7,20 @@
         v-for='source in sources'
         :href='source.url'
         target="_blank"
+        rel="noreferrer"
       )
         .relative(class='pb-2/5')
           img.absolute.h-full.w-full.object-cover(
             v-if="source.logo"
             :src='require(`@/assets/source_logos/${source.logo}`)'
+            :alt='source.name'
           )
         .p-3
-          h4.mt-1.font-semibold.text-base.leading-tight.text-gray-800(
+          h4.mt-1.font-semibold.text-xl.sm_text-base.leading-tight.text-gray-800(
             v-text="source.name"
           )
         .p-3
-          span.inline-block.text-xs.px-2.py-1.rounded-full.uppercase.font-semibold.tracking-wide(
+          span.inline-block.text-sm.sm_text-xs.px-2.py-1.rounded-full.uppercase.font-semibold.tracking-wide(
             :class="sourceStatusColour(source.status)"
             v-text="source.status"
           )
