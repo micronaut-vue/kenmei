@@ -53,6 +53,24 @@
     "logo": "deathtolls_logo.jpg"
   },
   {
+    "name": "One Shot Scans",
+    "url": "https://oneshotscans.com/",
+    "status": "In Development",
+    "logo": "one_shot_scans_logo.jpg"
+  },
+  {
+    "name": "Reaper Scans",
+    "url": "https://reaperscans.com/",
+    "status": "In Development",
+    "logo": "reaper_scans_logo.jpg"
+  },
+  {
+    "name": "Nonames Scans",
+    "url": "https://the-nonames.com/",
+    "status": "In Development",
+    "logo": "no_names_scans_logo.jpg"
+  },
+  {
     "name": "Silent Sky",
     "url": "https://www.silentsky-scans.net/",
     "status": "In Development",
