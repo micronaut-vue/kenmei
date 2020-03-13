@@ -1,8 +1,9 @@
 <template lang="pug">
-  #home.h-full.overflow-auto
+  #home.min-h-screen.flex.flex-col.font-sans.bg-blue-300
     navigation-bar
-    transition(name="slide-left" mode="out-in")
-      router-view
+    .flex-grow
+      transition(name="slide-left" mode="out-in")
+        router-view
 </template>
 
 <script>
