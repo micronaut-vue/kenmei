@@ -43,6 +43,8 @@
 </template>
 
 <script>
+  import VueScrollTo from 'vue-scrollto';
+
   import {
     Card, Button, Input, Link,
   } from 'element-ui';
@@ -60,6 +62,9 @@
           email: '',
         },
       };
+    },
+    beforeMount() {
+      VueScrollTo.scrollTo('header');
     },
   };
 </script>
