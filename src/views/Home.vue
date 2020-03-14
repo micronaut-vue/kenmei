@@ -1,9 +1,11 @@
 <template lang="pug">
-  #home.min-h-screen.flex.flex-col.font-sans.bg-blue-300
+  #home.min-h-full.flex.flex-col.font-sans.bg-blue-300
     navigation-bar
-    .flex-grow
-      transition(name="slide-left" mode="out-in")
-        router-view
+    .flex-1
+      main.min-h-45
+        transition(name="slide-left" mode="out-in")
+          router-view
+    base-footer.flex-shrink-0
 </template>
 
 <script>

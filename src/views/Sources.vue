@@ -27,6 +27,8 @@
 </template>
 
 <script>
+  import VueScrollTo from 'vue-scrollto';
+
   import sources from '@/assets/sources.json';
 
   export default {
@@ -34,6 +36,9 @@
       return {
         sources,
       };
+    },
+    mounted() {
+      VueScrollTo.scrollTo('header');
     },
     methods: {
       sourceStatusColour(status) {
