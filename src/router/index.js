@@ -13,6 +13,29 @@ export default new Router({
       component: () => import(/* webpackChunkName: "landing_page" */ '@/views/LandingPage.vue')
     },
     {
+      path: '/about',
+      name: 'about',
+      beforeEnter() { Message.info('Under development'); }
+    },
+    {
+      path: '/terms',
+      name: 'terms',
+      beforeEnter() { Message.info('Under development'); }
+    },
+    {
+      path: '/privacy',
+      name: 'privacy',
+      beforeEnter() { Message.info('Under development'); }
+    },
+    {
+      path: '/changelog',
+      beforeEnter() { location.href = 'https://news.kenmei.co/changelog' }
+    },
+    {
+      path: '/blog',
+      beforeEnter() { location.href = 'https://news.kenmei.co/updates' }
+    },
+    {
       path: '/supported-sites',
       name: 'sources',
       // route level code-splitting
