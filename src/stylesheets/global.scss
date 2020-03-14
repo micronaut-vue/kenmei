@@ -3,18 +3,5 @@
 
 html,
 body {
-  background: -webkit-linear-gradient(
-    180deg,
-    rgb(64, 158, 255),
-    rgb(217, 236, 255)
-  );
-  background: linear-gradient(
-    180deg,
-    rgb(64, 158, 255),
-    rgb(217, 236, 255)
-  );
-  font-family: "Helvetica Neue",Helvetica,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","微软雅黑",Arial,sans-serif;
-  height: 100%;
-  margin: 0;
-  overflow-y: auto;
+  @apply font-sans m-0 overflow-y-auto;
 }

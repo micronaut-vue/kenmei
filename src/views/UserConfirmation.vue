@@ -1,7 +1,7 @@
 <template lang="pug">
   .container.mx-auto.w-full.h-full
     .flex.flex-col.h-full.w-full.items-center.justify-center
-      base-card.max-w-sm
+      base-card.max-w-sm.my-56
         .px-6.py-4#user-confirmation-card
           p.text-lg.leading-normal.text-gray-600.text-center(
             v-if="tokenValid === null"

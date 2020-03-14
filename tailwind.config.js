@@ -1,3 +1,5 @@
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 module.exports = {
   important: true,
   separator: '_',
@@ -15,6 +17,9 @@ module.exports = {
     extend: {
       margin: {
         '10px': '0.65rem',
+      },
+      fontFamily: {
+        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
     },
   },
