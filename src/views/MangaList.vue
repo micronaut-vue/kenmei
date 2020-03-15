@@ -2,17 +2,12 @@
   .flex.flex-col.items-center
     .flex.flex-col.w-full.max-w-7xl.py-6
       .mx-5.mb-5.max-sm_mx-2
-        a.no-underline(
-          href="https://news.kenmei.co/updates/2020/update-13"
-          target="_blank"
+        //- @bannerClose="setUpdateSeen(true)"
+        base-banner(
+          :visible="!updateSeen"
+          :text="alertMessage"
+          @bannerClose="updateSeen = true"
         )
-          el-alert.cursor-pointer(
-            title="Update #13"
-            type="info"
-            :description="alertMessage"
-            :closable="false"
-            show-icon
-          )
       .mx-5.mb-5.max-sm_mx-2
         el-select.sm_shadow-md.rounded.float-right.w-48(
           v-model="currentListID"
@@ -124,7 +119,7 @@
     mapActions, mapState, mapMutations, mapGetters,
   } from 'vuex';
   import {
-    Message, Button, Input, Select, Option, Alert,
+    Message, Button, Input, Select, Option,
   } from 'element-ui';
 
   import Importers from '@/components/TheImporters';
@@ -148,12 +143,12 @@
       'el-input': Input,
       'el-select': Select,
       'el-option': Option,
-      'el-alert': Alert,
     },
     data() {
       return {
         selectedEntries: [],
         entriesSelected: false,
+        updateSeen: false,
         currentListID: '',
         searchTerm: '',
         dialogVisible: false,
@@ -168,6 +163,9 @@
       };
     },
     computed: {
+      // ...mapState('user', [
+      //   'updateSeen',
+      // ]),
       ...mapState('lists', [
         'lists',
         'listsLoading',
@@ -222,6 +220,9 @@
       ...mapActions('lists', [
         'getLists',
         'getEntries',
+      ]),
+      ...mapMutations('user', [
+        'setUpdateSeen',
       ]),
       ...mapMutations('lists', [
         'removeEntries',
