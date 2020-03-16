@@ -23,6 +23,10 @@ module.exports = {
       full: '100%',
     },
     extend: {
+      colors: {
+        'el-green': '#67C23A',
+        'el-green-light': '#85CE61',
+      },
       margin: {
         '10px': '0.65rem',
       },

@@ -23,11 +23,7 @@
       )
     el-form-item.mb-0
       el-checkbox(v-model="remembered") Remember Me (2 months)
-      el-button.w-full(
-        ref='signInSubmit'
-        type='primary'
-        @click='submitForm'
-      ) Sign In
+      base-button(ref='signInSubmit' @click='submitForm') Sign In
     .text-center
       el-link.mt-4(
         @click.native="$emit('componentChanged', 'TheResetPassword')"
@@ -48,7 +44,7 @@
 <script>
   import { mapActions, mapGetters } from 'vuex';
   import {
-    Form, FormItem, Button, Input, Checkbox, Link, Divider,
+    Form, FormItem, Input, Checkbox, Link, Divider,
   } from 'element-ui';
 
   export default {
@@ -56,7 +52,6 @@
       'el-form': Form,
       'el-form-item': FormItem,
       'el-input': Input,
-      'el-button': Button,
       'el-checkbox': Checkbox,
       'el-link': Link,
       'el-divider': Divider,

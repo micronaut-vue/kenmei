@@ -6,28 +6,26 @@
       placeholder="https://mangadex.org/title/7139/"
       prefix-icon="el-icon-link"
     )
-    .mt-8.-mb-2.text-right
-      el-button(@click="$emit('dialogClosed')") Cancel
-      el-button(
-        ref="addMangaButton"
-        type="primary"
-        @click="mangaDexSearch"
-        :disabled="mangaURL.length === 0"
-      )
-        | Add
+    .mt-8.-mb-2.sm_flex.sm_flex-row-reverse
+      span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+        base-button(
+          ref="addMangaButton"
+          @click="mangaDexSearch"
+          :disabled="mangaURL.length === 0"
+        )
+          | Add
+      span.mt-3.sm_mt-0.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+        base-button(type="secondary" @click="$emit('dialogClosed')") Cancel
 </template>
 
 <script>
   import { mapMutations, mapGetters } from 'vuex';
-  import {
-    Message, Button, Input, Loading,
-  } from 'element-ui';
+  import { Message, Input, Loading } from 'element-ui';
   import { addMangaEntry } from '@/services/api';
 
   export default {
     name: 'AddMangaEntry',
     components: {
-      'el-button': Button,
       'el-input': Input,
     },
     props: {

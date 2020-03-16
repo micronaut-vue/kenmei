@@ -18,20 +18,22 @@
       template(v-else)
         | Select this option, if manga titles are duplicated.
         | They will be manually updated so that only a single manga is shown.
-    .mt-8.-mb-2.text-right
-      el-button(@click="$emit('closeDialog')") Cancel
-      el-button(
-        ref="reportEntriesButton"
-        type="danger"
-        @click="report"
-        :disabled="issueInvalid"
-      )
-        | Report
+    .mt-8.-mb-2.sm_flex.sm_flex-row-reverse
+      span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+        base-button(
+          ref="reportEntriesButton"
+          type="danger"
+          @click="report"
+          :disabled="issueInvalid"
+        )
+          | Report
+      span.mt-3.sm_mt-0.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+        base-button(type="secondary" @click="$emit('closeDialog')") Cancel
 </template>
 
 <script>
   import {
-    Dialog, Button, Select, Option, Message, Loading,
+    Dialog, Select, Option, Message, Loading,
   } from 'element-ui';
 
   import {
@@ -44,7 +46,6 @@
       'el-dialog': Dialog,
       'el-select': Select,
       'el-option': Option,
-      'el-button': Button,
     },
     props: {
       selectedEntries: {

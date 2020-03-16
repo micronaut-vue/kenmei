@@ -37,18 +37,15 @@
                   @keyup.enter.native='submitForm'
                 )
               el-form-item.mb-0
-                el-button.w-full(
-                  ref='resetPasswordSubmit'
-                  type='primary'
-                  @click='submitForm'
-                ) Save Password
+                base-button(ref='resetPasswordSubmit' @click='submitForm')
+                  | Save Password
           p.leading-normal.text-gray-600.text-center(v-else)
             | {{ this.validationError }}
 </template>
 
 <script>
   import {
-    Form, FormItem, Button, Input,
+    Form, FormItem, Input,
   } from 'element-ui';
   import { mapActions, mapGetters } from 'vuex';
 
@@ -59,7 +56,6 @@
       'el-form': Form,
       'el-form-item': FormItem,
       'el-input': Input,
-      'el-button': Button,
     },
     props: {
       resetPasswordToken: {
