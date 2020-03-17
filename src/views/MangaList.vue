@@ -206,7 +206,7 @@
         );
       },
     },
-    async mounted() {
+    async created() {
       this.setListsLoading(true);
 
       await this.retrieveLists();
