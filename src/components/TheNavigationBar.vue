@@ -22,23 +22,25 @@
           | Register
         el-menu-item.border-none.float-right(@click="openSignOnWith('TheSignIn')")
           | Sign In
-    el-dialog(
-      :title="signOnDialogTitle"
-      :visible.sync="signOnVisible"
-      width="340px"
-      custom-class="sign-on-dialog"
+    base-modal(
+      :visible="signOnVisible"
+      :loading="loading"
+      @dialogClosed="signOnVisible = false"
+      size="xs"
     )
-      component(
-        :is='activeComponent'
-        @componentChanged='activeComponent = $event'
-        @signOnFinished='signOnVisible = false'
-      )
+      template(slot='body')
+        component(
+          :is='activeComponent'
+          @componentChanged='activeComponent = $event'
+          @signOnFinished='signOnVisible = false'
+          @loading='loading = $event'
+        )
 </template>
 
 <script>
   import { mapGetters, mapActions } from 'vuex';
   import {
-    Menu, MenuItem, Avatar, Submenu, Dialog, Button,
+    Menu, MenuItem, Avatar, Submenu, Button,
   } from 'element-ui';
 
   import TheResetPassword from '@/components/TheResetPassword';
@@ -54,14 +56,13 @@
       'el-menu-item': MenuItem,
       'el-submenu': Submenu,
       'el-avatar': Avatar,
-      'el-dialog': Dialog,
       'el-button': Button,
     },
     data() {
       return {
-        mobile: false,
         signOnVisible: false,
         activeComponent: 'TheSignIn',
+        loading: false,
       };
     },
     computed: {
@@ -95,9 +96,6 @@
 </script>
 
 <style media="screen" lang="scss">
-  .sign-on-dialog > .el-dialog__body {
-    @apply pt-5;
-  }
   .avatar-menu > .el-submenu__title {
     border-bottom: 2px solid transparent !important;
   }

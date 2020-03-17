@@ -1,5 +1,5 @@
 <template lang="pug">
-  el-form(
+  el-form.w-full(
     ref='signUpForm'
     :rules='rules'
     :model='user'
@@ -41,7 +41,7 @@
         base-button(ref='signUpSubmit' @click='submitForm') Register
       .text-center
         el-divider.my-4
-        span
+        span.text-sm
           | Already have an account?
           |
         el-link.align-baseline(
@@ -54,7 +54,7 @@
 <script>
   import { mapGetters } from 'vuex';
   import {
-    Form, FormItem, Input, Loading, Message, Divider, Link,
+    Form, FormItem, Input, Message, Divider, Link,
   } from 'element-ui';
 
   import { plain } from '@/modules/axios';
@@ -133,20 +133,23 @@
           return false;
         });
       },
-      signUp() {
-        const loading = Loading.service({ target: '.sign-on-dialog' });
+      async signUp() {
+        this.$emit('loading', true);
 
-        return plain.post('/api/v1/registrations/', { user: this.user })
-          .then(() => {
-            this.confirmationInitiated = true;
-          })
-          .catch((request) => {
-            Message.error({
-              dangerouslyUseHTMLString: true,
-              message: request.response.data,
-            });
-          })
-          .then(() => { loading.close(); });
+        const response = await plain
+          .post('/api/v1/registrations/', { user: this.user })
+          .catch(e => e.response);
+
+        if (response.status === 200) {
+          this.confirmationInitiated = true;
+        } else {
+          Message.error({
+            dangerouslyUseHTMLString: true,
+            message: response.data,
+          });
+        }
+
+        this.$emit('loading', false);
       },
     },
   };
