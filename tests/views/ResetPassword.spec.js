@@ -138,7 +138,7 @@ describe('ResetPassword.vue', () => {
       });
     });
 
-    it('tests that passwords match each other', () => {
+    it('tests that passwords match each other', async () => {
       resetPassword.setData({
         tokenValid: true,
         user: {
@@ -147,7 +147,11 @@ describe('ResetPassword.vue', () => {
         },
       });
 
+      await nextTick();
+
       resetPassword.find({ ref: 'resetPasswordSubmit' }).trigger('click');
+
+      await nextTick();
 
       expect(resetPassword.text()).toContain('Passwords do not match');
     });

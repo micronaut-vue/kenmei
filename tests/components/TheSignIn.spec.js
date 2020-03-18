@@ -52,8 +52,10 @@ describe('TheSignIn.vue', () => {
       signIn.find({ ref: 'signInSubmit' }).trigger('click');
     });
 
-    it('shows validation errors if form is invalid', () => {
+    it('shows validation errors if form is invalid', async () => {
       signIn.find({ ref: 'signInSubmit' }).trigger('click');
+
+      await nextTick();
 
       expect(signIn.text()).toContain("Password can't be blank");
     });

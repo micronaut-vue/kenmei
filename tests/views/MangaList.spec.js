@@ -103,8 +103,10 @@ describe('MangaList.vue', () => {
     });
 
     describe('@events', () => {
-      it('@open - opening edit modal renders edit manga entry component', () => {
+      it('@open - opening edit modal renders edit manga entry component', async () => {
         mangaList.find({ ref: 'editMangaEntryDialog' }).vm.$emit('open');
+
+        await nextTick();
 
         expect(mangaList.find(EditMangaEntries).exists()).toBeTruthy();
       });
@@ -117,19 +119,23 @@ describe('MangaList.vue', () => {
         expect(mangaList.find(EditMangaEntries).exists()).toBeFalsy();
       });
 
-      it('@cancelEdit - closes edit manga entries dialog', () => {
+      it('@cancelEdit - closes edit manga entries dialog', async () => {
         mangaList.setData(
           { editDialogVisible: true, editDialogBodyVisible: true }
         );
+
+        await nextTick();
 
         mangaList.find(EditMangaEntries).vm.$emit('cancelEdit');
         expect(mangaList.vm.$data.editDialogVisible).toBeFalsy();
       });
 
-      it('@editComplete - resets selected manga entries and closes modal', () => {
+      it('@editComplete - resets selected manga entries and closes modal', async () => {
         mangaList.setData(
           { editDialogVisible: true, editDialogBodyVisible: true }
         );
+
+        await nextTick();
 
         mangaList.find(EditMangaEntries).vm.$emit('editComplete');
 
@@ -250,7 +256,7 @@ describe('MangaList.vue', () => {
       });
     });
 
-    it('@seriesSelected - toggles bulk actions and sets selected series', () => {
+    it('@seriesSelected - toggles bulk actions and sets selected series', async () => {
       const deleteButton = mangaList.find({ ref: 'removeSeriesButton' });
       const editButton = mangaList.find({ ref: 'editMangaEntriesButton' });
       const reportButton = mangaList.find({ ref: 'reportMangaEntriesButton' });
@@ -260,6 +266,8 @@ describe('MangaList.vue', () => {
       expect(reportButton.isVisible()).not.toBeTruthy();
 
       mangaList.find(TheMangaList).vm.$emit('seriesSelected', [entry1]);
+
+      await nextTick();
 
       expect(deleteButton.isVisible()).toBeTruthy();
       expect(editButton.isVisible()).toBeTruthy();
@@ -288,8 +296,10 @@ describe('MangaList.vue', () => {
         dialog = mangaList.find({ ref: 'editMangaEntryDialog' });
       });
 
-      it('shows plural title in edit entry modal if there are more than one entry selected', () => {
+      it('shows plural title in edit entry modal if there are more than one entry selected', async () => {
         mangaList.setData({ selectedEntries: [entry1, entry2] });
+
+        await nextTick();
 
         expect(dialog.attributes('title')).toEqual('Edit Manga Entries');
       });
