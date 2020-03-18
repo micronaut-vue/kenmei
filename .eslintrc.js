@@ -51,6 +51,7 @@ module.exports = {
         mount: false,
         shallowMount: false,
         createLocalVue: false,
+        nextTick: false,
       },
     },
   ],

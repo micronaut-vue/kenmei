@@ -36,7 +36,6 @@ describe('TheMangaList.vue', () => {
     mangaList = mount(MangaList, {
       store,
       localVue,
-      sync: false,
       propsData: {
         tableData: defaultEntries,
       },

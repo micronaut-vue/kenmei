@@ -99,7 +99,7 @@ describe('EditMangaEntries.vue', () => {
   });
 
   describe(':props', () => {
-    it(':selectedEntries - shows manga source selector if less than 1 selected', () => {
+    it(':selectedEntries - shows manga source selector if less than 1 selected', async () => {
       const editMangaEntries = shallowMount(EditMangaEntries, {
         store,
         localVue,
@@ -109,6 +109,8 @@ describe('EditMangaEntries.vue', () => {
       expect(editMangaEntries.text()).toContain('Manga Source Name');
 
       editMangaEntries.setProps({ selectedEntries: [entry1, entry2] });
+
+      await nextTick();
 
       expect(editMangaEntries.text()).not.toContain('Manga Source Name');
     });
