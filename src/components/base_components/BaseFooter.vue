@@ -72,7 +72,7 @@
 
   export default {
     props: {
-      companyName: { type: String, default: 'Studio Shogun, LLC' },
+      companyName: { type: String, default: 'Studio Shogun, LTD' },
       copyrightYear: { type: String, default: '2020' },
       subscribe: {
         type: Object,
