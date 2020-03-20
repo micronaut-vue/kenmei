@@ -1,5 +1,5 @@
 <template lang="pug">
-  .container.mx-auto.w-full.h-full.flex.flex-col.items-center
+  .flex.flex-col.items-center
     .flex.flex-col.w-full.max-w-6xl.py-24
       .mx-5.mb-5.max-sm_mx-2
         a.no-underline(
