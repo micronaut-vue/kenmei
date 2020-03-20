@@ -1,6 +1,6 @@
 <template lang="pug">
-  .flex.flex-row.justify-center.mt-24
-    .grid.grid-cols-1.sm_grid-cols-3.md_grid-cols-4.lg_grid-cols-6.gap-10.mb-20(
+  .flex.flex-row.justify-center.my-10
+    .grid.grid-cols-1.sm_grid-cols-3.md_grid-cols-4.lg_grid-cols-6.gap-10(
       class="max-sm_w-2/3"
     )
       a.no-underline.max-w-sm.rounded-lg.overflow-hidden.shadow-md.bg-white.hover_shadow-xl.transition.duration-200(

@@ -1,6 +1,6 @@
 <template lang="pug">
   .flex.flex-col.items-center
-    .flex.flex-col.w-full.max-w-6xl.py-24
+    .flex.flex-col.w-full.max-w-6xl.py-6
       .mx-5.mb-5.max-sm_mx-2
         a.no-underline(
           href="https://news.kenmei.co/updates/2020/update-12"

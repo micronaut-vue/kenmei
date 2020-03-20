@@ -1,6 +1,6 @@
 <template lang="pug">
   header
-    el-menu.absolute.w-full.z-10.top-0.shadow-md(
+    el-menu.w-full.top-0.shadow-md(
       :default-active='currentPath'
       mode='horizontal'
       menu-trigger='click'
