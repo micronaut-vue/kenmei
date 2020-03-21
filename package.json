@@ -42,7 +42,7 @@
     "babel-eslint": "^10.0.3",
     "babel-jest": "^23.6.0",
     "babel-plugin-component": "^1.1.1",
-    "coveralls": "^3.0.9",
+    "coveralls": "^3.0.11",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
     "flush-promises": "^1.0.2",
