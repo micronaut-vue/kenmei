@@ -69,13 +69,6 @@
       ...mapGetters('user', [
         'signedIn',
       ]),
-      signOnDialogTitle() {
-        return this.activeComponent === 'TheSignIn'
-          ? 'Sign In'
-          : this.activeComponent === 'TheSignUp'
-            ? 'Create Account'
-            : 'Reset Password';
-      },
       currentPath() {
         return this.$route.path;
       },
