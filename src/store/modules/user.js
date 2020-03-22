@@ -3,6 +3,7 @@ import { secure, plain } from '@/modules/axios';
 
 const state = {
   currentUser: null,
+  updateSeen: null,
 };
 
 const getters = {
@@ -63,6 +64,9 @@ const actions = {
 const mutations = {
   setCurrentUser(state, data) {
     state.currentUser = data;
+  },
+  setUpdateSeen(state, data) {
+    state.updateSeen = data;
   },
 };
 

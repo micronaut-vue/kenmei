@@ -2,11 +2,10 @@
   .flex.flex-col.items-center
     .flex.flex-col.w-full.max-w-7xl.py-6
       .mx-5.mb-5.max-sm_mx-2
-        //- @bannerClose="setUpdateSeen(true)"
         base-banner(
           :visible="!updateSeen"
           :text="alertMessage"
-          @bannerClose="updateSeen = true"
+          @bannerClose="setUpdateSeen()"
         )
       .mx-5.mb-5.max-sm_mx-2
         el-select.sm_shadow-md.rounded.float-right.w-48(
@@ -148,7 +147,6 @@
       return {
         selectedEntries: [],
         entriesSelected: false,
-        updateSeen: false,
         currentListID: '',
         searchTerm: '',
         dialogVisible: false,
@@ -163,9 +161,9 @@
       };
     },
     computed: {
-      // ...mapState('user', [
-      //   'updateSeen',
-      // ]),
+      ...mapState('user', [
+        'updateSeen',
+      ]),
       ...mapState('lists', [
         'lists',
         'listsLoading',
