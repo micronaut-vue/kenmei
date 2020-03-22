@@ -37,82 +37,68 @@ describe('EditMangaEntries.vue', () => {
     });
   });
 
-  describe(':lifecycle', () => {
-    it(':mounted() - prefills manga list', () => {
-      const editMangaEntries = shallowMount(EditMangaEntries, {
-        store,
-        localVue,
-        propsData: { selectedEntries: [entry1] },
-      });
-
-      expect(editMangaEntries.vm.$data.listID).toEqual(
-        entry1.manga_list_id.toString()
-      );
-    });
-
-    describe('when single entry edit', () => {
-      it(':mounted() - loads available sources', async () => {
-        const availableSources = mangaSourceFactory.buildList(1);
-        const getMangaSourcesSpy = jest.spyOn(mangaSources, 'getMangaSources');
-
-        getMangaSourcesSpy.mockResolvedValue({ data: availableSources });
-
-        const editMangaEntries = shallowMount(EditMangaEntries, {
-          store,
-          localVue,
-          propsData: { selectedEntries: [entry1] },
-        });
-
-        await flushPromises();
-
-        expect(editMangaEntries.vm.$data.mangaSourceID).toEqual(entry1.id);
-        expect(editMangaEntries.vm.$data.availableSources).toEqual(
-          availableSources
-        );
-      });
-
-      it(":mounted() - shows error when available sources didn't load", async () => {
-        const errorMessageMock = jest.spyOn(Message, 'error');
-        const getMangaSourcesSpy = jest.spyOn(mangaSources, 'getMangaSources');
-
-        getMangaSourcesSpy.mockResolvedValue(false);
-
-        const editMangaEntries = shallowMount(EditMangaEntries, {
-          store,
-          localVue,
-          propsData: { selectedEntries: [entry1] },
-        });
-
-        await flushPromises();
-
-        expect(editMangaEntries.vm.$data).toEqual({
-          listID: entry1.manga_list_id.toString(),
-          mangaSourceID: null,
-          availableSources: [],
-          loadingSources: true,
-        });
-        expect(errorMessageMock).toHaveBeenCalledWith(
-          "Couldn't fetch available manga sites. Try refreshing the page"
-        );
-      });
-    });
-  });
-
   describe(':props', () => {
-    it(':selectedEntries - shows manga source selector if less than 1 selected', async () => {
-      const editMangaEntries = shallowMount(EditMangaEntries, {
-        store,
-        localVue,
-        propsData: { selectedEntries: [entry1] },
+    describe(':selectedEntries', () => {
+      let editMangaEntries;
+
+      beforeEach(() => {
+        editMangaEntries = shallowMount(EditMangaEntries, {
+          store,
+          localVue,
+          propsData: { selectedEntries: [] },
+        });
       });
 
-      expect(editMangaEntries.text()).toContain('Manga Source Name');
 
-      editMangaEntries.setProps({ selectedEntries: [entry1, entry2] });
+      it('prefills manga list', async () => {
+        editMangaEntries.setProps({ selectedEntries: [entry1] });
 
-      await nextTick();
+        await nextTick();
 
-      expect(editMangaEntries.text()).not.toContain('Manga Source Name');
+        expect(editMangaEntries.vm.$data.listID).toEqual(
+          entry1.manga_list_id.toString()
+        );
+      });
+
+      describe('when single entry selected', () => {
+        it('loads available sources', async () => {
+          const availableSources = mangaSourceFactory.buildList(1);
+          const getMangaSourcesSpy = jest.spyOn(mangaSources, 'getMangaSources');
+
+          getMangaSourcesSpy.mockResolvedValue({ data: availableSources });
+
+          editMangaEntries.setProps({ selectedEntries: [entry1] });
+
+          await flushPromises();
+
+          expect(editMangaEntries.vm.$data.mangaSourceID).toEqual(entry1.id);
+          expect(editMangaEntries.vm.$data.availableSources).toEqual(
+            availableSources
+          );
+        });
+
+        it("shows error when available sources didn't load", async () => {
+          const errorMessageMock = jest.spyOn(Message, 'error');
+          const getMangaSourcesSpy = jest.spyOn(mangaSources, 'getMangaSources');
+
+          getMangaSourcesSpy.mockResolvedValue(false);
+
+          editMangaEntries.setProps({ selectedEntries: [entry1] });
+
+          await flushPromises();
+
+          expect(editMangaEntries.vm.$data).toEqual({
+            listID: entry1.manga_list_id.toString(),
+            mangaSourceID: null,
+            availableSources: [],
+            loadingSources: true,
+            loading: false,
+          });
+          expect(errorMessageMock).toHaveBeenCalledWith(
+            "Couldn't fetch available manga sites. Try refreshing the page"
+          );
+        });
+      });
     });
   });
 

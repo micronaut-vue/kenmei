@@ -28,7 +28,7 @@
           | Reset Password
       .text-center
         el-divider.my-4
-        span
+        span.text-sm
           | Already have an account?
           |
         el-link.align-baseline(
@@ -40,7 +40,7 @@
 
 <script>
   import {
-    Form, FormItem, Input, Link, Message, Loading, Divider,
+    Form, FormItem, Input, Link, Message, Divider,
   } from 'element-ui';
 
   import { plain } from '@/modules/axios';
@@ -83,20 +83,23 @@
           return false;
         });
       },
-      resetPassword() {
-        const loading = Loading.service({ target: '.sign-on-dialog' });
+      async resetPassword() {
+        this.$emit('loading', true);
 
-        return plain.post('/auth/passwords', { email: this.user.email })
-          .then(() => {
-            this.resetInitiated = true;
-          })
-          .catch((request) => {
-            Message.error({
-              dangerouslyUseHTMLString: true,
-              message: request.response.data,
-            });
-          })
-          .then(() => { loading.close(); });
+        const response = await plain
+          .post('/auth/passwords', { email: this.user.email })
+          .catch(e => e.response);
+
+        if (response.status === 200) {
+          this.resetInitiated = true;
+        } else {
+          Message.error({
+            dangerouslyUseHTMLString: true,
+            message: response.data,
+          });
+        }
+
+        this.$emit('loading', false);
       },
     },
   };

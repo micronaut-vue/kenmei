@@ -1,34 +1,47 @@
 <template lang="pug">
-  #add-manga-entry
-    label.font-size-b.primary-text Manga URL
-    el-input.mt-3(
-      v-model="mangaURL"
-      placeholder="https://mangadex.org/title/7139/"
-      prefix-icon="el-icon-link"
-    )
-    .mt-8.-mb-2.sm_flex.sm_flex-row-reverse
-      span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+  base-modal(
+    :visible="visible"
+    :loading="loading"
+    size="sm"
+    @dialogClosed="closeModal()"
+  )
+    template(slot='body')
+      .mt-3.text-center.sm_mt-0.sm_text-left.w-full
+        label.block.text-sm.leading-5.font-medium.text-gray-700(for='url')
+          | Manga URL
+        .mt-1.relative.rounded-md.shadow-sm.w-auto
+          .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
+            i.el-icon-link.text-gray-400.sm_text-sm.sm_leading-5
+          input.placeholder-gray-400.focus_placeholder-gray-300(
+            aria-label='Manga URL'
+            name='manga_url'
+            v-model="mangaURL"
+            placeholder='https://mangadex.org/title/7139/'
+          )
+    template(slot='actions')
+      span.flex.w-full.rounded-md.shadow-sm.sm_ml-3.sm_w-auto
         base-button(
           ref="addMangaButton"
           @click="mangaDexSearch"
           :disabled="mangaURL.length === 0"
         )
           | Add
-      span.mt-3.sm_mt-0.flex.w-full.rounded-md.shadow-sm.sm_w-auto
-        base-button(type="secondary" @click="$emit('dialogClosed')") Cancel
+      span.mt-3.flex.w-full.rounded-md.shadow-sm.sm_mt-0.sm_w-auto
+        base-button(type="secondary" @click="closeModal()") Cancel
 </template>
 
 <script>
   import { mapMutations, mapGetters } from 'vuex';
-  import { Message, Input, Loading } from 'element-ui';
+  import { Message } from 'element-ui';
   import { addMangaEntry } from '@/services/api';
 
   export default {
     name: 'AddMangaEntry',
-    components: {
-      'el-input': Input,
-    },
     props: {
+      visible: {
+        type: Boolean,
+        default: false,
+      },
       currentListID: {
         type: String,
         required: true,
@@ -37,6 +50,7 @@
     data() {
       return {
         mangaURL: '',
+        loading: false,
       };
     },
     computed: {
@@ -50,7 +64,8 @@
         'replaceEntry',
       ]),
       mangaDexSearch() {
-        const loading = Loading.service({ target: '.add-manga-entry-dialog' });
+        this.loading = true;
+
         addMangaEntry(this.mangaURL, this.currentListID)
           .then((newMangaEntry) => {
             const { data } = newMangaEntry;
@@ -64,25 +79,42 @@
               this.addEntry(newMangaEntry.data);
             }
 
-            this.closeModal(loading);
+            this.closeModal();
           })
           .catch((error) => {
             const { status, data } = error.response;
 
             if (status === 404 || status === 406) {
               Message.info(data);
-              loading.close();
+              this.loading = false;
             } else {
               Message.error('Something went wrong');
-              this.closeModal(loading);
+              this.closeModal();
             }
           });
       },
-      closeModal(loading) {
+      closeModal() {
         this.$emit('dialogClosed');
-        loading.close();
+        this.loading = false;
         this.mangaURL = '';
       },
     },
   };
 </script>
+
+<style lang="scss" media="screen" scoped>
+  @tailwind base;
+
+  input {
+    @apply appearance-none rounded-md block w-full py-2 pl-8;
+    @apply border border-gray-300 text-gray-900;
+
+    &:focus {
+      @apply outline-none shadow-outline-blue border-blue-300 z-10;
+    }
+
+    @screen sm {
+      @apply text-sm leading-5;
+    }
+  }
+</style>

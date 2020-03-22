@@ -1,5 +1,5 @@
 <template lang="pug">
-  el-form(
+  el-form.w-full(
     ref='signInForm'
     :rules='rules'
     :model='user'
@@ -31,7 +31,7 @@
       )
         | Forgot your password?
       el-divider.my-4
-      span
+      span.text-sm
         | Don't have an account?
         |
       el-link.align-baseline(
@@ -103,11 +103,15 @@
         });
       },
       async trySignIn() {
+        this.$emit('loading', true);
+
         await this.signIn(this.user);
         if (this.signedIn) {
           this.$emit('signOnFinished');
           this.$router.push({ name: 'manga-list' });
         }
+
+        this.$emit('loading', false);
       },
     },
   };

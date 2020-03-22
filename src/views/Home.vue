@@ -1,7 +1,7 @@
 <template lang="pug">
   #home.min-h-full.flex.flex-col.font-sans.bg-blue-300
     navigation-bar
-    .flex-1
+    .flex-1.overflow-x-hidden
       main.min-h-45
         transition(name="slide-left" mode="out-in")
           router-view

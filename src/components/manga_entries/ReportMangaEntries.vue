@@ -1,24 +1,31 @@
 <template lang="pug">
-  #report-manga-entries
-    el-select.rounded.w-full(
-      v-model="currentIssue"
-      placeholder="Select issue type"
-    )
-      el-option(
-        v-for="issue in issues"
-        :key="issue.type"
-        :label="issue.value"
-        :value="issue.type"
-      )
-    p.text-gray-600.text-xs.break-normal
-      template(v-if="currentIssue === 0")
-        | Select this option, if manga information is outdated or incorrect.
-        | Manga will attempt to update automatically, otherwise it will be
-        | investigated in detail later.
-      template(v-else)
-        | Select this option, if manga titles are duplicated.
-        | They will be manually updated so that only a single manga is shown.
-    .mt-8.-mb-2.sm_flex.sm_flex-row-reverse
+  base-modal(
+    :visible="visible"
+    :loading="loading"
+    size="sm"
+    @dialogClosed="$emit('closeDialog')"
+  )
+    template(slot='body')
+      .mt-3.text-center.sm_mt-0.sm_text-left
+        el-select.rounded.w-full(
+          v-model="currentIssue"
+          placeholder="Select issue type"
+        )
+          el-option(
+            v-for="issue in issues"
+            :key="issue.type"
+            :label="issue.value"
+            :value="issue.type"
+          )
+        p.text-xs.leading-5.text-gray-500.mt-2
+          template(v-if="currentIssue === 0")
+            | Select this option, if manga information is outdated or incorrect.
+            | Manga will attempt to update automatically, otherwise it will be
+            | investigated in detail later.
+          template(v-else)
+            | Select this option, if manga titles are duplicated. They will be
+            | manually updated so that only a single manga is shown.
+    template(slot='actions')
       span.sm_ml-3.flex.w-full.rounded-md.shadow-sm.sm_w-auto
         base-button(
           ref="reportEntriesButton"
@@ -32,9 +39,7 @@
 </template>
 
 <script>
-  import {
-    Dialog, Select, Option, Message, Loading,
-  } from 'element-ui';
+  import { Select, Option, Message } from 'element-ui';
 
   import {
     postMangaEntriesErrors,
@@ -43,11 +48,14 @@
   export default {
     name: 'ReportMangaEntries',
     components: {
-      'el-dialog': Dialog,
       'el-select': Select,
       'el-option': Option,
     },
     props: {
+      visible: {
+        type: Boolean,
+        default: false,
+      },
       selectedEntries: {
         type: Array,
         required: true,
@@ -60,6 +68,7 @@
           { type: 1, value: 'Duplicated Manga Series' },
         ],
         currentIssue: 0,
+        loading: false,
       };
     },
     computed: {
@@ -72,13 +81,13 @@
     },
     methods: {
       async report() {
-        const loading = Loading.service({ target: '.report-manga-entry-dialog' });
+        this.loading = true;
 
         const successful = await postMangaEntriesErrors(
           this.selectedEntriesIDs, this.currentIssue
         );
 
-        loading.close();
+        this.loading = false;
 
         if (successful) {
           this.$emit('closeDialog');

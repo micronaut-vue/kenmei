@@ -1,4 +1,4 @@
-import { Message, Loading } from 'element-ui';
+import { Message } from 'element-ui';
 import { secure, plain } from '@/modules/axios';
 
 const state = {
@@ -11,8 +11,6 @@ const getters = {
 
 const actions = {
   signIn({ commit }, data) {
-    const loading = Loading.service({ target: '.sign-on-dialog' });
-
     return plain.post('/api/v1/sessions/', { user: data })
       .then((response) => {
         commit('setCurrentUser', { user_id: response.data.user_id });
@@ -26,8 +24,7 @@ const actions = {
         } else {
           Message.error(request.response.data.error);
         }
-      })
-      .then(() => { loading.close(); });
+      });
   },
   signOut({ commit }) {
     return secure.delete('/api/v1/sessions/')
@@ -45,7 +42,6 @@ const actions = {
       });
   },
   updatePassword({ commit }, { resetPasswordToken, user }) {
-    const loading = Loading.service({ target: '#reset-pass-card' });
     const payload = { user, reset_password_token: resetPasswordToken };
 
     return plain.put('/auth/passwords/', payload)
@@ -58,8 +54,7 @@ const actions = {
           dangerouslyUseHTMLString: true,
           message: request.response.data,
         });
-      })
-      .then(() => { loading.close(); });
+      });
   },
 };
 

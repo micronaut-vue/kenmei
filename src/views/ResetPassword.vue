@@ -1,46 +1,45 @@
 <template lang="pug">
-  .container.mx-auto.w-full.h-full
-    .flex.flex-col.h-full.w-full.items-center.justify-center
-      base-card.max-w-sm.my-56
-        .px-6.py-4#reset-pass-card
-          p.text-lg.leading-normal.text-gray-600.text-center(
-            v-if="tokenValid === null"
+  .flex.flex-col.h-full.w-full.items-center.justify-center
+    base-card.max-w-sm.my-56
+      .px-6.py-4#reset-pass-card
+        p.text-lg.leading-normal.text-gray-600.text-center(
+          v-if="tokenValid === null"
+        )
+          | Checking token validity
+          br
+          i.el-icon-loading
+        template(v-else-if="tokenValid")
+          h3.leading-normal.text-gray-600.text-center
+            | Reset Password
+          el-form(
+            ref='updatePasswordForm'
+            :rules='rules'
+            :model='user'
+            label-position='top'
           )
-            | Checking token validity
-            br
-            i.el-icon-loading
-          template(v-else-if="tokenValid")
-            h3.leading-normal.text-gray-600.text-center
-              | Reset Password
-            el-form(
-              ref='updatePasswordForm'
-              :rules='rules'
-              :model='user'
-              label-position='top'
-            )
-              el-form-item(prop='password')
-                el-input(
-                  placeholder='Password'
-                  type='password'
-                  prefix-icon="el-icon-lock"
-                  v-model.trim='user.password'
-                  auto-complete='new-password'
-                  @keyup.enter.native='submitForm'
-                )
-              el-form-item(prop='password_confirmation')
-                el-input(
-                  placeholder='Password confirmation'
-                  type='password'
-                  prefix-icon="el-icon-lock"
-                  v-model.trim='user.password_confirmation'
-                  auto-complete='new-password'
-                  @keyup.enter.native='submitForm'
-                )
-              el-form-item.mb-0
-                base-button(ref='resetPasswordSubmit' @click='submitForm')
-                  | Save Password
-          p.leading-normal.text-gray-600.text-center(v-else)
-            | {{ this.validationError }}
+            el-form-item(prop='password')
+              el-input(
+                placeholder='Password'
+                type='password'
+                prefix-icon="el-icon-lock"
+                v-model.trim='user.password'
+                auto-complete='new-password'
+                @keyup.enter.native='submitForm'
+              )
+            el-form-item(prop='password_confirmation')
+              el-input(
+                placeholder='Password confirmation'
+                type='password'
+                prefix-icon="el-icon-lock"
+                v-model.trim='user.password_confirmation'
+                auto-complete='new-password'
+                @keyup.enter.native='submitForm'
+              )
+            el-form-item.mb-0
+              base-button(ref='resetPasswordSubmit' @click='submitForm')
+                | Save Password
+        p.leading-normal.text-gray-600.text-center(v-else)
+          | {{ this.validationError }}
 </template>
 
 <script>

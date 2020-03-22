@@ -2,7 +2,7 @@
 
 exports[`LandingPage.vue renders the page 1`] = `
 <div
-  class="container mx-auto w-full h-full flex flex-col justify-center items-center"
+  class="flex flex-col justify-center items-center"
 >
   <base-card-stub
     class="max-w-lg text-center mx-5 md_mx-0 my-40"

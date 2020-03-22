@@ -1,53 +1,60 @@
 <template lang="pug">
-  el-tabs(v-model="activeTab" stretch)
-    el-tab-pane(label="Trakr.moe" name="trackrMoe")
-      template(v-if="trackrMoeimportInitiated")
-        p.leading-normal.text-gray-600.text-center.break-normal
-          | Your Trackr.moe import has started. You will receive an email
-          | when the series have been imported.
-      template(v-else)
-        el-upload(
-          ref="upload"
-          action=""
-          :http-request="processUpload"
-          :multiple="false"
-          :show-file-list="false"
-          accept="application/json"
-          drag
-          )
-          i.el-icon-upload
-          .el-upload__text
-            | Drop file here or click to upload
-          .el-upload__tip(slot="tip")
-            | You can download your Trackr.moe list
-            |
-            el-link.align-baseline.text-xs(
-              href="https://trackr.moe/user/options"
-              :underline="false"
-              target="_blank"
+  base-modal(
+    :visible="visible"
+    :loading="loading"
+    size="sm"
+    @dialogClosed="$emit('closeDialog')"
+  )
+    template(slot='body')
+      el-tabs.w-full(v-model="activeTab" stretch)
+        el-tab-pane(label="Trakr.moe" name="trackrMoe")
+          template(v-if="trackrMoeimportInitiated")
+            p.leading-normal.text-gray-600.text-center.break-normal
+              | Your Trackr.moe import has started. You will receive an email
+              | when the series have been imported.
+          template(v-else)
+            el-upload(
+              ref="upload"
+              action=""
+              :http-request="processUpload"
+              :multiple="false"
+              :show-file-list="false"
+              accept="application/json"
+              drag
+              )
+              i.el-icon-upload
+              .el-upload__text
+                | Drop file here or click to upload
+              .el-upload__tip(slot="tip")
+                | You can download your Trackr.moe list
+                |
+                el-link.align-baseline.text-xs(
+                  href="https://trackr.moe/user/options"
+                  :underline="false"
+                  target="_blank"
+                )
+                  | here
+        el-tab-pane(label="MangaDex" name="mangaDex")
+          template(v-if="mangaDexImportInitiated")
+            p.leading-normal.text-gray-600.text-center.break-normal
+              | Your MangaDex MDList import has started.
+              | You will receive an email when the series have been imported.
+          template(v-else)
+            el-input(
+              v-model="importURL"
+              placeholder="https://mangadex.cc/list/3"
+              prefix-icon="el-icon-link"
             )
-              | here
-    el-tab-pane(label="MangaDex" name="mangaDex")
-      template(v-if="mangaDexImportInitiated")
-        p.leading-normal.text-gray-600.text-center.break-normal
-          | Your MangaDex MDList import has started. You will receive an email
-          | when the series have been imported.
-      template(v-else)
-        el-input(
-          v-model="importURL"
-          placeholder="https://mangadex.cc/list/3"
-          prefix-icon="el-icon-link"
-        )
-        p.text-gray-600.text-xs.italic.break-normal
-          | Provide your MangaDex MDList URL. It needs to be all lists link, not
-          | specific ones like Reading or Completed.
-        span.flex.w-full.rounded-md.shadow-sm.sm_w-auto
-          base-button(
-            ref="importMangaDexButton"
-            @click="importMangaDex"
-            :disabled="!validUrl"
-          )
-            | Import
+            p.text-xs.leading-5.text-gray-500
+              | Provide your MangaDex MDList URL. It needs to be all lists link,
+              | not specific ones like Reading or Completed.
+            span.flex.w-full.rounded-md.shadow-sm.sm_w-auto
+              base-button(
+                ref="importMangaDexButton"
+                @click="importMangaDex"
+                :disabled="!validUrl"
+              )
+                | Import
 </template>
 
 <script>
@@ -70,12 +77,19 @@
       'el-tabs': Tabs,
       'el-tab-pane': TabPane,
     },
+    props: {
+      visible: {
+        type: Boolean,
+        default: false,
+      },
+    },
     data() {
       return {
         activeTab: 'trackrMoe',
         importURL: '',
         mangaDexImportInitiated: false,
         trackrMoeimportInitiated: false,
+        loading: false,
       };
     },
     computed: {
@@ -85,7 +99,8 @@
     },
     methods: {
       importMangaDex() {
-        const loading = Loading.service({ target: '.el-dialog' });
+        this.loading = true;
+
         secure.post('/api/v1/importers/mangadex', { url: this.importURL })
           .then(() => {
             this.mangaDexImportInitiated = true;
@@ -96,7 +111,7 @@
             );
           })
           .then(() => {
-            loading.close();
+            this.loading = false;
           });
       },
       async processMangaDexList(list) {
@@ -150,3 +165,9 @@
     },
   };
 </script>
+
+<style media="screen" lang="scss">
+  .el-upload, .el-upload-dragger {
+    @apply w-full;
+  }
+</style>
