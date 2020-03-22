@@ -13,7 +13,9 @@ const actions = {
   signIn({ commit }, data) {
     return plain.post('/api/v1/sessions/', { user: data })
       .then((response) => {
-        commit('setCurrentUser', { user_id: response.data.user_id });
+        commit('setCurrentUser', {
+          user_id: response.data.user_id, email: response.data.email,
+        });
         localStorage.access = response.data.access;
       })
       .catch((request) => {
