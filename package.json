@@ -15,7 +15,7 @@
     "axios": "^0.19.2",
     "body-scroll-lock": "^3.0.1",
     "core-js": "^3.3.2",
-    "dayjs": "^1.8.22",
+    "dayjs": "^1.8.23",
     "element-ui": "^2.12.0",
     "he": "^1.2.0",
     "jest-mock-axios": "^3.2.0",
