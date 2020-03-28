@@ -3,11 +3,11 @@
     .flex.flex-col.w-full.max-w-6xl.py-6
       .mx-5.mb-5.max-sm_mx-2
         a.no-underline(
-          href="https://news.kenmei.co/updates/2020/update-12"
+          href="https://forms.gle/7mFHhZfDAn9Yh4Ve9"
           target="_blank"
         )
           el-alert.cursor-pointer(
-            title="Update #12"
+            title="Cross-site update feedback questionnaire"
             type="info"
             :description="alertMessage"
             :closable="false"
@@ -161,8 +161,8 @@
         deleteDialogVisible: false,
         reportDialogVisible: false,
         alertMessage: `
-          Support for 8 new sites, cross-site support,
-          speed improvements and much more in the biggest update to date!
+          Please take a minute and provide feedback for the latest update by
+          clicking on this banner
         `,
       };
     },
