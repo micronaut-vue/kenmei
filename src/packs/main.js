@@ -4,6 +4,7 @@ import Rollbar from 'vue-rollbar';
 import { Loading } from 'element-ui';
 import VueTippy from 'vue-tippy';
 import VueScrollTo from 'vue-scrollto';
+import VClickOutside from 'v-click-outside';
 import Home from '@/views/Home.vue';
 import '@/plugins/element.js';
 import '@/components/_globals.js';
@@ -16,6 +17,7 @@ import store from '@/store/index';
 
 Vue.config.productionTip = false;
 
+Vue.use(VClickOutside);
 Vue.use(VueScrollTo);
 Vue.use(VueTippy, {
   directive: 'tippy',
