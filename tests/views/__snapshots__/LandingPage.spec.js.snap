@@ -2,83 +2,31 @@
 
 exports[`LandingPage.vue renders the page 1`] = `
 <div
-  class="flex flex-col justify-center items-center"
+  class="font-sans"
+  id="landing-page"
 >
-  <base-card-stub
-    class="max-w-lg text-center mx-5 md_mx-0 my-40"
+  <hero-section-stub />
+  <features-stub
+    id="features"
+  />
+  <stats-stub
+    id="stats"
+  />
+  <call-to-action-stub />
+  <base-footer-stub
+    companyname="Studio Shogun, LTD"
+    copyrightyear="2020"
+    linkgroupone="[object Object]"
+    linkgrouptwo="[object Object]"
+    socials="[object Object]"
+    subscribe="[object Object]"
+  />
+  <base-modal-stub
+    size="xs"
   >
-    <div
-      class="p-5"
-    >
-      <img
-        alt="logo"
-        class="max-w-xs w-full inline logo"
-        src="@/assets/logo.svg"
-      />
-      <div
-        class="welcome-text font-size-b font-line-height-secondary"
-      >
-        <p>
-          Welcome to Kenmei, a new manga tracking website currently in
-alpha.
-        </p>
-        <p>
-          Inspired by
-
-          <el-link-stub
-            class="inline align-baseline"
-            href="https://www.trackr.moe"
-            type="primary"
-          >
-            trackr.moe
-          </el-link-stub>
-          , the best manga tracking website,
-
-          <el-link-stub
-            class="inline align-baseline"
-            href="https://blog.codeanimu.net/posts/2019/07/trackr-moe-the-future/"
-            type="primary"
-          >
-            that is now slated to be closed
-          </el-link-stub>
-          , Kenmei is here to replace it
-and provide even more features, for all manga fans out there!
-        </p>
-        <p>
-          To get development updates, please leave your email below.
-        </p>
-      </div>
-      <div
-        class="email-form"
-      >
-        <form
-          action="https://tinyletter.com/kenmei"
-          method="post"
-          onsubmit="window.open('https://tinyletter.com/kenmei', 'popupwindow', 'scrollbars=yes,width=800,height=600');"
-          target="popupwindow"
-        >
-          <el-input-stub
-            autocomplete="off"
-            class="my-5"
-            name="email"
-            placeholder="Please enter your email"
-            type="text"
-            validateevent="true"
-            value=""
-          />
-          <input
-            name="embed"
-            type="hidden"
-            value="1"
-          />
-          <input
-            class="el-button"
-            type="submit"
-            value="Subscribe"
-          />
-        </form>
-      </div>
-    </div>
-  </base-card-stub>
+    <template>
+      <thesignup-stub />
+    </template>
+  </base-modal-stub>
 </div>
 `;
