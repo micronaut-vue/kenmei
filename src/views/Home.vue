@@ -1,5 +1,5 @@
 <template lang="pug">
-  #home.min-h-full.flex.flex-col.font-sans.bg-blue-300
+  #home.min-h-full.flex.flex-col.bg-blue-300
     navigation-bar
     .flex-1.overflow-x-hidden
       main.min-h-45
