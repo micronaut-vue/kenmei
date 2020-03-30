@@ -1,5 +1,7 @@
 <template lang="pug">
-  footer.bg-gray-800
+  footer(
+    :class="{ 'bg-gray-800': dark, 'bg-white border-t border-gray-200': !dark }"
+  )
     .max-w-screen-xl.mx-auto.py-12.px-4.sm_px-6.lg_px-8
       .xl_grid.xl_grid-cols-3.xl_gap-8
         .grid.grid-cols-2.gap-8.xl_col-span-2
@@ -14,7 +16,11 @@
                   v-for='(link, name, index) in group.links'
                   :class="{'mt-4': index !== 0}"
                 )
-                  router-link.link(:to="link.href" v-text="link.heading")
+                  router-link(
+                    :to="link.href"
+                    :class="{ 'link': dark, 'link-light': !dark }"
+                    v-text="link.heading"
+                  )
           .md_grid.md_grid-cols-2.md_gap-8
             div(
               v-for='(group, name, index) in linkGroupTwo'
@@ -26,10 +32,17 @@
                   v-for='(link, name, index) in group.links'
                   :class="{'mt-4': index !== 0}"
                 )
-                  router-link.link(:to="link.href" v-text="link.heading")
+                  router-link(
+                    :to="link.href"
+                    :class="{ 'link': dark, 'link-light': !dark }"
+                    v-text="link.heading"
+                  )
         .mt-8.xl_mt-0
           h4(v-text="subscribe.heading")
-          p.mt-4.text-gray-300.text-base.leading-6(v-text="subscribe.paragraph")
+          p.mt-4.text-base.leading-6(
+            v-text="subscribe.paragraph"
+            :class="{ 'text-gray-300': dark, 'text-gray-500': !dark }"
+          )
           form.mt-4.sm_flex.sm_max-w-md(
             action='https://tinyletter.com/kenmei'
             method='post'
@@ -37,6 +50,7 @@
             v-on:submit="openNewsletterWindow"
           )
             input.placeholder-gray-500.focus_placeholder-gray-400(
+              :class="{ 'border-transparent': dark, 'border-gray-300': !dark }"
               aria-label='Email address'
               name='email'
               type='email'
@@ -46,11 +60,14 @@
             input(type='hidden', value='1', name='embed')
             .mt-3.rounded-md.shadow.sm_mt-0.sm_ml-3.sm_flex-shrink-0
               button(type="submit" v-text="subscribe.buttonText")
-      .socials-with-copyright
+      .socials-with-copyright(
+        :class="{ 'border-gray-700': dark, 'border-gray-200': !dark }"
+      )
         .flex.md_order-2
           a.text-gray-400.hover_text-gray-300(
             v-for='(social, name, index) in socials'
             target="_blank"
+            rel="noreferrer"
             :href='social.href'
             :class="{'ml-6': index !== 0}"
           )
@@ -72,6 +89,10 @@
 
   export default {
     props: {
+      dark: {
+        type: Boolean,
+        default: false,
+      },
       companyName: { type: String, default: 'Studio Shogun, LTD' },
       copyrightYear: { type: String, default: '2020' },
       subscribe: {
@@ -152,7 +173,7 @@
   @tailwind base;
 
   .socials-with-copyright {
-    @apply mt-8 border-t border-gray-700 pt-8;
+    @apply mt-8 border-t pt-8;
 
     @screen md {
       @apply flex items-center justify-between;
@@ -179,7 +200,7 @@
   }
 
   input {
-    @apply appearance-none w-full px-5 py-3 border border-transparent text-base;
+    @apply appearance-none w-full px-5 py-3 border text-base;
     @apply leading-6 rounded-md text-gray-900 bg-white;
     @apply transition duration-150 ease-in-out;
 
@@ -193,6 +214,14 @@
 
     &:hover {
       @apply text-white;
+    }
+  }
+
+  .link-light {
+    @apply text-base leading-6 text-gray-500;
+
+    &:hover {
+      @apply text-gray-900;
     }
   }
 </style>
