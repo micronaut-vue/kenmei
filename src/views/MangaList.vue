@@ -118,6 +118,7 @@
 </template>
 
 <script>
+  import VueScrollTo from 'vue-scrollto';
   import debounce from 'lodash/debounce';
   import {
     mapActions, mapState, mapMutations, mapGetters,
@@ -213,6 +214,9 @@
       await this.retrieveEntries();
 
       this.setListsLoading(false);
+    },
+    mounted() {
+      VueScrollTo.scrollTo('header');
     },
     methods: {
       ...mapActions('lists', [
