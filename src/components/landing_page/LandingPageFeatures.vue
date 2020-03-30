@@ -50,7 +50,7 @@
           {
             title: 'Real-time manga updates',
             description: `
-              When latest chapter of your favourite manga gets released,
+              When the latest chapter of your favourite manga gets released,
               we automagically update your dashboard, so that you can jump
               straight into reading.
             `,

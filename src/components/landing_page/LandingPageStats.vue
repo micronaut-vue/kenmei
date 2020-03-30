@@ -4,9 +4,9 @@
       .max-w-4xl.mx-auto.text-center
         h2 Track manga series across sites
         p.mt-3.text-xl.leading-7.text-gray-500.sm_mt-4
-          | Get latest releases from supported sites hourly.
+          | Get the latest releases from supported sites hourly.
           br
-          | With new sites added montly, always stay up to date with your
+          | With new sites added monthly, always stay up to date with your
           | favourite series
         .mx-auto.text-center.mt-5.sm_max-w-xs
           router-link.btn-action(to="/supported-sites")
