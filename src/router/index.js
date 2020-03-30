@@ -8,11 +8,6 @@ Vue.use(Router);
 export default new Router({
   routes: [
     {
-      path: '/',
-      name: 'root',
-      component: () => import(/* webpackChunkName: "landing_page" */ '@/views/LandingPage.vue')
-    },
-    {
       path: '/about',
       name: 'about',
       beforeEnter() { Message.info('Under development'); }
@@ -88,4 +83,4 @@ export default new Router({
       },
     },
   ]
-})
+});

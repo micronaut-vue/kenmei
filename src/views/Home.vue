@@ -1,29 +1,39 @@
 <template lang="pug">
-  #home.min-h-full.flex.flex-col.font-sans.bg-blue-300
-    navigation-bar
-    .flex-1.overflow-x-hidden
-      main.min-h-45
-        transition(name="slide-left" mode="out-in")
-          router-view
-    base-footer.flex-shrink-0
+  #home
+    landing-page(v-if="landing")
+    .min-h-full.flex.flex-col.bg-blue-300(v-else)
+      navigation-bar
+      .flex-1.overflow-x-hidden
+        main.min-h-45
+          transition(name="slide-left" mode="out-in")
+            router-view
+      base-footer(dark).flex-shrink-0
 </template>
 
 <script>
   import NavigationBar from '@/components/TheNavigationBar';
+  import LandingPage from '@/views/LandingPage';
 
   export default {
     name: 'Home',
     components: {
       NavigationBar,
+      LandingPage,
+    },
+    data() {
+      return {
+        landing: false,
+      };
+    },
+    watch: {
+      // TODO: Remove when I am able to use transitions from landing page
+      // Currently this is required to render landing page without router
+      $route(to, _from) {
+        this.landing = to.path === '/';
+      },
+    },
+    created() {
+      this.landing = window.location.hash === '#/';
     },
   };
 </script>
-
-<style media="screen" lang="scss">
-  .slide-left-enter-active, .slide-left-leave-active {
-    @apply transition ease-in duration-300 transition-all overflow-hidden;
-  }
-
-  .slide-left-enter { @apply opacity-0 transform translate-x-8; }
-  .slide-left-leave-active { @apply opacity-0 transform -translate-x-8;}
-</style>

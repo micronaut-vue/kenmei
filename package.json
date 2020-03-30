@@ -23,6 +23,7 @@
     "p-limit": "^2.2.2",
     "pug-plain-loader": "^1.0.0",
     "qs": "^6.9.3",
+    "v-click-outside": "^3.0.1",
     "vue": "^2.6.11",
     "vue-analytics": "^5.22.1",
     "vue-rollbar": "^1.0.0",

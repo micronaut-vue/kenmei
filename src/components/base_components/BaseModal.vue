@@ -68,6 +68,11 @@
         }
       },
     },
+    destroyed() {
+      // I need to enable body scroll, in case modal gets destroyed before the
+      // prop change
+      enableBodyScroll(this.targetElement);
+    },
     mounted() {
       document.addEventListener('keydown', (event) => {
         event.stopPropagation();

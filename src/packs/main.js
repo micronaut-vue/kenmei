@@ -3,11 +3,14 @@ import VueAnalytics from 'vue-analytics';
 import Rollbar from 'vue-rollbar';
 import { Loading } from 'element-ui';
 import VueTippy from 'vue-tippy';
+import VueScrollTo from 'vue-scrollto';
+import VClickOutside from 'v-click-outside';
 import Home from '@/views/Home.vue';
 import '@/plugins/element.js';
 import '@/components/_globals.js';
-import '@/stylesheets/global.scss';
 import '@/stylesheets/tailwind.css';
+import '@/stylesheets/global.scss';
+import '@/stylesheets/transitions.scss';
 import 'tippy.js/themes/light.css';
 
 import router from '@/router/';
@@ -15,6 +18,8 @@ import store from '@/store/index';
 
 Vue.config.productionTip = false;
 
+Vue.use(VClickOutside);
+Vue.use(VueScrollTo);
 Vue.use(VueTippy, {
   directive: 'tippy',
   animateFill: false,

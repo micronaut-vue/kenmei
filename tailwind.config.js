@@ -31,7 +31,7 @@ module.exports = {
         '10px': '0.65rem',
       },
       fontFamily: {
-        sans: ['Inter var', ...defaultTheme.fontFamily.sans],
+        inter: ['Inter var', ...defaultTheme.fontFamily.sans],
       },
     },
   },
