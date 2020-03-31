@@ -5,6 +5,7 @@ import { Loading } from 'element-ui';
 import VueTippy from 'vue-tippy';
 import VueScrollTo from 'vue-scrollto';
 import VClickOutside from 'v-click-outside';
+import Meta from 'vue-meta';
 import Home from '@/views/Home.vue';
 import '@/plugins/element.js';
 import '@/components/_globals.js';
@@ -20,6 +21,7 @@ Vue.config.productionTip = false;
 
 Vue.use(VClickOutside);
 Vue.use(VueScrollTo);
+Vue.use(Meta);
 Vue.use(VueTippy, {
   directive: 'tippy',
   animateFill: false,
