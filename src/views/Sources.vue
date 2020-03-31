@@ -32,6 +32,9 @@
   import sources from '@/assets/sources.json';
 
   export default {
+    metaInfo: {
+      title: 'Supported manga sites | Kenmei',
+    },
     data() {
       return {
         sources,

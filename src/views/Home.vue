@@ -16,6 +16,9 @@
 
   export default {
     name: 'Home',
+    metaInfo: {
+      title: 'Kenmei | Cross-site manga tracker',
+    },
     components: {
       NavigationBar,
       LandingPage,
