@@ -15,7 +15,7 @@
           input.placeholder-gray-400.focus_placeholder-gray-300(
             aria-label='Manga URL'
             name='manga_url'
-            v-model="mangaURL"
+            v-model.trim="mangaURL"
             placeholder='https://mangadex.org/title/7139/'
           )
     template(slot='actions')
