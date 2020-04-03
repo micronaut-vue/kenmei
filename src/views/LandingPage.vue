@@ -1,9 +1,10 @@
 <template lang="pug">
-  #landing-page.font-sans
-    hero-section(@signOnOpened="openSignOnWith($event)")
-    features#features
-    stats#stats
-    call-to-action(@signOnOpened="openSignOnWith($event)")
+  #landing-page.font-sans.flex.flex-col.h-full
+    content.flex-1
+      hero-section(@signOnOpened="openSignOnWith($event)")
+      features#features
+      stats#stats
+      call-to-action(@signOnOpened="openSignOnWith($event)")
     base-footer
     base-modal(
       :visible="signOnVisible"

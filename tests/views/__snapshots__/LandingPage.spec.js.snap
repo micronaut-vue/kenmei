@@ -2,17 +2,21 @@
 
 exports[`LandingPage.vue renders the page 1`] = `
 <div
-  class="font-sans"
+  class="font-sans flex flex-col h-full"
   id="landing-page"
 >
-  <hero-section-stub />
-  <features-stub
-    id="features"
-  />
-  <stats-stub
-    id="stats"
-  />
-  <call-to-action-stub />
+  <content
+    class="flex-1"
+  >
+    <hero-section-stub />
+    <features-stub
+      id="features"
+    />
+    <stats-stub
+      id="stats"
+    />
+    <call-to-action-stub />
+  </content>
   <base-footer-stub
     companyname="Studio Shogun, LTD"
     copyrightyear="2020"

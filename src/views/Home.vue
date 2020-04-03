@@ -1,5 +1,5 @@
 <template lang="pug">
-  #home
+  #home.h-full
     landing-page(v-if="landing")
     .min-h-full.flex.flex-col.bg-blue-300(v-else)
       navigation-bar
