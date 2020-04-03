@@ -99,5 +99,65 @@
     "url": "https://mangakakalot.com/",
     "status": "Requested",
     "logo": "mangakakalot_logo.png"
+  },
+  {
+    "name": "MangaFox",
+    "url": "http://fanfox.net/",
+    "status": "Requested",
+    "logo": "mangafox.jpg"
+  },
+  {
+    "name": "MangaPlus",
+    "url": "https://mangaplus.shueisha.co.jp/",
+    "status": "Requested",
+    "logo": "manga-plus.jpg"
+  },
+  {
+    "name": "Manganelo",
+    "url": "https://manganelo.com/",
+    "status": "Requested",
+    "logo": "manganelo.jpg"
+  },
+  {
+    "name": "Mangago",
+    "url": "http://www.mangago.me/",
+    "status": "Requested",
+    "logo": "mangago.jpg"
+  },
+  {
+    "name": "KissManga",
+    "url": "https://kissmanga.com/",
+    "status": "Requested",
+    "logo": "kissmanga.jpg"
+  },
+  {
+    "name": "LHTranslation",
+    "url": "https://lhtranslation.net/",
+    "status": "Requested",
+    "logo": "lhtranslations.jpg"
+  },
+  {
+    "name": "Merakiscans",
+    "url": "https://merakiscans.com/",
+    "status": "Requested",
+    "logo": "meraki-scans.jpg"
+  },
+  {
+    "name": "MangaHere",
+    "url": "https://www.mangahere.cc/",
+    "status": "Requested",
+    "logo": "manga-here.jpg"
+  },
+  {
+    "name": "Fallen Angels",
+    "url": "https://fascans.com/",
+    "status": "Requested",
+    "logo": "fallen-scans.jpg"
+  },
+  {
+    "name": "Dynasty Scans",
+    "url": "https://dynasty-scans.com/",
+    "status": "Requested",
+    "logo": "dynasty-scans.jpg"
   }
 ]
