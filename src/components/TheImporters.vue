@@ -41,7 +41,7 @@
               | You will receive an email when the series have been imported.
           template(v-else)
             el-input(
-              v-model="importURL"
+              v-model.trim="importURL"
               placeholder="https://mangadex.cc/list/3"
               prefix-icon="el-icon-link"
             )
