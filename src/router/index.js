@@ -82,5 +82,18 @@ export default new Router({
         }
       },
     },
+    {
+      path: '/sign-out',
+      name: 'Sign Out',
+      beforeEnter: async (to, from, next) => {
+        if (store.getters["user/signedIn"]) {
+          await store.dispatch('user/signOut');
+
+          next('/');
+        } else {
+          Message.info("You've already signed out");
+        }
+      },
+    },
   ]
 });

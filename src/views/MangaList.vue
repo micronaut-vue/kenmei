@@ -1,6 +1,6 @@
 <template lang="pug">
   .flex.flex-col.items-center
-    .flex.flex-col.w-full.max-w-6xl.py-6
+    .flex.flex-col.w-full.max-w-7xl.py-6
       .mx-5.mb-5.max-sm_mx-2
         a.no-underline(
           href="https://forms.gle/7mFHhZfDAn9Yh4Ve9"

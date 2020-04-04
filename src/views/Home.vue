@@ -2,7 +2,8 @@
   #home.h-full
     landing-page(v-if="landing")
     .min-h-full.flex.flex-col.bg-blue-300(v-else)
-      navigation-bar
+      header
+        base-nav-light
       .flex-1.overflow-x-hidden
         main.min-h-45
           transition(name="slide-left" mode="out-in")
@@ -11,7 +12,6 @@
 </template>
 
 <script>
-  import NavigationBar from '@/components/TheNavigationBar';
   import LandingPage from '@/views/LandingPage';
 
   export default {
@@ -20,7 +20,6 @@
       title: 'Kenmei | Cross-site manga tracker',
     },
     components: {
-      NavigationBar,
       LandingPage,
     },
     data() {
