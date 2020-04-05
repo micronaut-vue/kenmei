@@ -3,11 +3,11 @@
     .flex.flex-col.w-full.max-w-7xl.py-6
       .mx-5.mb-5.max-sm_mx-2
         a.no-underline(
-          href="https://forms.gle/7mFHhZfDAn9Yh4Ve9"
+          href="https://news.kenmei.co/updates/2020/update-13"
           target="_blank"
         )
           el-alert.cursor-pointer(
-            title="Cross-site update feedback questionnaire"
+            title="Update #13"
             type="info"
             :description="alertMessage"
             :closable="false"
@@ -162,8 +162,8 @@
         deleteDialogVisible: false,
         reportDialogVisible: false,
         alertMessage: `
-          Please take a minute and provide feedback for the latest update by
-          clicking on this banner
+          New landing page, updated UI components and more
+          in the latest update. Click to find out more.
         `,
       };
     },
