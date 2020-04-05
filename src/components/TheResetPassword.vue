@@ -88,7 +88,7 @@
 
         const response = await plain
           .post('/auth/passwords', { email: this.user.email })
-          .catch(e => e.response);
+          .catch((e) => e.response);
 
         if (response.status === 200) {
           this.resetInitiated = true;

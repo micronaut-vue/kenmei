@@ -179,12 +179,12 @@
         return this.getEntriesByListId(this.currentListID);
       },
       selectedEntriesIDs() {
-        return this.selectedEntries.map(entry => entry.id);
+        return this.selectedEntries.map((entry) => entry.id);
       },
       trackedEntriesIDs() {
         const trackedIDs = this.selectedEntries.map(
-          entry => entry.attributes.tracked_entries.map(
-            trackedEntry => trackedEntry.id
+          (entry) => entry.attributes.tracked_entries.map(
+            (trackedEntry) => trackedEntry.id
           )
         );
 
@@ -202,7 +202,7 @@
         if (this.searchTerm === '') { return this.currentListEntries; }
 
         return this.currentListEntries.filter(
-          entry => entry.attributes.title.toLowerCase()
+          (entry) => entry.attributes.title.toLowerCase()
             .includes(this.searchTerm.toLowerCase())
         );
       },

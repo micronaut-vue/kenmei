@@ -3,7 +3,7 @@ import { secure } from '@/modules/axios';
 
 // Can't access getter inside mutations, hence this has to be a plain function
 export const getEntryIndex = (state, id) => state.entries.findIndex(
-  e => e.id === id
+  (e) => e.id === id
 );
 
 const state = {
@@ -13,11 +13,11 @@ const state = {
 };
 
 const getters = {
-  getEntriesByListId: state => listID => state.entries.filter(
-    entry => entry.manga_list_id.toString() === listID
+  getEntriesByListId: (state) => (listID) => state.entries.filter(
+    (entry) => entry.manga_list_id.toString() === listID
   ),
-  findEntryFromIDs: state => ids => state.entries.find(
-    entry => ids.includes(entry.id)
+  findEntryFromIDs: (state) => (ids) => state.entries.find(
+    (entry) => ids.includes(entry.id)
   ),
 };
 

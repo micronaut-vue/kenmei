@@ -70,7 +70,7 @@
           .then((newMangaEntry) => {
             const { data } = newMangaEntry;
             const currentEntry = this.findEntryFromIDs(
-              data.attributes.tracked_entries.map(e => e.id)
+              data.attributes.tracked_entries.map((e) => e.id)
             );
 
             if (currentEntry) {

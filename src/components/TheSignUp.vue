@@ -138,7 +138,7 @@
 
         const response = await plain
           .post('/api/v1/registrations/', { user: this.user })
-          .catch(e => e.response);
+          .catch((e) => e.response);
 
         if (response.status === 200) {
           this.confirmationInitiated = true;

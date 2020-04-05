@@ -120,7 +120,7 @@
 
         Object.entries(listsToImport).forEach(([name, list]) => {
           filteredLists[name] = list
-            .map(url => ({
+            .map((url) => ({
               seriesURL: url.full_title_url,
               chapterURL: url.generated_current_data.url,
               lastRead: url.generated_current_data.number,

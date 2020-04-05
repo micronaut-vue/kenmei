@@ -1,5 +1,5 @@
-import mangaList from '../fixtures/mangalist';
 import * as Importer from '@/services/importer';
+import mangaList from '../fixtures/mangalist';
 
 describe('Importer', () => {
   describe('processList', () => {
