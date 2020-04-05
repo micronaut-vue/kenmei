@@ -1,6 +1,6 @@
 language: node_js
 node_js:
-  - "11"
+  - "12.14.0"
 cache: yarn
 after_script:
   - cat ./coverage/lcov.info | coveralls
