@@ -51,7 +51,7 @@
     "flush-promises": "^1.0.2",
     "pug": "^2.0.4",
     "rosie": "^2.0.1",
-    "sass": "^1.23.3",
+    "sass": "^1.26.3",
     "sass-loader": "^8.0.2",
     "tailwindcss": "^1.2.0",
     "vue-cli-plugin-element": "^1.0.1",
