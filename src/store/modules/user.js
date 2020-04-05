@@ -6,7 +6,7 @@ const state = {
 };
 
 const getters = {
-  signedIn: state => state.currentUser !== null,
+  signedIn: (state) => state.currentUser !== null,
 };
 
 const actions = {

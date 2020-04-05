@@ -78,7 +78,7 @@ describe('API', () => {
 
     beforeEach(() => {
       mangaEntries = mangaEntryFactory.buildList(2);
-      ids = mangaEntries.map(entry => entry.id);
+      ids = mangaEntries.map((entry) => entry.id);
       attributes = {
         last_chapter_read: mangaEntries[0].attributes.last_chapter_available,
         last_chapter_read_url: mangaEntries[0].links.last_chapter_available_url,

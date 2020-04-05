@@ -69,5 +69,5 @@ Vue.config.errorHandler = (err, _vm, _info) => { Vue.rollbar.error(err); };
 new Vue({
   router,
   store,
-  render: h => h(Home),
+  render: (h) => h(Home),
 }).$mount('#app');

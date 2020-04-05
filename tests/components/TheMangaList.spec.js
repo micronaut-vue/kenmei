@@ -4,9 +4,9 @@ import flushPromises from 'flush-promises';
 
 import MangaList from '@/components/TheMangaList.vue';
 import lists from '@/store/modules/lists';
+import * as api from '@/services/api';
 import mangaEntryFactory from '../factories/mangaEntry';
 
-import * as api from '@/services/api';
 
 const localVue = createLocalVue();
 

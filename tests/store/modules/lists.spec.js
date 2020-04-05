@@ -92,8 +92,8 @@ describe('lists', () => {
 
         lists.mutations.updateEntry(state, updatedEntry);
 
-        entryToUpdate = state.entries.find(e => e.id === 1);
-        entry = state.entries.find(e => e.id === 2);
+        entryToUpdate = state.entries.find((e) => e.id === 1);
+        entry = state.entries.find((e) => e.id === 2);
 
         expect(entryToUpdate.attributes.title).toContain('Updated Title');
         expect(entry.attributes.title).toContain('Manga Title');

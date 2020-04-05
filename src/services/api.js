@@ -20,7 +20,7 @@ export const updateMangaEntry = (id, attributes) => secure
 
     return response.data.data;
   })
-  .catch(_error => false);
+  .catch((_error) => false);
 
 export const bulkUpdateMangaEntry = (ids, attributes) => secure
   .put('/api/v1/manga_entries/bulk_update', { ids, manga_entry: attributes })
@@ -29,9 +29,9 @@ export const bulkUpdateMangaEntry = (ids, attributes) => secure
 
     return response.data.data;
   })
-  .catch(_error => false);
+  .catch((_error) => false);
 
-export const bulkDeleteMangaEntries = seriesIDs => secure
+export const bulkDeleteMangaEntries = (seriesIDs) => secure
   .delete('/api/v1/manga_entries/bulk_destroy', { data: { ids: seriesIDs } })
   .then(() => true)
   .catch(() => false);

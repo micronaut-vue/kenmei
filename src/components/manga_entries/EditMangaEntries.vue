@@ -88,7 +88,7 @@
         return this.selectedEntries[0];
       },
       selectedEntriesIDs() {
-        return this.selectedEntries.map(entry => entry.id);
+        return this.selectedEntries.map((entry) => entry.id);
       },
       isBulkUpdate() {
         return this.selectedEntries.length > 1;
@@ -147,7 +147,7 @@
           Message.info(`${this.selectedEntries.length} entries updated`);
 
           if (Array.isArray(response)) {
-            response.map(e => this.updateEntry(e));
+            response.map((e) => this.updateEntry(e));
           } else {
             this.replaceEntry({
               currentEntry: this.selectedEntry, newEntry: response,

@@ -73,7 +73,7 @@
     },
     computed: {
       selectedEntriesIDs() {
-        return this.selectedEntries.map(e => e.id);
+        return this.selectedEntries.map((e) => e.id);
       },
       issueInvalid() {
         return this.currentIssue === 1 && this.selectedEntriesIDs.length < 2;

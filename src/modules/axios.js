@@ -8,7 +8,7 @@ const currentEnv = () => (
   process.env.NODE_ENV === 'production' ? PRODUCTION_API_URL : DEV_API_URL
 );
 
-const logOutFailed = response => response.config.method === 'delete'
+const logOutFailed = (response) => response.config.method === 'delete'
   && response.data.error === 'Signature has expired';
 
 const setAuthConfig = (config) => {
@@ -32,8 +32,8 @@ const baseConfig = {
 const secure = axios.create(baseConfig);
 const plain  = axios.create(baseConfig);
 
-plain.interceptors.request.use(config => setAuthConfig(config));
-secure.interceptors.request.use(config => setAuthConfig(config));
+plain.interceptors.request.use((config) => setAuthConfig(config));
+secure.interceptors.request.use((config) => setAuthConfig(config));
 secure.interceptors.response.use(null, (error) => {
   const { response } = error;
   const { config, status } = response;
