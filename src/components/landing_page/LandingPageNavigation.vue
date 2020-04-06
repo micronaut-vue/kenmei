@@ -29,11 +29,15 @@
         template(v-else)
           span.inline-flex.rounded-md.shadow-md
             span.inline-flex.rounded-md.shadow-xs
-              button.desktop-action(@click="$emit('signOnOpened', 'TheSignIn')")
+              button.desktop-action(
+                ref="SignInButton"
+                @click="$emit('signOnOpened', 'TheSignIn')"
+              )
                 | Log in
           span.ml-5.inline-flex.rounded-md.shadow-md
             span.inline-flex.rounded-md.shadow-xs
               button.desktop-action.text-white.bg-blue-500.hover_bg-blue-600(
+                ref="SignUpButton"
                 @click="$emit('signOnOpened', 'TheSignUp')"
               )
                 | Register
