@@ -17,7 +17,7 @@
             aria-label='Manga URL'
             name='manga_url'
             v-model.trim="mangaURL"
-            placeholder='https://mangadex.org/title/7139/'
+            placeholder='Manga or chapter URL'
           )
         p.mt-2.text-xs.text-gray-500
           | When using a chapter URL, last read chapter will be pre-populated
