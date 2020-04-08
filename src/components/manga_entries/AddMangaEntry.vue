@@ -13,6 +13,7 @@
           .absolute.inset-y-0.left-0.pl-3.flex.items-center.pointer-events-none
              i.el-icon-link.text-gray-400.sm_text-sm.sm_leading-5
           input#email.form-input.block.w-full.pl-10.sm_text-sm.sm_leading-5(
+            ref="manga_url"
             aria-label='Manga URL'
             name='manga_url'
             v-model.trim="mangaURL"
@@ -59,6 +60,13 @@
       ...mapGetters('lists', [
         'findEntryFromIDs',
       ]),
+    },
+    watch: {
+      visible(val) {
+        if (val) {
+          this.$nextTick(() => { this.$refs.manga_url.focus(); });
+        }
+      },
     },
     methods: {
       ...mapMutations('lists', [
