@@ -88,6 +88,7 @@
             icon="el-icon-check"
             size="mini"
             @click="setLastRead(scope.row)"
+            :loading="entryUpdated === scope.row"
             circle
             v-tippy
           )
@@ -141,6 +142,7 @@
       return {
         currentPage: 1,
         sortedData: [],
+        entryUpdated: null,
       };
     },
     computed: {
@@ -166,17 +168,24 @@
         'updateEntry',
       ]),
       async setLastRead(entry) {
+        this.entryUpdated = entry;
+
         const attributes = {
           last_chapter_read: entry.attributes.last_chapter_available,
           last_chapter_read_url: entry.links.last_chapter_available_url,
         };
+
         const response = await updateMangaEntry(entry.id, attributes);
         if (response) {
-          Message.info('Updated last read chapter');
+          Message.info(
+            `Updated last read chapter to ${attributes.last_chapter_read}`
+          );
           this.updateEntry(response);
         } else {
           Message.error("Couldn't update. Try refreshing the page");
         }
+
+        this.entryUpdated = null;
       },
       applySorting({ _column, prop, order }) {
         this.sortedData = sortBy(this.tableData, prop, order);
